@@ -26,10 +26,10 @@ import moment from "moment";
 import { Auth } from "aws-amplify";
 import { Link } from "react-router-dom";
 
-export const ParentDialog = () => {
+export const ParentDialog = (props) => {
   const EntryDialog = (props) => {
     const handleClick = (button) => {
-      button === "yes" ? setView(2) : setView(5);
+      button === "yes" ? setView(2) : setView(4);
     };
     const tooltipText =
       "The research being used for this program has not yet been done to include people outside of this age range. You are more than welcome to still utilize the service, however, results may vary.";
@@ -105,14 +105,11 @@ export const ParentDialog = () => {
   };
 
   const SignUpDialog = (props) => {
-    const handleClick = () => {
-      setView(3);
-    };
     const [inputs, setInputs] = useState({
       firstName: "",
       lastName: "",
       email: "",
-      pass: "",
+      password: "",
     });
 
     return (
@@ -124,31 +121,40 @@ export const ParentDialog = () => {
           <Stack spacing={2} justifyContent="center">
             <Input
               placeholder="First Name"
-              onChange={(value) => setInputs({ ...inputs, firstName: value })}
+              onChange={(event) =>
+                setInputs({ ...inputs, firstName: event.target.value })
+              }
             />
             <Input
               placeholder="Last Name"
-              onChange={(value) => setInputs({ ...inputs, lastName: value })}
+              onChange={(event) =>
+                setInputs({ ...inputs, lastName: event.target.value })
+              }
             />
             <Input
               placeholder="Email Address"
-              onChange={(value) => setInputs({ ...inputs, email: value })}
+              onChange={(event) =>
+                setInputs({ ...inputs, email: event.target.value })
+              }
             />
             <Input
               placeholder="Password"
-              onChange={(value) => setInputs({ ...inputs, pass: value })}
+              onChange={(event) =>
+                setInputs({ ...inputs, password: event.target.value })
+              }
             />
           </Stack>
           <Stack spacing={1}>
             <Button
               variant="contained"
               onClick={() => {
-                handleClick();
+                console.log(inputs);
+                // setView(3);
               }}
             >
               Create Account
             </Button>
-            <Button size="small" onClick={() => setView(2)}>
+            <Button size="small" onClick={() => setView(5)}>
               Already have an account?
             </Button>
           </Stack>
@@ -245,7 +251,7 @@ export const ParentDialog = () => {
             <Button component={Link} to={`home`} variant="contained">
               Sign In
             </Button>
-            <Button size="small" onClick={() => setView(3)}>
+            <Button size="small" onClick={() => setView(2)}>
               Don't have an account?
             </Button>
           </Stack>
@@ -254,25 +260,25 @@ export const ParentDialog = () => {
     );
   };
 
-  const [view, setView] = useState(1);
+  const [view, setView] = useState(props.view);
   const dialogDisplay = () => {
     switch (view) {
       case 1:
         return <EntryDialog />;
       case 2:
-        return <SignInDialog />;
-      case 3:
         return <SignUpDialog />;
-      case 4:
+      case 3:
         return <HealthDialog />;
-      case 5:
+      case 4:
         return <InfoDialog />;
+      case 5:
+        return <SignInDialog />;
       default:
         return <SignInDialog />;
     }
   };
   return (
-    <Dialog open fullWidth maxWidth="xs">
+    <Dialog open={props.open} fullWidth maxWidth="xs">
       {/* <EntryDialog /> */}
       {dialogDisplay()}
     </Dialog>

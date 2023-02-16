@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { ParentDialog } from "../components/Dialogs";
 import background from "../assets/background.jpg";
 
-function App() {
+function Appx() {
   return (
     <Box>
       <Box
@@ -19,4 +19,4 @@ function App() {
   );
 }
 
-export default App;
+export default Appx;

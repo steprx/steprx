@@ -1,42 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./routes/App";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 import reportWebVitals from "./reportWebVitals";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { Amplify } from "aws-amplify";
 import config from "./aws-exports";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ErrorPage from "./errorPage";
-import Home from "./routes/Home";
-import Main from "./routes/Root";
-import Root from "./routes/Root";
-import Profile from "./routes/Profile";
+import awsconfig from "./aws-exports";
+import App from "./App";
 Amplify.configure(config);
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "home",
-    element: <Root />,
-    children: [
-      { index: true, element: <Home /> },
-      { path: "profile", element: <Profile /> },
-    ],
-  },
-]);
+Amplify.configure(awsconfig);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <LocalizationProvider dateAdapter={AdapterMoment}>
-      <RouterProvider router={router} />
-    </LocalizationProvider>
+    <App />
   </React.StrictMode>
 );
 
