@@ -17,14 +17,10 @@ import {
 } from "@mui/material";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
-import {
-  validateEmail,
-  validateName,
-  validatePass,
-} from "../utils/Validations";
 import moment from "moment";
 import { Auth } from "aws-amplify";
 import { Link } from "react-router-dom";
+import { signUp } from "../utils/auth";
 
 export const ParentDialog = (props) => {
   const EntryDialog = (props) => {
@@ -105,12 +101,19 @@ export const ParentDialog = (props) => {
   };
 
   const SignUpDialog = (props) => {
+    const time = new Date();
+
     const [inputs, setInputs] = useState({
       firstName: "",
       lastName: "",
       email: "",
       password: "",
+      time: time.getTime(),
     });
+
+    const createUser = (inputs) => {
+      signUp(inputs);
+    };
 
     return (
       <Box p={2}>
@@ -149,6 +152,7 @@ export const ParentDialog = (props) => {
               variant="contained"
               onClick={() => {
                 console.log(inputs);
+                createUser(inputs);
                 // setView(3);
               }}
             >
