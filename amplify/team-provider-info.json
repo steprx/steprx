@@ -13,8 +13,12 @@
     },
     "categories": {
       "auth": {
-        "steprxae052ccc": {},
-        "steprx": {}
+        "steprx19b5753e": {
+          "userPoolId": "us-east-1_chn8x9FxA",
+          "userPoolName": "users",
+          "webClientId": "5ngeq7v69v8amuhm94ids5goue",
+          "nativeClientId": "5ngeq7v69v8amuhm94ids5goue"
+        }
       }
     }
   }

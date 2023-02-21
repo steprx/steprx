@@ -6,6 +6,14 @@ import Dashboard from "./routes/Dashboard";
 import Home from "./routes/Home";
 import LandingPage from "./routes/Landing";
 import Profile from "./routes/Profile";
+import { create } from "zustand";
+
+const useUserStore = create((set) => ({
+  uuid: null,
+  setUuid: (uuid) => set({ uuid }),
+}));
+
+const user = useUserStore((state) => state.uuid);
 
 const router = createBrowserRouter([
   {
