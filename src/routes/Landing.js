@@ -2,14 +2,14 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import background from "../assets/background.jpg";
 import { ParentDialog } from "../components/Dialogs";
+import { useDialogStore } from "../Stores/DialogStore";
 
 const LandingPage = () => {
   const [open, setOpen] = useState(false);
-  const [view, setView] = useState(1);
+  const setView = useDialogStore((state) => state.setCurrentView);
   const handleOpen = (button) => {
-    console.log(open);
+    button === "sign in" ? setView(5) : setView(1);
     setOpen(true);
-    console.log(open);
   };
   return (
     <Box
@@ -22,11 +22,11 @@ const LandingPage = () => {
         minHeight: "100vh",
       }}
     >
-      {/* <Box position="absolute" p={2} right={0}>
-        <Button variant="contained" onClick={() => handleOpen(1)}>
+      <Box position="absolute" p={2} right={0}>
+        <Button variant="contained" onClick={() => handleOpen("sign in")}>
           Sign In
         </Button>
-      </Box> */}
+      </Box>
       <Stack
         spacing={3}
         height="100%"
@@ -37,15 +37,11 @@ const LandingPage = () => {
         <Typography variant="h1" align="center" color="text.primary">
           Welcome to stepRx!
         </Typography>
-        <Button variant="contained" onClick={() => handleOpen(1)}>
+        <Button variant="contained" onClick={() => handleOpen("get started")}>
           Get Started
         </Button>
       </Stack>
-      <ParentDialog
-        open={open}
-        handleClose={() => setOpen(false)}
-        view={view}
-      />
+      <ParentDialog open={open} handleClose={() => setOpen(false)} />
     </Box>
   );
 };

@@ -21,6 +21,8 @@ import moment from "moment";
 import { Auth } from "aws-amplify";
 import { Link } from "react-router-dom";
 import { signUp } from "../utils/auth";
+import { useUserStore } from "../Stores/UserStore";
+import { useDialogStore } from "../Stores/DialogStore";
 
 export const ParentDialog = (props) => {
   const EntryDialog = (props) => {
@@ -103,6 +105,8 @@ export const ParentDialog = (props) => {
   const SignUpDialog = (props) => {
     const time = new Date();
 
+    const setUser = useUserStore((state) => state.setCurrentUser);
+
     const [inputs, setInputs] = useState({
       firstName: "",
       lastName: "",
@@ -112,7 +116,9 @@ export const ParentDialog = (props) => {
     });
 
     const createUser = (inputs) => {
-      signUp(inputs);
+      signUp(inputs)
+        .then((res) => setUser(res))
+        .then(setView(3));
     };
 
     return (
@@ -153,7 +159,6 @@ export const ParentDialog = (props) => {
               onClick={() => {
                 console.log(inputs);
                 createUser(inputs);
-                // setView(3);
               }}
             >
               Create Account
@@ -168,12 +173,6 @@ export const ParentDialog = (props) => {
   };
 
   const HealthDialog = (props) => {
-    const ages = [];
-    let x = 13;
-    while (x < 100) {
-      ages[x - 13] = x;
-      x++;
-    }
     return (
       <Box p={2}>
         <Stack justifyContent="center" spacing={2}>
@@ -182,16 +181,7 @@ export const ParentDialog = (props) => {
           </Typography>
           <Stack spacing={2} justifyContent="center">
             <Stack direction="row" spacing={1}>
-              <FormControl variant="standard" fullWidth>
-                <InputLabel>Age</InputLabel>
-                <Select label="Age">
-                  {ages.map((age) => (
-                    <MenuItem key={age} value={age}>
-                      {age}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Input placeholder="Age" fullWidth />
               <Input placeholder="Weight (lbs)" fullWidth />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -264,7 +254,9 @@ export const ParentDialog = (props) => {
     );
   };
 
-  const [view, setView] = useState(props.view);
+  const view = useDialogStore((state) => state.currentView);
+  const setView = useDialogStore((state) => state.setCurrentView);
+  // const [view, setView] = useState(props.view);
   const dialogDisplay = () => {
     switch (view) {
       case 1:

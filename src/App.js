@@ -7,22 +7,19 @@ import Home from "./routes/Home";
 import LandingPage from "./routes/Landing";
 import Profile from "./routes/Profile";
 import { create } from "zustand";
+import { useUserStore } from "./Stores/UserStore";
 
-const useUserStore = create((set) => ({
-  uuid: null,
-  setUuid: (uuid) => set({ uuid }),
-}));
-
-const user = useUserStore((state) => state.uuid);
-
-const router = createBrowserRouter([
+const authRouter = createBrowserRouter([
   {
     path: "/",
     element: <LandingPage />,
     errorElement: <ErrorPage />,
   },
+]);
+
+const mainRouter = createBrowserRouter([
   {
-    path: "home",
+    path: "/",
     element: <Home />,
     children: [
       { index: true, element: <Dashboard /> },
@@ -32,9 +29,11 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+  const userSubmit = useUserStore((state) => state.userSubmit);
+
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <RouterProvider router={router} />
+      <RouterProvider router={userSubmit ? mainRouter : authRouter} />
     </LocalizationProvider>
   );
 };
