@@ -128,7 +128,7 @@ export const ParentDialog = (props) => {
             Create an Account
           </Typography>
           <Stack spacing={2} justifyContent="center">
-            <Input
+            {/* <Input
               placeholder="First Name"
               onChange={(event) =>
                 setInputs({ ...inputs, firstName: event.target.value })
@@ -148,6 +148,43 @@ export const ParentDialog = (props) => {
             />
             <Input
               placeholder="Password"
+              onChange={(event) =>
+                setInputs({ ...inputs, password: event.target.value })
+              }
+            /> */}
+            <TextField
+              size="small"
+              label="First Name"
+              variant="outlined"
+              fullWidth
+              onChange={(event) =>
+                setInputs({ ...inputs, firstName: event.target.value })
+              }
+            />
+            <TextField
+              size="small"
+              label="Last Name"
+              variant="outlined"
+              fullWidth
+              onChange={(event) =>
+                setInputs({ ...inputs, lastName: event.target.value })
+              }
+            />
+            <TextField
+              size="small"
+              label="Email Address"
+              variant="outlined"
+              fullWidth
+              onChange={(event) =>
+                setInputs({ ...inputs, email: event.target.value })
+              }
+            />
+            <TextField
+              size="small"
+              label="Password"
+              variant="outlined"
+              type="password"
+              fullWidth
               onChange={(event) =>
                 setInputs({ ...inputs, password: event.target.value })
               }
@@ -181,20 +218,68 @@ export const ParentDialog = (props) => {
           </Typography>
           <Stack spacing={2} justifyContent="center">
             <Stack direction="row" spacing={1}>
-              <Input placeholder="Age" fullWidth />
-              <Input placeholder="Weight (lbs)" fullWidth />
+              {/* <Input placeholder="Age" fullWidth />
+              <Input placeholder="Weight (lbs)" fullWidth /> */}
+              <TextField
+                size="small"
+                label="Age"
+                variant="outlined"
+                fullWidth
+              />
+              <TextField
+                size="small"
+                label="Weight (lbs)"
+                variant="outlined"
+                fullWidth
+              />
             </Stack>
             <Stack direction="row" spacing={1}>
-              <Input placeholder="Height (ft)" fullWidth />
-              <Input placeholder="Height (in)" fullWidth />
+              {/* <Input placeholder="Height (ft)" fullWidth />
+              <Input placeholder="Height (in)" fullWidth /> */}
+              <TextField
+                size="small"
+                label="Height (ft)"
+                variant="outlined"
+                fullWidth
+              />
+              <TextField
+                size="small"
+                label="Height (in)"
+                variant="outlined"
+                fullWidth
+              />
             </Stack>
             <Stack direction="row" spacing={1}>
-              <Input placeholder="Body Fat %" fullWidth />
-              <Input placeholder="Target Weight" fullWidth />
+              {/* <Input placeholder="Body Fat %" fullWidth />
+              <Input placeholder="Target Weight" fullWidth /> */}
+              <TextField
+                size="small"
+                label="Body Fat %"
+                variant="outlined"
+                fullWidth
+              />
+              <TextField
+                size="small"
+                label="Target Weight"
+                variant="outlined"
+                fullWidth
+              />
             </Stack>
             <Stack direction="row" spacing={1}>
-              <Input placeholder="Waist (in)" fullWidth />
-              <Input placeholder="Neck (in)" fullWidth />
+              {/* <Input placeholder="Waist (in)" fullWidth />
+              <Input placeholder="Neck (in)" fullWidth /> */}
+              <TextField
+                size="small"
+                label="Waist (in)"
+                variant="outlined"
+                fullWidth
+              />
+              <TextField
+                size="small"
+                label="Neck (in)"
+                variant="outlined"
+                fullWidth
+              />
             </Stack>
             <FormControl variant="standard">
               <RadioGroup row>
@@ -232,14 +317,26 @@ export const ParentDialog = (props) => {
             Sign In
           </Typography>
           <Stack spacing={2} justifyContent="center">
-            <Input
+            <TextField
+              size="small"
+              label="Email Address"
+              variant="outlined"
+              onChange={(value) => setInputs({ ...inputs, email: value })}
+            />
+            <TextField
+              size="small"
+              label="Password"
+              variant="outlined"
+              onChange={(value) => setInputs({ ...inputs, pass: value })}
+            />
+            {/* <Input
               placeholder="Email Address"
               onChange={(value) => setInputs({ ...inputs, email: value })}
             />
             <Input
               placeholder="Password"
               onChange={(value) => setInputs({ ...inputs, pass: value })}
-            />
+            /> */}
           </Stack>
           <Stack spacing={1}>
             <Button component={Link} to={`home`} variant="contained">
