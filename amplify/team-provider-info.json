@@ -21,5 +21,18 @@
         }
       }
     }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-steprx-dev-141136-authRole",
+      "UnauthRoleArn": "arn:aws:iam::005159501475:role/amplify-steprx-dev-141136-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::005159501475:role/amplify-steprx-dev-141136-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-steprx-dev-141136-deployment",
+      "UnauthRoleName": "amplify-steprx-dev-141136-unauthRole",
+      "StackName": "amplify-steprx-dev-141136",
+      "StackId": "arn:aws:cloudformation:us-east-1:005159501475:stack/amplify-steprx-dev-141136/e40fbb30-b864-11ed-a142-1216fa73ee63",
+      "AmplifyAppId": "d19yznp7zh5ale"
+    }
   }
 }
