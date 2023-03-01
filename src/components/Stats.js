@@ -1,5 +1,4 @@
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { Charts } from "./Charts";
 
 const Stats = () => {
   return (

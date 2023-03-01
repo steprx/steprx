@@ -4,12 +4,8 @@ import {
   Dialog,
   FormControl,
   FormControlLabel,
-  Input,
-  InputLabel,
-  MenuItem,
   Radio,
   RadioGroup,
-  Select,
   Stack,
   TextField,
   Tooltip,
@@ -17,16 +13,21 @@ import {
 } from "@mui/material";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
-import {
-  validateEmail,
-  validateName,
-  validatePass,
-} from "../utils/Validations";
 import moment from "moment";
-import { Auth } from "aws-amplify";
 import { Link } from "react-router-dom";
+import { confirmSignUp, signIn, signUp } from "../utils/auth";
+import { useUserStore } from "../Stores/UserStore";
+import { useDialogStore } from "../Stores/DialogStore";
+import { putItem } from "../APIs/UserServices";
 
-export const ParentDialog = () => {
+export const ParentDialog = (props) => {
+  const currentUser = useUserStore((state) => state.currentUser);
+  const setUser = useUserStore((state) => state.setCurrentUser);
+  const setUserSubmit = useUserStore((state) => state.setUserSubmit);
+  const handleClose = () => {
+    props.handleClose(false);
+  };
+
   const EntryDialog = (props) => {
     const handleClick = (button) => {
       button === "yes" ? setView(2) : setView(5);
@@ -68,6 +69,260 @@ export const ParentDialog = () => {
     );
   };
 
+  const SignUpDialog = (props) => {
+    const time = new Date();
+
+    const [inputs, setInputs] = useState({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      time: time.getTime(),
+    });
+
+    const createUser = (inputs) => {
+      signUp(inputs)
+        .then((res) => setUser(res))
+        .then(setView(3));
+    };
+
+    return (
+      <Box p={2}>
+        <Stack justifyContent="center" spacing={2}>
+          <Typography align="center" variant="h6">
+            Create an Account
+          </Typography>
+          <Stack spacing={2} justifyContent="center">
+            <TextField
+              size="small"
+              label="First Name"
+              variant="outlined"
+              fullWidth
+              onChange={(event) =>
+                setInputs({ ...inputs, firstName: event.target.value })
+              }
+            />
+            <TextField
+              size="small"
+              label="Last Name"
+              variant="outlined"
+              fullWidth
+              onChange={(event) =>
+                setInputs({ ...inputs, lastName: event.target.value })
+              }
+            />
+            <TextField
+              size="small"
+              label="Email Address"
+              variant="outlined"
+              fullWidth
+              onChange={(event) =>
+                setInputs({ ...inputs, email: event.target.value })
+              }
+            />
+            <TextField
+              size="small"
+              label="Password"
+              variant="outlined"
+              type="password"
+              fullWidth
+              onChange={(event) =>
+                setInputs({ ...inputs, password: event.target.value })
+              }
+            />
+          </Stack>
+          <Stack spacing={1}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                console.log(inputs);
+                createUser(inputs);
+              }}
+            >
+              Create Account
+            </Button>
+            <Button size="small" onClick={() => setView(6)}>
+              Already have an account?
+            </Button>
+          </Stack>
+        </Stack>
+      </Box>
+    );
+  };
+
+  const ConfirmDialog = (props) => {
+    const [code, setCode] = useState(null);
+
+    const confirmUser = (code) => {
+      confirmSignUp(currentUser.user.username, code).then(setView(4));
+    };
+
+    return (
+      <Box p={2}>
+        <Stack justifyContent="center" spacing={2}>
+          <TextField
+            size="small"
+            label="Verification Code"
+            variant="outlined"
+            fullWidth
+            onChange={(event) => setCode(event.target.value)}
+          />
+          <Button size="small" onClick={() => confirmUser(code)}>
+            Verify Email
+          </Button>
+        </Stack>
+      </Box>
+    );
+  };
+
+  const HealthDialog = (props) => {
+    const { userSub } = useUserStore((state) => state.currentUser);
+    const handleRadioChange = (event) => {
+      setInputs({ ...inputs, sex: event.target.value });
+    };
+    const [inputs, setInputs] = useState({
+      age: null,
+      weight: null,
+      heightFt: null,
+      heightIn: null,
+      bodyFat: null,
+      targetWeight: null,
+      waist: null,
+      neck: null,
+      sex: "",
+    });
+    const handleSubmit = () => {
+      console.log(userSub);
+      console.log(inputs);
+      putItem(userSub, inputs);
+      setUserSubmit(true);
+    };
+
+    return (
+      <Box p={2}>
+        <Stack justifyContent="center" spacing={2}>
+          <Typography align="center" variant="h6">
+            Let's get some basic info
+          </Typography>
+          <Stack spacing={2} justifyContent="center">
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Age"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, age: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Weight (lbs)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, weight: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Height (ft)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, heightFt: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Height (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, heightIn: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Body Fat %"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, bodyFat: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Target Weight"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, targetWeight: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Waist (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, waist: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Neck (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, neck: event.target.value })
+                }
+              />
+            </Stack>
+            <FormControl variant="standard" required>
+              <RadioGroup row value={inputs.sex}>
+                <FormControlLabel
+                  value="female"
+                  control={<Radio />}
+                  label="Female"
+                  onChange={handleRadioChange}
+                />
+                <FormControlLabel
+                  value="male"
+                  control={<Radio />}
+                  label="Male"
+                  onChange={handleRadioChange}
+                />
+              </RadioGroup>
+            </FormControl>
+          </Stack>
+          <Button
+            component={Link}
+            to={`/`}
+            variant="contained"
+            onClick={() => handleSubmit(inputs)}
+          >
+            Submit
+          </Button>
+        </Stack>
+      </Box>
+    );
+  };
+
   const InfoDialog = (props) => {
     const handleClick = (button) => {
       button === "agree" ? setView(2) : setView(1);
@@ -104,126 +359,17 @@ export const ParentDialog = () => {
     );
   };
 
-  const SignUpDialog = (props) => {
-    const handleClick = () => {
-      setView(3);
-    };
-    const [inputs, setInputs] = useState({
-      firstName: "",
-      lastName: "",
-      email: "",
-      pass: "",
-    });
-
-    return (
-      <Box p={2}>
-        <Stack justifyContent="center" spacing={2}>
-          <Typography align="center" variant="h6">
-            Create an Account
-          </Typography>
-          <Stack spacing={2} justifyContent="center">
-            <Input
-              placeholder="First Name"
-              onChange={(value) => setInputs({ ...inputs, firstName: value })}
-            />
-            <Input
-              placeholder="Last Name"
-              onChange={(value) => setInputs({ ...inputs, lastName: value })}
-            />
-            <Input
-              placeholder="Email Address"
-              onChange={(value) => setInputs({ ...inputs, email: value })}
-            />
-            <Input
-              placeholder="Password"
-              onChange={(value) => setInputs({ ...inputs, pass: value })}
-            />
-          </Stack>
-          <Stack spacing={1}>
-            <Button
-              variant="contained"
-              onClick={() => {
-                handleClick();
-              }}
-            >
-              Create Account
-            </Button>
-            <Button size="small" onClick={() => setView(2)}>
-              Already have an account?
-            </Button>
-          </Stack>
-        </Stack>
-      </Box>
-    );
-  };
-
-  const HealthDialog = (props) => {
-    const ages = [];
-    let x = 13;
-    while (x < 100) {
-      ages[x - 13] = x;
-      x++;
-    }
-    return (
-      <Box p={2}>
-        <Stack justifyContent="center" spacing={2}>
-          <Typography align="center" variant="h6">
-            Let's get some basic info
-          </Typography>
-          <Stack spacing={2} justifyContent="center">
-            <Stack direction="row" spacing={1}>
-              <FormControl variant="standard" fullWidth>
-                <InputLabel>Age</InputLabel>
-                <Select label="Age">
-                  {ages.map((age) => (
-                    <MenuItem key={age} value={age}>
-                      {age}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <Input placeholder="Weight (lbs)" fullWidth />
-            </Stack>
-            <Stack direction="row" spacing={1}>
-              <Input placeholder="Height (ft)" fullWidth />
-              <Input placeholder="Height (in)" fullWidth />
-            </Stack>
-            <Stack direction="row" spacing={1}>
-              <Input placeholder="Body Fat %" fullWidth />
-              <Input placeholder="Target Weight" fullWidth />
-            </Stack>
-            <Stack direction="row" spacing={1}>
-              <Input placeholder="Waist (in)" fullWidth />
-              <Input placeholder="Neck (in)" fullWidth />
-            </Stack>
-            <FormControl variant="standard">
-              <RadioGroup row>
-                <FormControlLabel
-                  value="female"
-                  control={<Radio />}
-                  label="Female"
-                />
-                <FormControlLabel
-                  value="male"
-                  control={<Radio />}
-                  label="Male"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Stack>
-          <Button component={Link} to={`home`} variant="contained">
-            Submit
-          </Button>
-        </Stack>
-      </Box>
-    );
-  };
-
   const SignInDialog = () => {
     const [inputs, setInputs] = useState({
       email: "",
-      pass: "",
+      password: "",
     });
+    const authUser = (inputs) => {
+      console.log(inputs);
+      signIn(inputs)
+        .then((res) => setUser(res))
+        .then(() => setUserSubmit(true));
+    };
 
     return (
       <Box p={2}>
@@ -232,20 +378,28 @@ export const ParentDialog = () => {
             Sign In
           </Typography>
           <Stack spacing={2} justifyContent="center">
-            <Input
-              placeholder="Email Address"
-              onChange={(value) => setInputs({ ...inputs, email: value })}
+            <TextField
+              size="small"
+              label="Email Address"
+              variant="outlined"
+              onChange={(event) =>
+                setInputs({ ...inputs, email: event.target.value })
+              }
             />
-            <Input
-              placeholder="Password"
-              onChange={(value) => setInputs({ ...inputs, pass: value })}
+            <TextField
+              size="small"
+              label="Password"
+              variant="outlined"
+              onChange={(event) =>
+                setInputs({ ...inputs, password: event.target.value })
+              }
             />
           </Stack>
           <Stack spacing={1}>
-            <Button component={Link} to={`home`} variant="contained">
+            <Button variant="contained" onClick={() => authUser(inputs)}>
               Sign In
             </Button>
-            <Button size="small" onClick={() => setView(3)}>
+            <Button size="small" onClick={() => setView(2)}>
               Don't have an account?
             </Button>
           </Stack>
@@ -254,26 +408,28 @@ export const ParentDialog = () => {
     );
   };
 
-  const [view, setView] = useState(1);
+  const view = useDialogStore((state) => state.currentView);
+  const setView = useDialogStore((state) => state.setCurrentView);
   const dialogDisplay = () => {
     switch (view) {
       case 1:
         return <EntryDialog />;
       case 2:
-        return <SignInDialog />;
-      case 3:
         return <SignUpDialog />;
+      case 3:
+        return <ConfirmDialog />;
       case 4:
         return <HealthDialog />;
       case 5:
         return <InfoDialog />;
+      case 6:
+        return <SignInDialog />;
       default:
         return <SignInDialog />;
     }
   };
   return (
-    <Dialog open fullWidth maxWidth="xs">
-      {/* <EntryDialog /> */}
+    <Dialog open={props.open} onClose={handleClose} fullWidth maxWidth="xs">
       {dialogDisplay()}
     </Dialog>
   );
