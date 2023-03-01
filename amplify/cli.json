@@ -57,11 +57,5 @@
       "overrides": true
     }
   },
-<<<<<<< Updated upstream
-  "debug": {
-    "shareProjectConfig": false
-  }
-=======
   "debug": {}
->>>>>>> Stashed changes
 }

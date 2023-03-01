@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-export type AmplifyDependentResourcesAttributes = {}
-=======
 export type AmplifyDependentResourcesAttributes = {
   "auth": {
     "steprxa46f13ad": {
@@ -14,4 +11,3 @@ export type AmplifyDependentResourcesAttributes = {
     }
   }
 }
->>>>>>> Stashed changes
