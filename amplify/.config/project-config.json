@@ -1,4 +1,10 @@
 {
+<<<<<<< Updated upstream
+=======
+  "providers": [
+    "awscloudformation"
+  ],
+>>>>>>> Stashed changes
   "projectName": "steprx",
   "version": "3.1",
   "frontend": "javascript",
@@ -10,8 +16,12 @@
       "BuildCommand": "npm run-script build",
       "StartCommand": "npm run-script start"
     }
+<<<<<<< Updated upstream
   },
   "providers": [
     "awscloudformation"
   ]
+=======
+  }
+>>>>>>> Stashed changes
 }
