@@ -8,7 +8,7 @@ const LandingPage = () => {
   const [open, setOpen] = useState(false);
   const setView = useDialogStore((state) => state.setCurrentView);
   const handleOpen = (button) => {
-    button === "sign in" ? setView(5) : setView(1);
+    button === "sign in" ? setView(6) : setView(1);
     setOpen(true);
   };
   return (

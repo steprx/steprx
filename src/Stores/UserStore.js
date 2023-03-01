@@ -5,7 +5,7 @@ const store = (set) => ({
   currentUser: null,
   userSubmit: false,
   setCurrentUser: (user) => set((state) => ({ currentUser: user })),
-  setUserSubmit: () => set((state) => ({ userSubmit: true })),
+  setUserSubmit: (submit) => set((state) => ({ userSubmit: submit })),
 });
 
 export const useUserStore = create(devtools(store));

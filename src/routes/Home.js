@@ -2,28 +2,22 @@ import {
   Avatar,
   Box,
   Divider,
-  Grid,
   IconButton,
   ListItemIcon,
   Menu,
   MenuItem,
-  Paper,
   Typography,
 } from "@mui/material";
 import { useState } from "react";
 import { AddStepsDialog } from "../components/Dialogs";
-import { Charts } from "../components/Charts";
-import {
-  Addchart,
-  AddCircle,
-  Logout,
-  PersonAdd,
-  Settings,
-} from "@mui/icons-material";
+import { Addchart, AddCircle, Logout, Settings } from "@mui/icons-material";
 import { Link, Outlet } from "react-router-dom";
+import { signOut } from "../utils/auth";
+import { useUserStore } from "../Stores/UserStore";
 
 const Home = () => {
   const [open, setOpen] = useState(false);
+  const setUserSubmit = useUserStore((state) => state.setUserSubmit);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -35,6 +29,10 @@ const Home = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const logout = () => {
+    signOut().then(() => setUserSubmit(false));
+  };
+
   return (
     <Box>
       <Box
@@ -86,7 +84,12 @@ const Home = () => {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            logout();
+          }}
+        >
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

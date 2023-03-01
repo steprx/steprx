@@ -7,7 +7,6 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import reportWebVitals from "./reportWebVitals";
 import { Amplify } from "aws-amplify";
-import config from "./aws-exports";
 import awsconfig from "./aws-exports";
 import App from "./App";
 Amplify.configure(awsconfig);

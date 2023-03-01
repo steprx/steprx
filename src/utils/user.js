@@ -1,5 +1,8 @@
 import { useState } from "react";
 
+//************DEPRECATED*************//
+//********TEST DATA**********//
+
 export const User = () => {
   const [user, setUser] = useState({
     firstName: "",
