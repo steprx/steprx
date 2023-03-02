@@ -83,7 +83,7 @@ export const ParentDialog = (props) => {
     const createUser = (inputs) => {
       signUp(inputs)
         .then((res) => setUser(res))
-        .then(setView(3));
+        .then(() => setView(3));
     };
 
     return (
@@ -154,7 +154,7 @@ export const ParentDialog = (props) => {
     const [code, setCode] = useState(null);
 
     const confirmUser = (code) => {
-      confirmSignUp(currentUser.user.username, code).then(setView(4));
+      confirmSignUp(currentUser.user.username, code).then(() => setView(4));
     };
 
     return (
