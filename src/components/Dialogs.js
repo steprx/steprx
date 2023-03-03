@@ -24,7 +24,6 @@ export const ParentDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
   const setUser = useUserStore((state) => state.setCurrentUser);
   const setUserSubmit = useUserStore((state) => state.setUserSubmit);
-  const setUserAttributes = useUserStore((state) => state.setUserAttributes);
   const handleClose = () => {
     props.handleClose(false);
   };
@@ -155,10 +154,7 @@ export const ParentDialog = (props) => {
     const [code, setCode] = useState(null);
 
     const confirmUser = (code) => {
-      confirmSignUp(currentUser.user.username, code)
-        .then(() => setView(4))
-        .then(() => getUserInfo())
-        .then((res) => setUserAttributes(res.attributes));
+      confirmSignUp(currentUser.user.username, code).then(() => setView(4));
     };
 
     return (

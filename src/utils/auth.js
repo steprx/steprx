@@ -25,7 +25,9 @@ export async function signUp(payload) {
 
 export async function confirmSignUp(username, code) {
   try {
+    console.log("confirming user...");
     await Auth.confirmSignUp(username, code);
+    console.log("user confirmed.");
   } catch (error) {
     console.log("error confirming sign up", error);
   }
