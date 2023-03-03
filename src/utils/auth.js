@@ -42,6 +42,12 @@ export async function signIn(payload) {
   }
 }
 
+export async function getUserInfo() {
+  const user = await Auth.currentAuthenticatedUser();
+  console.log("attributes:", user.attributes);
+  return user;
+}
+
 export async function signOut() {
   console.log("signing out...");
   try {
