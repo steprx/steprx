@@ -4,10 +4,9 @@ import Stats from "../components/Stats";
 import { useUserStore } from "../Stores/UserStore";
 
 const Dashboard = () => {
-  const currentUser = useUserStore((state) => state.currentUser);
-  const { attributes } = currentUser;
-  console.log(attributes);
-  const { given_name } = attributes;
+  const userAttributes = useUserStore((state) => state.userAttributes);
+  console.log(userAttributes);
+  const { given_name } = userAttributes;
   return (
     <Box>
       <Typography variant="h4" align="center">

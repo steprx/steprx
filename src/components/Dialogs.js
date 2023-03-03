@@ -15,7 +15,7 @@ import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { confirmSignUp, signIn, signUp } from "../utils/auth";
+import { confirmSignUp, getUserInfo, signIn, signUp } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useDialogStore } from "../Stores/DialogStore";
 import { putItem } from "../APIs/UserServices";
@@ -24,6 +24,7 @@ export const ParentDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
   const setUser = useUserStore((state) => state.setCurrentUser);
   const setUserSubmit = useUserStore((state) => state.setUserSubmit);
+  const setUserAttributes = useUserStore((state) => state.setUserAttributes);
   const handleClose = () => {
     props.handleClose(false);
   };
@@ -154,7 +155,10 @@ export const ParentDialog = (props) => {
     const [code, setCode] = useState(null);
 
     const confirmUser = (code) => {
-      confirmSignUp(currentUser.user.username, code).then(() => setView(4));
+      confirmSignUp(currentUser.user.username, code)
+        .then(() => setView(4))
+        .then(() => getUserInfo())
+        .then((res) => setUserAttributes(res.attributes));
     };
 
     return (

@@ -1,33 +1,45 @@
 {
   "auth": {
-    "steprxa46f13ad": {
+    "steprxc66d5217": {
       "customAuth": false,
       "dependsOn": [],
-      "frontendAuthConfig": {
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [],
-          "passwordPolicyMinLength": 8
-        },
-        "signupAttributes": [
-          "EMAIL",
-          "FAMILY_NAME",
-          "GIVEN_NAME",
-          "UPDATED_AT"
-        ],
-        "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL"
-        ],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      },
       "providerPlugin": "awscloudformation",
-      "service": "Cognito"
+      "service": "Cognito",
+      "serviceType": "imported"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_auth_steprxc66d5217_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "steprxc66d5217"
+        }
+      ]
+    },
+    "AMPLIFY_auth_steprxc66d5217_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "steprxc66d5217"
+        }
+      ]
+    },
+    "AMPLIFY_auth_steprxc66d5217_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "steprxc66d5217"
+        }
+      ]
+    },
+    "AMPLIFY_auth_steprxc66d5217_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "steprxc66d5217"
+        }
+      ]
     }
   }
 }
