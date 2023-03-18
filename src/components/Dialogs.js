@@ -390,6 +390,7 @@ export const ParentDialog = (props) => {
               size="small"
               label="Password"
               variant="outlined"
+              type="password"
               onChange={(event) =>
                 setInputs({ ...inputs, password: event.target.value })
               }
