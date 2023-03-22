@@ -19,6 +19,7 @@ import { confirmSignUp, getUserInfo, signIn, signUp } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useDialogStore } from "../Stores/DialogStore";
 import { putItem } from "../APIs/UserServices";
+import { useStepCountStore } from "../Stores/StepCountStore";
 
 export const ParentDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
@@ -438,15 +439,23 @@ export const ParentDialog = (props) => {
 
 export const AddStepsDialog = (props) => {
   const [value, setValue] = useState(moment());
-
+  const [inputs, setInputs] = useState({
+    date: moment().format("L"),
+    steps: 0,
+  });
+  const addStepCount = useStepCountStore((state) => state.addCount);
+  const currentCounts = useStepCountStore((state) => state.currentCounts);
   const handleChange = (newValue) => {
     setValue(newValue);
+    setInputs({ date: newValue.format("L") });
   };
-
   const handleClose = () => {
     props.handleClose(false);
   };
-
+  const handleSubmit = () => {
+    addStepCount(inputs);
+    handleClose();
+  };
   return (
     <Dialog open={props.open} fullWidth maxWidth="xs" onClose={handleClose}>
       <Box m={1} p={1}>
@@ -464,10 +473,15 @@ export const AddStepsDialog = (props) => {
                 <TextField fullWidth size="small" {...params} />
               )}
             />
-            <TextField size="small" label="Steps" variant="outlined" />
+            <TextField
+              size="small"
+              label="Steps"
+              variant="outlined"
+              onChange={(event) => setInputs({ steps: event.target.value })}
+            />
           </Stack>
           <Stack spacing={1} direction="row">
-            <Button variant="contained" onClick={() => handleClose()}>
+            <Button variant="contained" onClick={() => handleSubmit()}>
               Submit
             </Button>
             <Button
@@ -477,6 +491,31 @@ export const AddStepsDialog = (props) => {
             >
               Cancel
             </Button>
+          </Stack>
+        </Stack>
+      </Box>
+    </Dialog>
+  );
+};
+
+export const AddWeighInDialog = (props) => {
+  const handleClose = () => {
+    props.handleClose(false);
+  };
+  return (
+    <Dialog open={props.open} fullWidth maxWidth="xs" onClose={handleClose}>
+      <Box p={2}>
+        <Stack justifyContent="center" spacing={2}>
+          <Typography align="center" variant="h6">
+            Sign In
+          </Typography>
+          <Stack spacing={2} justifyContent="center">
+            <TextField size="small" label="Email Address" variant="outlined" />
+            <TextField size="small" label="Password" variant="outlined" />
+          </Stack>
+          <Stack spacing={1}>
+            <Button variant="contained">Sign In</Button>
+            <Button size="small">Don't have an account?</Button>
           </Stack>
         </Stack>
       </Box>
