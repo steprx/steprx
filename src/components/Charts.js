@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { DailyData } from "../utils/user";
+import { DailyData } from "../utils/userOLD";
 
 export const Charts = () => {
   const data = DailyData();

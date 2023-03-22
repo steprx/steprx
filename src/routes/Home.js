@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { AddStepsDialog } from "../components/Dialogs";
+import { AddStepsDialog, AddWeighInDialog } from "../components/Dialogs";
 import { Addchart, AddCircle, Logout, Settings } from "@mui/icons-material";
 import { Link, Outlet } from "react-router-dom";
 import { signOut } from "../utils/auth";
@@ -20,6 +20,10 @@ const Home = () => {
   const setUserSubmit = useUserStore((state) => state.setUserSubmit);
   const handleOpen = () => {
     setOpen(true);
+  };
+  const [dataOpen, setDataOpen] = useState(false);
+  const handleDataOpen = () => {
+    setDataOpen(true);
   };
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
@@ -97,6 +101,10 @@ const Home = () => {
         </MenuItem>
       </Menu>
       <AddStepsDialog open={open} handleClose={() => setOpen(false)} />
+      <AddWeighInDialog
+        open={dataOpen}
+        handleClose={() => setDataOpen(false)}
+      />
       <Outlet />
     </Box>
   );
