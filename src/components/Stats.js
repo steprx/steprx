@@ -1,6 +1,6 @@
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { getItem } from "../APIs/UserServices";
+import { getInfo } from "../APIs/UserServices";
 import { useInfoStore } from "../Stores/InfoStore";
 import { useStepCountStore } from "../Stores/StepCountStore";
 import { useUserStore } from "../Stores/UserStore";
@@ -14,7 +14,7 @@ import {
 const Stats = () => {
   const { sub } = useUserStore((state) => state.userAttributes);
   useEffect(() => {
-    getItem(sub).then((res) => setInfo(res));
+    getInfo(sub).then((res) => setInfo(res));
   }, []);
   const stepCounts = useStepCountStore((state) => state.currentCounts);
   const weights = useWeightStore((state) => state.weights);
