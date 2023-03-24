@@ -10,7 +10,6 @@ const Dashboard = () => {
   const userAttributes = useUserStore((state) => state.userAttributes);
   useEffect(() => {
     getUserInfo().then((res) => setUserAttributes(res.attributes));
-    console.log(userAttributes);
   }, []);
 
   return (

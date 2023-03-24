@@ -1,5 +1,9 @@
 import { Box, Grid, Paper, Typography } from "@mui/material";
+import { useEffect } from "react";
+import { getItem } from "../APIs/UserServices";
+import { useInfoStore } from "../Stores/InfoStore";
 import { useStepCountStore } from "../Stores/StepCountStore";
+import { useUserStore } from "../Stores/UserStore";
 import { useWeightStore } from "../Stores/WeightStore";
 import {
   calcStepGoal,
@@ -8,10 +12,40 @@ import {
 } from "../utils/calculations";
 
 const Stats = () => {
+  const { sub } = useUserStore((state) => state.userAttributes);
+  useEffect(() => {
+    getItem(sub).then((res) => setInfo(res));
+  }, []);
   const stepCounts = useStepCountStore((state) => state.currentCounts);
   const weights = useWeightStore((state) => state.weights);
-  const stepGoal = calcStepGoal();
+  const setAge = useInfoStore((state) => state.setAge);
+  const age = useInfoStore((state) => state.age);
+  const setBodyFat = useInfoStore((state) => state.setBodyFat);
+  const bodyFat = useInfoStore((state) => state.bodyFat);
+  const setGender = useInfoStore((state) => state.setGender);
+  const gender = useInfoStore((state) => state.gender);
+  const setHeight = useInfoStore((state) => state.setHeight);
+  const height = useInfoStore((state) => state.height);
+  const setNeck = useInfoStore((state) => state.setNeck);
+  const neck = useInfoStore((state) => state.neck);
+  const setTargetWeight = useInfoStore((state) => state.setTargetWeight);
+  const targetWeight = useInfoStore((state) => state.targetWeight);
+  const setWaist = useInfoStore((state) => state.setWaist);
+  const waist = useInfoStore((state) => state.waist);
+  const setWeight = useInfoStore((state) => state.setWeight);
+  const weight = useInfoStore((state) => state.weight);
+  const setInfo = (info) => {
+    setAge(info.age);
+    setBodyFat(info.bodyFat);
+    setGender(info.sex);
+    setHeight(info.heightFt);
+    setNeck(info.neck);
+    setTargetWeight(info.targetWeight);
+    setWaist(info.waist);
+    setWeight(info.weight);
+  };
   const totalSteps = calcTotalSteps(stepCounts);
+  const stepGoal = calcStepGoal(gender, weight, bodyFat, targetWeight);
   const weightDiff = calcWeightDiff(weights);
   return (
     <Box m={2} p={1}>
