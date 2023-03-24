@@ -6,11 +6,7 @@ import { useUserStore } from "../Stores/UserStore";
 import { getUserInfo } from "../utils/auth";
 
 const Dashboard = () => {
-  const setUserAttributes = useUserStore((state) => state.setUserAttributes);
   const userAttributes = useUserStore((state) => state.userAttributes);
-  useEffect(() => {
-    getUserInfo().then((res) => setUserAttributes(res.attributes));
-  }, []);
 
   return (
     <Box>

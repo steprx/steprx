@@ -18,12 +18,14 @@ import { Link } from "react-router-dom";
 import { confirmSignUp, getUserInfo, signIn, signUp } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useDialogStore } from "../Stores/DialogStore";
-import { putItem } from "../APIs/UserServices";
+import { putInfo } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
 
 export const ParentDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
   const setUser = useUserStore((state) => state.setCurrentUser);
+  const setUserAttributes = useUserStore((state) => state.setUserAttributes);
+  const userAttributes = useUserStore((state) => state.userAttributes);
   const setUserSubmit = useUserStore((state) => state.setUserSubmit);
   const handleClose = () => {
     props.handleClose(false);
@@ -84,6 +86,8 @@ export const ParentDialog = (props) => {
     const createUser = (inputs) => {
       signUp(inputs)
         .then((res) => setUser(res))
+        .then(() => getUserInfo())
+        .then((res) => setUserAttributes(res.attributes))
         .then(() => setView(3));
     };
 
@@ -192,7 +196,7 @@ export const ParentDialog = (props) => {
       sex: "",
     });
     const handleSubmit = () => {
-      putItem(userSub, inputs);
+      putInfo(userSub, inputs);
       setUserSubmit(true);
     };
 
@@ -365,6 +369,8 @@ export const ParentDialog = (props) => {
     const authUser = (inputs) => {
       signIn(inputs)
         .then((res) => setUser(res))
+        .then(() => getUserInfo())
+        .then((res) => setUserAttributes(res.attributes))
         .then(() => setUserSubmit(true));
     };
 
