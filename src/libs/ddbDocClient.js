@@ -4,7 +4,7 @@ import { ddbClient } from "./ddbClient";
 const marshallOptions = {
   convertEmptyValues: false,
   removeUndefinedValues: true,
-  converClassInstanceToMap: false,
+  convertClassInstanceToMap: false,
 };
 
 const unmarshallOptions = {

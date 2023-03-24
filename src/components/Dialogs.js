@@ -136,7 +136,6 @@ export const ParentDialog = (props) => {
             <Button
               variant="contained"
               onClick={() => {
-                console.log(inputs);
                 createUser(inputs);
               }}
             >
@@ -193,8 +192,6 @@ export const ParentDialog = (props) => {
       sex: "",
     });
     const handleSubmit = () => {
-      console.log(userSub);
-      console.log(inputs);
       putItem(userSub, inputs);
       setUserSubmit(true);
     };
@@ -366,7 +363,6 @@ export const ParentDialog = (props) => {
       password: "",
     });
     const authUser = (inputs) => {
-      console.log(inputs);
       signIn(inputs)
         .then((res) => setUser(res))
         .then(() => setUserSubmit(true));

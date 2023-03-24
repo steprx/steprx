@@ -1,4 +1,4 @@
-import { PutCommand } from "@aws-sdk/lib-dynamodb";
+import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { ddbDocClient } from "../libs/ddbDocClient.js";
 import { useUserStore } from "../Stores/UserStore.js";
 
@@ -21,25 +21,22 @@ export const putItem = async (user, payload) => {
   };
   try {
     const data = await ddbDocClient.send(new PutCommand(params));
-    console.log("Success - item added or updated", data);
   } catch (err) {
     console.log("Error", err);
   }
 };
 // putItem();
 
-// export const getItem = async (payload) => {
-//   const params = {
-//     TableName: "TABLE_NAME",
-//     Key: {
-//       uuid: "VALUE_1",
-//     },
-//   };
-//   try {
-//     const data = await ddbDocClient.send(new GetCommand(params));
-//     console.log("Success :", data.Item);
-//   } catch (err) {
-//     console.log("Error", err);
-//   }
-// };
+export const getItem = async (payload) => {
+  const params = {
+    TableName: "info",
+    Key: { uuid: payload },
+  };
+  try {
+    const data = await ddbDocClient.send(new GetCommand(params));
+    return data.Item;
+  } catch (err) {
+    console.log("Error", err);
+  }
+};
 // getItem();

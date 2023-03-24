@@ -16,7 +16,6 @@ export async function signUp(payload) {
         enabled: true,
       },
     });
-    console.log(user);
     return user;
   } catch (error) {
     console.log("error signing up:", error);
@@ -37,7 +36,6 @@ export async function signIn(payload) {
   console.log("signing in...");
   try {
     const user = await Auth.signIn(payload.email, payload.password);
-    console.log(user);
     return user;
   } catch (error) {
     console.log("error signing in", error);
@@ -46,7 +44,6 @@ export async function signIn(payload) {
 
 export async function getUserInfo() {
   const user = await Auth.currentAuthenticatedUser();
-  console.log("attributes:", user.attributes);
   return user;
 }
 
