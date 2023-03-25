@@ -20,9 +20,11 @@ import { useUserStore } from "../Stores/UserStore";
 import { useDialogStore } from "../Stores/DialogStore";
 import { putInfo } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
+import { validateRegister } from "../utils/validations";
 
 export const ParentDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
+
   const setUser = useUserStore((state) => state.setCurrentUser);
   const setUserAttributes = useUserStore((state) => state.setUserAttributes);
   const userAttributes = useUserStore((state) => state.userAttributes);
@@ -84,12 +86,22 @@ export const ParentDialog = (props) => {
     });
 
     const createUser = (inputs) => {
-      signUp(inputs)
-        .then((res) => setUser(res))
-        .then(() => getUserInfo())
-        .then((res) => setUserAttributes(res.attributes))
-        .then(() => setView(3));
+      validateInputs(inputs)
+        ? signUp(inputs)
+            .then((res) => setUser(res))
+            .then(() => getUserInfo())
+            .then((res) => setUserAttributes(res.attributes))
+            .then(() => setView(3))
+        : console.log("Input error, see validateInputs");
     };
+
+    const validateInputs = (inputs) => {
+      return validateRegister(inputs);
+    };
+
+    // const firstNameRegex = /^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/g;
+    // const lastNameRegex = /^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/g;
+    // const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/g;
 
     return (
       <Box p={2}>
@@ -139,6 +151,16 @@ export const ParentDialog = (props) => {
           <Stack spacing={1}>
             <Button
               variant="contained"
+              // disabled={
+              //   disabled
+              //   // inputs.firstName === "" ||
+              //   // inputs.lastName === "" ||
+              //   // inputs.email === "" ||
+              //   // inputs.password === ""
+              //   // !emailRegex.test(inputs.email) ||
+              //   // !lastNameRegex.test(inputs.lastName) ||
+              //   // !firstNameRegex.test(inputs.firstName)
+              // }
               onClick={() => {
                 createUser(inputs);
               }}
@@ -222,6 +244,7 @@ export const ParentDialog = (props) => {
                 size="small"
                 label="Weight (lbs)"
                 variant="outlined"
+                type="number"
                 fullWidth
                 required
                 onChange={(event) =>
@@ -234,6 +257,7 @@ export const ParentDialog = (props) => {
                 size="small"
                 label="Height (ft)"
                 variant="outlined"
+                type="number"
                 fullWidth
                 required
                 onChange={(event) =>
@@ -244,6 +268,7 @@ export const ParentDialog = (props) => {
                 size="small"
                 label="Height (in)"
                 variant="outlined"
+                type="number"
                 fullWidth
                 required
                 onChange={(event) =>
@@ -256,6 +281,7 @@ export const ParentDialog = (props) => {
                 size="small"
                 label="Body Fat %"
                 variant="outlined"
+                type="number"
                 fullWidth
                 required
                 onChange={(event) =>
@@ -266,6 +292,7 @@ export const ParentDialog = (props) => {
                 size="small"
                 label="Target Weight"
                 variant="outlined"
+                type="number"
                 fullWidth
                 required
                 onChange={(event) =>
@@ -278,6 +305,7 @@ export const ParentDialog = (props) => {
                 size="small"
                 label="Waist (in)"
                 variant="outlined"
+                type="number"
                 fullWidth
                 required
                 onChange={(event) =>
@@ -288,6 +316,7 @@ export const ParentDialog = (props) => {
                 size="small"
                 label="Neck (in)"
                 variant="outlined"
+                type="number"
                 fullWidth
                 required
                 onChange={(event) =>
@@ -315,6 +344,15 @@ export const ParentDialog = (props) => {
           <Button
             component={Link}
             to={`/`}
+            // disabled={
+            //   inputs.age === "" ||
+            //   inputs.weight === "" ||
+            //   inputs.heightFt === "" ||
+            //   inputs.heightIn === "" ||
+            //   inputs.bodyFat === "" ||
+            //   inputs.targetWeight === "" ||
+            //   inputs.sex === ""
+            // }
             variant="contained"
             onClick={() => handleSubmit(inputs)}
           >
@@ -393,7 +431,7 @@ export const ParentDialog = (props) => {
               size="small"
               label="Password"
               variant="outlined"
-              type="password"
+              //type="password"
               onChange={(event) =>
                 setInputs({ ...inputs, password: event.target.value })
               }
