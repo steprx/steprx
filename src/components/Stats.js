@@ -12,10 +12,10 @@ import {
 } from "../utils/calculations";
 
 const Stats = () => {
-  const { sub } = useUserStore((state) => state.userAttributes);
+  const { userSub } = useUserStore((state) => state.currentUser);
   useEffect(() => {
-    getInfo(sub).then((res) => setInfo(res));
-  }, []);
+    getInfo(userSub).then((res) => setInfo(res));
+  });
   const stepCounts = useStepCountStore((state) => state.currentCounts);
   const weights = useWeightStore((state) => state.weights);
   const setAge = useInfoStore((state) => state.setAge);

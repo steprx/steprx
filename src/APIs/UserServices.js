@@ -32,7 +32,9 @@ export const getInfo = async (payload) => {
     Key: { uuid: payload },
   };
   try {
+    console.log("getting info");
     const data = await ddbDocClient.send(new GetCommand(params));
+    console.log(data.Item);
     return data.Item;
   } catch (err) {
     console.log("Error", err);
@@ -40,8 +42,9 @@ export const getInfo = async (payload) => {
 };
 
 export const putSteps = async (user, payload) => {
+  console.log(payload);
   const params = {
-    TableName: "info",
+    TableName: "steps",
     Item: {
       uuid: user,
       date: payload?.date,
@@ -50,6 +53,7 @@ export const putSteps = async (user, payload) => {
   };
   try {
     const data = await ddbDocClient.send(new PutCommand(params));
+    console.log(data);
   } catch (err) {
     console.log("Error", err);
   }
@@ -58,7 +62,7 @@ export const putSteps = async (user, payload) => {
 export const getSteps = async (payload) => {
   const params = {
     TableName: "info",
-    Key: { uuid: payload },
+    Key: { uuid: payload.userSub, date: payload.date },
   };
   try {
     const data = await ddbDocClient.send(new GetCommand(params));

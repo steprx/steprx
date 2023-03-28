@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 import { confirmSignUp, getUserInfo, signIn, signUp } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useDialogStore } from "../Stores/DialogStore";
-import { putInfo } from "../APIs/UserServices";
+import { putInfo, putSteps } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
 
 export const ParentDialog = (props) => {
@@ -86,8 +86,6 @@ export const ParentDialog = (props) => {
     const createUser = (inputs) => {
       signUp(inputs)
         .then((res) => setUser(res))
-        .then(() => getUserInfo())
-        .then((res) => setUserAttributes(res.attributes))
         .then(() => setView(3));
     };
 
@@ -455,8 +453,9 @@ export const AddStepsDialog = (props) => {
     props.handleClose(false);
   };
   const handleSubmit = () => {
-    addStepCount(inputs);
-    handleClose();
+    putSteps(inputs)
+      .then(() => addStepCount(inputs))
+      .then(() => handleClose());
   };
   return (
     <Dialog open={props.open} fullWidth maxWidth="xs" onClose={handleClose}>
