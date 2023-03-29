@@ -44,6 +44,7 @@ export async function signIn(payload) {
 
 export async function getUserInfo() {
   try {
+    console.log("getting current user");
     const user = await Auth.currentAuthenticatedUser();
     return user;
   } catch (error) {

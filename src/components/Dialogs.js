@@ -178,7 +178,7 @@ export const ParentDialog = (props) => {
   };
 
   const HealthDialog = (props) => {
-    const { userSub } = useUserStore((state) => state.currentUser);
+    const { username } = useUserStore((state) => state.currentUser);
     const handleRadioChange = (event) => {
       setInputs({ ...inputs, sex: event.target.value });
     };
@@ -194,7 +194,7 @@ export const ParentDialog = (props) => {
       sex: "",
     });
     const handleSubmit = () => {
-      putInfo(userSub, inputs);
+      putInfo(username, inputs);
       setUserSubmit(true);
     };
 
@@ -367,8 +367,8 @@ export const ParentDialog = (props) => {
     const authUser = (inputs) => {
       signIn(inputs)
         .then((res) => setUser(res))
-        .then(() => getUserInfo())
-        .then((res) => setUserAttributes(res.attributes))
+        // .then(() => getUserInfo())
+        // .then((res) => setUserAttributes(res.attributes))
         .then(() => setUserSubmit(true));
     };
 
@@ -438,22 +438,23 @@ export const ParentDialog = (props) => {
 };
 
 export const AddStepsDialog = (props) => {
+  const { username } = useUserStore((state) => state.currentUser);
+  const today = moment().format("L");
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
-    date: moment().format("L"),
+    date: today,
     steps: 0,
   });
   const addStepCount = useStepCountStore((state) => state.addCount);
-  const currentCounts = useStepCountStore((state) => state.currentCounts);
   const handleChange = (newValue) => {
     setValue(newValue);
-    setInputs({ date: newValue.format("L") });
+    setInputs({ ...inputs, date: newValue.format("L") });
   };
   const handleClose = () => {
     props.handleClose(false);
   };
   const handleSubmit = () => {
-    putSteps(inputs)
+    putSteps(username, inputs)
       .then(() => addStepCount(inputs))
       .then(() => handleClose());
   };
@@ -478,7 +479,9 @@ export const AddStepsDialog = (props) => {
               size="small"
               label="Steps"
               variant="outlined"
-              onChange={(event) => setInputs({ steps: event.target.value })}
+              onChange={(event) =>
+                setInputs({ ...inputs, steps: event.target.value })
+              }
             />
           </Stack>
           <Stack spacing={1} direction="row">
