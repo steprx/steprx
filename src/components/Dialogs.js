@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 import { confirmSignUp, getUserInfo, signIn, signUp } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useDialogStore } from "../Stores/DialogStore";
-import { putInfo } from "../APIs/UserServices";
+import { putInfo, putSteps } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
 import { validateRegister } from "../utils/validations";
 
@@ -86,6 +86,7 @@ export const ParentDialog = (props) => {
     });
 
     const createUser = (inputs) => {
+<<<<<<< HEAD
       validateInputs(inputs)
         ? signUp(inputs)
             .then((res) => setUser(res))
@@ -93,6 +94,11 @@ export const ParentDialog = (props) => {
             .then((res) => setUserAttributes(res.attributes))
             .then(() => setView(3))
         : console.log("Input error, see validateInputs");
+=======
+      signUp(inputs)
+        .then((res) => setUser(res))
+        .then(() => setView(3));
+>>>>>>> a257389175f01e6f575a933987a150ff235ca414
     };
 
     const validateInputs = (inputs) => {
@@ -202,7 +208,7 @@ export const ParentDialog = (props) => {
   };
 
   const HealthDialog = (props) => {
-    const { userSub } = useUserStore((state) => state.currentUser);
+    const { username } = useUserStore((state) => state.currentUser);
     const handleRadioChange = (event) => {
       setInputs({ ...inputs, sex: event.target.value });
     };
@@ -218,7 +224,7 @@ export const ParentDialog = (props) => {
       sex: "",
     });
     const handleSubmit = () => {
-      putInfo(userSub, inputs);
+      putInfo(username, inputs);
       setUserSubmit(true);
     };
 
@@ -407,8 +413,8 @@ export const ParentDialog = (props) => {
     const authUser = (inputs) => {
       signIn(inputs)
         .then((res) => setUser(res))
-        .then(() => getUserInfo())
-        .then((res) => setUserAttributes(res.attributes))
+        // .then(() => getUserInfo())
+        // .then((res) => setUserAttributes(res.attributes))
         .then(() => setUserSubmit(true));
     };
 
@@ -478,23 +484,25 @@ export const ParentDialog = (props) => {
 };
 
 export const AddStepsDialog = (props) => {
+  const { username } = useUserStore((state) => state.currentUser);
+  const today = moment().format("L");
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
-    date: moment().format("L"),
+    date: today,
     steps: 0,
   });
   const addStepCount = useStepCountStore((state) => state.addCount);
-  const currentCounts = useStepCountStore((state) => state.currentCounts);
   const handleChange = (newValue) => {
     setValue(newValue);
-    setInputs({ date: newValue.format("L") });
+    setInputs({ ...inputs, date: newValue.format("L") });
   };
   const handleClose = () => {
     props.handleClose(false);
   };
   const handleSubmit = () => {
-    addStepCount(inputs);
-    handleClose();
+    putSteps(username, inputs)
+      .then(() => addStepCount(inputs))
+      .then(() => handleClose());
   };
   return (
     <Dialog open={props.open} fullWidth maxWidth="xs" onClose={handleClose}>
@@ -517,7 +525,9 @@ export const AddStepsDialog = (props) => {
               size="small"
               label="Steps"
               variant="outlined"
-              onChange={(event) => setInputs({ steps: event.target.value })}
+              onChange={(event) =>
+                setInputs({ ...inputs, steps: event.target.value })
+              }
             />
           </Stack>
           <Stack spacing={1} direction="row">

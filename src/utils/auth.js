@@ -43,8 +43,13 @@ export async function signIn(payload) {
 }
 
 export async function getUserInfo() {
-  const user = await Auth.currentAuthenticatedUser();
-  return user;
+  try {
+    console.log("getting current user");
+    const user = await Auth.currentAuthenticatedUser();
+    return user;
+  } catch (error) {
+    console.log("error getting info", error);
+  }
 }
 
 export async function signOut() {
