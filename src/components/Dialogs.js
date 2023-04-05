@@ -86,28 +86,12 @@ export const ParentDialog = (props) => {
     });
 
     const createUser = (inputs) => {
-<<<<<<< HEAD
-      validateInputs(inputs)
+      validateRegister(inputs)
         ? signUp(inputs)
             .then((res) => setUser(res))
-            .then(() => getUserInfo())
-            .then((res) => setUserAttributes(res.attributes))
             .then(() => setView(3))
         : console.log("Input error, see validateInputs");
-=======
-      signUp(inputs)
-        .then((res) => setUser(res))
-        .then(() => setView(3));
->>>>>>> a257389175f01e6f575a933987a150ff235ca414
     };
-
-    const validateInputs = (inputs) => {
-      return validateRegister(inputs);
-    };
-
-    // const firstNameRegex = /^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/g;
-    // const lastNameRegex = /^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/g;
-    // const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/g;
 
     return (
       <Box p={2}>
@@ -157,16 +141,6 @@ export const ParentDialog = (props) => {
           <Stack spacing={1}>
             <Button
               variant="contained"
-              // disabled={
-              //   disabled
-              //   // inputs.firstName === "" ||
-              //   // inputs.lastName === "" ||
-              //   // inputs.email === "" ||
-              //   // inputs.password === ""
-              //   // !emailRegex.test(inputs.email) ||
-              //   // !lastNameRegex.test(inputs.lastName) ||
-              //   // !firstNameRegex.test(inputs.firstName)
-              // }
               onClick={() => {
                 createUser(inputs);
               }}
@@ -228,6 +202,15 @@ export const ParentDialog = (props) => {
       setUserSubmit(true);
     };
 
+    const [ageError, setAgeError] = useState(false);
+    const [weightError, setWeightError] = useState(false);
+    const [heightFtError, setHeightFtError] = useState(false);
+    const [heightInError, setHeightInError] = useState(false);
+    const [bodyFatError, setBodyFatError] = useState(false);
+    const [targetWeightError, setTargetWeightError] = useState(false);
+    const [waistError, setWaistError] = useState(false);
+    const [neckError, setNeckError] = useState(false);
+
     return (
       <Box p={2}>
         <Stack justifyContent="center" spacing={2}>
@@ -242,92 +225,132 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, age: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, age: value });
+                  setAgeError(!value.match(/^\d{2}$/));
+                }}
+                inputProps={{ pattern: "^d{2}$" }}
+                error={ageError}
+                helperText={ageError ? "Invalid age format. Should be 2 digits." : ""}
               />
+
               <TextField
                 size="small"
                 label="Weight (lbs)"
                 variant="outlined"
-                type="number"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, weight: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, weight: value });
+                  setWeightError(!value.match(/^\d{3}(\.\d{1,2})?$/));
+                }}
+                inputProps={{ pattern: "^d{1,3}(.d{1,2})?$" }}
+                error={weightError}
+                helperText={weightError ? "Invalid weight (lbs) format. Should be 3 Digits with or without decimals." : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
+
               <TextField
                 size="small"
                 label="Height (ft)"
                 variant="outlined"
-                type="number"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, heightFt: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, heightFt: value });
+                  setHeightFtError(!value.match(/^\d{1}$/));
+                }}
+                inputProps={{ pattern: "^d{1}$" }}
+                error={heightFtError}
+                helperText={heightFtError ? "Invalid height (ft) format. Should be 1 Digit." : ""}
               />
+
               <TextField
                 size="small"
                 label="Height (in)"
                 variant="outlined"
-                type="number"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, heightIn: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, heightIn: value });
+                  setHeightInError(!value.match(/^\d{1,2}$/));
+                }}
+                inputProps={{ pattern: "^d{1,2}$" }}
+                error={heightInError}
+                helperText={heightInError ? "Invalid height (in) format. Should be 1 or 2 Digits." : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
               <TextField
                 size="small"
-                label="Body Fat %"
+                label="Body Fat (%)"
                 variant="outlined"
-                type="number"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, bodyFat: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, bodyFat: value });
+                  setBodyFatError(!value.match(/^\d{1,2}(\.\d{1,2})?$/));
+                }}
+                inputProps={{ pattern: "^d{1,2}(.d{1})?$" }}
+                error={bodyFatError}
+                helperText={bodyFatError ? "Invalid body fat (%) format. Should be 1 or 2 digiits with or without decimals." : ""}
               />
+
               <TextField
                 size="small"
-                label="Target Weight"
+                label="Target Weight (lbs)"
                 variant="outlined"
-                type="number"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, targetWeight: event.target.value })
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, targetWeight: value });
+                  setTargetWeightError(!value.match(/^\d{3}(\.\d{1,2})?$/));
+                }}
+                inputProps={{ pattern: "^d{1,3}(.d{1,2})?$" }}
+                error={targetWeightError}
+                helperText={
+                  targetWeightError ? "Invalid target weight format" : ""
                 }
               />
             </Stack>
             <Stack direction="row" spacing={1}>
-              <TextField
-                size="small"
-                label="Waist (in)"
-                variant="outlined"
-                type="number"
-                fullWidth
-                required
-                onChange={(event) =>
-                  setInputs({ ...inputs, waist: event.target.value })
-                }
-              />
               <TextField
                 size="small"
                 label="Neck (in)"
                 variant="outlined"
-                type="number"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, neck: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, neck: value });
+                  setNeckError(!value.match(/^\d{1,2}(\.\d{1,2})?$/));
+                }}
+                inputProps={{ pattern: "^d{1,3}(.d{1,2})?$" }}
+                error={neckError}
+                helperText={neckError ? "Invalid neck (in) format. Should be 1 or 2 decimals with or without decimals." : ""}
+              />
+
+              <TextField
+                size="small"
+                label="Waist (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, waist: value });
+                  setWaistError(!value.match(/^\d{1,2}(\.\d{1,2})?$/));
+                }}
+                inputProps={{ pattern: "^d{1,2}(.d{1,2})?$" }}
+                error={waistError}
+                helperText={waistError ? "Invalid waist (in) format. Should be 1 or 2 decimals with or without decimals." : ""}
               />
             </Stack>
             <FormControl variant="standard" required>
@@ -350,15 +373,6 @@ export const ParentDialog = (props) => {
           <Button
             component={Link}
             to={`/`}
-            // disabled={
-            //   inputs.age === "" ||
-            //   inputs.weight === "" ||
-            //   inputs.heightFt === "" ||
-            //   inputs.heightIn === "" ||
-            //   inputs.bodyFat === "" ||
-            //   inputs.targetWeight === "" ||
-            //   inputs.sex === ""
-            // }
             variant="contained"
             onClick={() => handleSubmit(inputs)}
           >
@@ -413,8 +427,8 @@ export const ParentDialog = (props) => {
     const authUser = (inputs) => {
       signIn(inputs)
         .then((res) => setUser(res))
-        // .then(() => getUserInfo())
-        // .then((res) => setUserAttributes(res.attributes))
+        .then(() => getUserInfo())
+        .then((res) => setUserAttributes(res.attributes))
         .then(() => setUserSubmit(true));
     };
 
@@ -437,7 +451,7 @@ export const ParentDialog = (props) => {
               size="small"
               label="Password"
               variant="outlined"
-              //type="password"
+              type="password"
               onChange={(event) =>
                 setInputs({ ...inputs, password: event.target.value })
               }
