@@ -12,7 +12,7 @@ import {
 } from "../utils/calculations";
 
 const Stats = () => {
-  const { username } = useUserStore((state) => state.currentUser);
+  const { userSub } = useUserStore((state) => state.currentUser);
   const currentUser = useUserStore((state) => state.currentUser);
   const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
   const totalSteps = useStepCountStore((state) => state.totalSteps);
@@ -27,8 +27,8 @@ const Stats = () => {
   const targetWeight = userInfo?.at(0)?.targetWeight.S;
   const stepGoal = calcStepGoal(gender, weight, bodyFat, targetWeight);
   useEffect(() => {
-    getAllInfo(username).then((res) => setUserInfo(res));
-    getAllSteps(username).then((res) => setTotalSteps(calcTotalSteps(res)));
+    getAllInfo(userSub).then((res) => setUserInfo(res));
+    getAllSteps(userSub).then((res) => setTotalSteps(calcTotalSteps(res)));
     setStepGoal(stepGoal);
   }, []);
   const weightDiff = calcWeightDiff(weights);

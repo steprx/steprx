@@ -34,7 +34,7 @@ export const getAllInfo = async (username) => {
     Parameters: [{ S: username }],
   };
   try {
-    console.log("getting user info...");
+    console.log("getting user info...", username);
     const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
     console.log("data: ", data.Items);
     return data.Items;
@@ -82,7 +82,7 @@ export const getAllSteps = async (username) => {
   };
   try {
     const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
-    // console.log(data.Items);
+    console.log(data.Items);
     return data.Items;
   } catch (err) {
     console.log("Error getting all steps", err);

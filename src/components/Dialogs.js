@@ -11,7 +11,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { DesktopDatePicker } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
 import moment from "moment";
 import { Link } from "react-router-dom";
@@ -182,7 +182,7 @@ export const ParentDialog = (props) => {
   };
 
   const HealthDialog = (props) => {
-    const today = moment().format("L");
+    const today = moment().format("l");
     const { userSub } = useUserStore((state) => state.currentUser);
     const [value, setValue] = useState(moment());
     const [birthdate, setBirthdate] = useState(moment());
@@ -210,7 +210,7 @@ export const ParentDialog = (props) => {
       date: today,
     });
     const handleSubmit = () => {
-      // console.log(currentUser, inputs);
+      console.log(currentUser, inputs);
       putInfo(userSub, inputs).catch((err) => alert(err));
       setUserSubmit(true);
     };
@@ -223,9 +223,8 @@ export const ParentDialog = (props) => {
           </Typography>
           <Stack spacing={2} justifyContent="center">
             <Stack direction="row" spacing={1}>
-              <DesktopDatePicker
+              <DatePicker
                 label="Birthdate"
-                inputFormat="MM/DD/YYYY"
                 disableFuture
                 value={birthdate}
                 onChange={handleBirthdateChange}
@@ -327,9 +326,8 @@ export const ParentDialog = (props) => {
                   />
                 </RadioGroup>
               </FormControl>
-              <DesktopDatePicker
+              <DatePicker
                 label="Date"
-                inputFormat="MM/DD/YYYY"
                 disableFuture
                 value={value}
                 onChange={handleChange}
@@ -467,7 +465,7 @@ export const ParentDialog = (props) => {
 
 export const AddStepsDialog = (props) => {
   const { username } = useUserStore((state) => state.currentUser);
-  const today = moment().format("L");
+  const today = moment().format("l");
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
     date: today,
@@ -503,9 +501,8 @@ export const AddStepsDialog = (props) => {
         </Typography>
         <Stack spacing={1} alignItems="center">
           <Stack spacing={1} direction="row">
-            <DesktopDatePicker
+            <DatePicker
               label="Date"
-              inputFormat="MM/DD/YYYY"
               disableFuture
               value={value}
               onChange={handleChange}
