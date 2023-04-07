@@ -12,34 +12,25 @@ import {
 } from "../utils/calculations";
 
 const Stats = () => {
-  const { userSub } = useUserStore((state) => state.currentUser);
+  const { username } = useUserStore((state) => state.currentUser);
   const currentUser = useUserStore((state) => state.currentUser);
-  console.log(userSub);
   const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
   const totalSteps = useStepCountStore((state) => state.totalSteps);
   const weights = useWeightStore((state) => state.weights);
   const userInfo = useUserStore((state) => state.userInfo);
   const setUserInfo = useUserStore((state) => state.setUserInfo);
   const setStepGoal = useStepCountStore((state) => state.setStepGoal);
-  getAllInfo(userSub).then((res) => setUserInfo(res));
-  getAllSteps(userSub).then((res) => setTotalSteps(calcTotalSteps(res)));
-  console.log("useInfo: ", userInfo);
-  const gender = userInfo[0]?.sex.S;
-  const weight = userInfo[0]?.weight.S;
-  const bodyFat = userInfo[0]?.bodyFat.S;
-  const targetWeight = userInfo[0]?.targetWeight.S;
-  setStepGoal(calcStepGoal(gender, weight, bodyFat, targetWeight));
-  // useEffect(() => {
-  //   getAllInfo(userSub).then((res) => setUserInfo(res));
-  //   getAllSteps(userSub).then((res) => setTotalSteps(calcTotalSteps(res)));
-  //   console.log("useEffect: ", userInfo);
-  //   const gender = userInfo[0]?.sex.S;
-  //   const weight = userInfo[0]?.weight.S;
-  //   const bodyFat = userInfo[0]?.bodyFat.S;
-  //   const targetWeight = userInfo[0]?.targetWeight.S;
-  //   setStepGoal(calcStepGoal(gender, weight, bodyFat, targetWeight));
-  // }, []);
-  const stepGoal = useStepCountStore((state) => state.stepGoal);
+  // const stepGoal = useStepCountStore((state) => state.stepGoal);
+  const gender = userInfo?.at(0)?.sex.S;
+  const weight = userInfo?.at(0)?.weight.S;
+  const bodyFat = userInfo?.at(0)?.bodyFat.S;
+  const targetWeight = userInfo?.at(0)?.targetWeight.S;
+  const stepGoal = calcStepGoal(gender, weight, bodyFat, targetWeight);
+  useEffect(() => {
+    getAllInfo(username).then((res) => setUserInfo(res));
+    getAllSteps(username).then((res) => setTotalSteps(calcTotalSteps(res)));
+    setStepGoal(stepGoal);
+  }, []);
   const weightDiff = calcWeightDiff(weights);
   return (
     <Box m={2} p={1}>

@@ -47,7 +47,6 @@ export async function getUserInfo() {
     console.log("getting current user...");
     const user = await Auth.currentAuthenticatedUser();
     const { attributes } = user;
-    console.log(attributes);
     return attributes;
   } catch (error) {
     console.log("error getting info", error);

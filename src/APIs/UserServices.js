@@ -34,8 +34,9 @@ export const getAllInfo = async (username) => {
     Parameters: [{ S: username }],
   };
   try {
+    console.log("getting user info...");
     const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
-    // console.log(data.Items);
+    console.log("data: ", data.Items);
     return data.Items;
   } catch (err) {
     console.log("Error getting all info", err);
