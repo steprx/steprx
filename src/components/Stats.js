@@ -1,6 +1,6 @@
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { getInfo } from "../APIs/UserServices";
+import { getAllInfo, getAllSteps, getInfo } from "../APIs/UserServices";
 import { useInfoStore } from "../Stores/InfoStore";
 import { useStepCountStore } from "../Stores/StepCountStore";
 import { useUserStore } from "../Stores/UserStore";
@@ -12,40 +12,34 @@ import {
 } from "../utils/calculations";
 
 const Stats = () => {
-  const { username } = useUserStore((state) => state.currentUser);
-  const stepCounts = useStepCountStore((state) => state.currentCounts);
+  const { userSub } = useUserStore((state) => state.currentUser);
+  const currentUser = useUserStore((state) => state.currentUser);
+  console.log(userSub);
+  const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
+  const totalSteps = useStepCountStore((state) => state.totalSteps);
   const weights = useWeightStore((state) => state.weights);
-  const setAge = useInfoStore((state) => state.setAge);
-  const age = useInfoStore((state) => state.age);
-  const setBodyFat = useInfoStore((state) => state.setBodyFat);
-  const bodyFat = useInfoStore((state) => state.bodyFat);
-  const setGender = useInfoStore((state) => state.setGender);
-  const gender = useInfoStore((state) => state.gender);
-  const setHeight = useInfoStore((state) => state.setHeight);
-  const height = useInfoStore((state) => state.height);
-  const setNeck = useInfoStore((state) => state.setNeck);
-  const neck = useInfoStore((state) => state.neck);
-  const setTargetWeight = useInfoStore((state) => state.setTargetWeight);
-  const targetWeight = useInfoStore((state) => state.targetWeight);
-  const setWaist = useInfoStore((state) => state.setWaist);
-  const waist = useInfoStore((state) => state.waist);
-  const setWeight = useInfoStore((state) => state.setWeight);
-  const weight = useInfoStore((state) => state.weight);
-  const setInfo = (info) => {
-    setAge(info.age);
-    setBodyFat(info.bodyFat);
-    setGender(info.sex);
-    setHeight(info.heightFt);
-    setNeck(info.neck);
-    setTargetWeight(info.targetWeight);
-    setWaist(info.waist);
-    setWeight(info.weight);
-  };
-  useEffect(() => {
-    getInfo(username).then((res) => setInfo(res));
-  });
-  const totalSteps = calcTotalSteps(stepCounts);
-  const stepGoal = calcStepGoal(gender, weight, bodyFat, targetWeight);
+  const userInfo = useUserStore((state) => state.userInfo);
+  const setUserInfo = useUserStore((state) => state.setUserInfo);
+  const setStepGoal = useStepCountStore((state) => state.setStepGoal);
+  getAllInfo(userSub).then((res) => setUserInfo(res));
+  getAllSteps(userSub).then((res) => setTotalSteps(calcTotalSteps(res)));
+  console.log("useInfo: ", userInfo);
+  const gender = userInfo[0]?.sex.S;
+  const weight = userInfo[0]?.weight.S;
+  const bodyFat = userInfo[0]?.bodyFat.S;
+  const targetWeight = userInfo[0]?.targetWeight.S;
+  setStepGoal(calcStepGoal(gender, weight, bodyFat, targetWeight));
+  // useEffect(() => {
+  //   getAllInfo(userSub).then((res) => setUserInfo(res));
+  //   getAllSteps(userSub).then((res) => setTotalSteps(calcTotalSteps(res)));
+  //   console.log("useEffect: ", userInfo);
+  //   const gender = userInfo[0]?.sex.S;
+  //   const weight = userInfo[0]?.weight.S;
+  //   const bodyFat = userInfo[0]?.bodyFat.S;
+  //   const targetWeight = userInfo[0]?.targetWeight.S;
+  //   setStepGoal(calcStepGoal(gender, weight, bodyFat, targetWeight));
+  // }, []);
+  const stepGoal = useStepCountStore((state) => state.stepGoal);
   const weightDiff = calcWeightDiff(weights);
   return (
     <Box m={2} p={1}>

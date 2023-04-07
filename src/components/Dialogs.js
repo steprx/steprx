@@ -18,8 +18,9 @@ import { Link } from "react-router-dom";
 import { confirmSignUp, getUserInfo, signIn, signUp } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useDialogStore } from "../Stores/DialogStore";
-import { putInfo, putSteps } from "../APIs/UserServices";
+import { getAllSteps, getSteps, putInfo, putSteps } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
+import { calcTotalSteps } from "../utils/calculations";
 
 export const ParentDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
@@ -85,6 +86,7 @@ export const ParentDialog = (props) => {
 
     const createUser = (inputs) => {
       signUp(inputs)
+        .catch((err) => alert(err))
         .then((res) => setUser(res))
         .then(() => setView(3));
     };
@@ -156,7 +158,9 @@ export const ParentDialog = (props) => {
     const [code, setCode] = useState(null);
 
     const confirmUser = (code) => {
-      confirmSignUp(currentUser.user.username, code).then(() => setView(4));
+      confirmSignUp(currentUser.user.username, code)
+        .catch((err) => alert(err))
+        .then(() => setView(4));
     };
 
     return (
@@ -178,12 +182,23 @@ export const ParentDialog = (props) => {
   };
 
   const HealthDialog = (props) => {
-    const { username } = useUserStore((state) => state.currentUser);
+    const today = moment().format("L");
+    const { userSub } = useUserStore((state) => state.currentUser);
+    const [value, setValue] = useState(moment());
+    const [birthdate, setBirthdate] = useState(moment());
+    const handleBirthdateChange = (newValue) => {
+      setBirthdate(newValue);
+      setInputs({ ...inputs, birthdate: newValue.format("l") });
+    };
+    const handleChange = (newValue) => {
+      setValue(newValue);
+      setInputs({ ...inputs, date: newValue.format("l") });
+    };
     const handleRadioChange = (event) => {
       setInputs({ ...inputs, sex: event.target.value });
     };
     const [inputs, setInputs] = useState({
-      age: null,
+      birthdate: today,
       weight: null,
       heightFt: null,
       heightIn: null,
@@ -192,9 +207,11 @@ export const ParentDialog = (props) => {
       waist: null,
       neck: null,
       sex: "",
+      date: today,
     });
     const handleSubmit = () => {
-      putInfo(username, inputs);
+      // console.log(currentUser, inputs);
+      putInfo(userSub, inputs).catch((err) => alert(err));
       setUserSubmit(true);
     };
 
@@ -206,15 +223,15 @@ export const ParentDialog = (props) => {
           </Typography>
           <Stack spacing={2} justifyContent="center">
             <Stack direction="row" spacing={1}>
-              <TextField
-                size="small"
-                label="Age"
-                variant="outlined"
-                fullWidth
-                required
-                onChange={(event) =>
-                  setInputs({ ...inputs, age: event.target.value })
-                }
+              <DesktopDatePicker
+                label="Birthdate"
+                inputFormat="MM/DD/YYYY"
+                disableFuture
+                value={birthdate}
+                onChange={handleBirthdateChange}
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
               />
               <TextField
                 size="small"
@@ -293,22 +310,34 @@ export const ParentDialog = (props) => {
                 }
               />
             </Stack>
-            <FormControl variant="standard" required>
-              <RadioGroup row value={inputs.sex}>
-                <FormControlLabel
-                  value="female"
-                  control={<Radio />}
-                  label="Female"
-                  onChange={handleRadioChange}
-                />
-                <FormControlLabel
-                  value="male"
-                  control={<Radio />}
-                  label="Male"
-                  onChange={handleRadioChange}
-                />
-              </RadioGroup>
-            </FormControl>
+            <Stack direction="row" spacing={1}>
+              <FormControl variant="standard" required>
+                <RadioGroup row value={inputs.sex}>
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Female"
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Male"
+                    onChange={handleRadioChange}
+                  />
+                </RadioGroup>
+              </FormControl>
+              <DesktopDatePicker
+                label="Date"
+                inputFormat="MM/DD/YYYY"
+                disableFuture
+                value={value}
+                onChange={handleChange}
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </Stack>
           </Stack>
           <Button
             component={Link}
@@ -366,9 +395,8 @@ export const ParentDialog = (props) => {
     });
     const authUser = (inputs) => {
       signIn(inputs)
+        .catch((err) => alert(err))
         .then((res) => setUser(res))
-        // .then(() => getUserInfo())
-        // .then((res) => setUserAttributes(res.attributes))
         .then(() => setUserSubmit(true));
     };
 
@@ -446,15 +474,24 @@ export const AddStepsDialog = (props) => {
     steps: 0,
   });
   const addStepCount = useStepCountStore((state) => state.addCount);
+  const totalSteps = useStepCountStore((state) => state.totalSteps);
+  const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
+  const setCountsData = useStepCountStore((state) => state.setCountsData);
   const handleChange = (newValue) => {
     setValue(newValue);
-    setInputs({ ...inputs, date: newValue.format("L") });
+    setInputs({ ...inputs, date: newValue.format("l") });
   };
   const handleClose = () => {
     props.handleClose(false);
   };
   const handleSubmit = () => {
-    putSteps(username, inputs)
+    // console.log(steps);
+    // const totalSteps = steps + inputs.steps;
+    // console.log(steps);
+    putSteps(username, inputs.date, inputs.steps)
+      .then(() => getAllSteps(username))
+      .then((res) => setCountsData(res))
+      .then(() => setTotalSteps(Number(inputs.steps) + totalSteps))
       .then(() => addStepCount(inputs))
       .then(() => handleClose());
   };
@@ -469,6 +506,7 @@ export const AddStepsDialog = (props) => {
             <DesktopDatePicker
               label="Date"
               inputFormat="MM/DD/YYYY"
+              disableFuture
               value={value}
               onChange={handleChange}
               renderInput={(params) => (
