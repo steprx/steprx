@@ -24,7 +24,6 @@ import { validateRegister } from "../utils/validations";
 
 export const ParentDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
-
   const setUser = useUserStore((state) => state.setCurrentUser);
   const setUserAttributes = useUserStore((state) => state.setUserAttributes);
   const userAttributes = useUserStore((state) => state.userAttributes);
@@ -234,7 +233,6 @@ export const ParentDialog = (props) => {
                 error={ageError}
                 helperText={ageError ? "Invalid age format. Should be 2 digits." : ""}
               />
-
               <TextField
                 size="small"
                 label="Weight (lbs)"
@@ -252,7 +250,6 @@ export const ParentDialog = (props) => {
               />
             </Stack>
             <Stack direction="row" spacing={1}>
-
               <TextField
                 size="small"
                 label="Height (ft)"
@@ -268,7 +265,6 @@ export const ParentDialog = (props) => {
                 error={heightFtError}
                 helperText={heightFtError ? "Invalid height (ft) format. Should be 1 Digit." : ""}
               />
-
               <TextField
                 size="small"
                 label="Height (in)"
@@ -301,7 +297,6 @@ export const ParentDialog = (props) => {
                 error={bodyFatError}
                 helperText={bodyFatError ? "Invalid body fat (%) format. Should be 1 or 2 digiits with or without decimals." : ""}
               />
-
               <TextField
                 size="small"
                 label="Target Weight (lbs)"
@@ -336,7 +331,6 @@ export const ParentDialog = (props) => {
                 error={neckError}
                 helperText={neckError ? "Invalid neck (in) format. Should be 1 or 2 decimals with or without decimals." : ""}
               />
-
               <TextField
                 size="small"
                 label="Waist (in)"
@@ -427,8 +421,6 @@ export const ParentDialog = (props) => {
     const authUser = (inputs) => {
       signIn(inputs)
         .then((res) => setUser(res))
-        .then(() => getUserInfo())
-        .then((res) => setUserAttributes(res.attributes))
         .then(() => setUserSubmit(true));
     };
 
