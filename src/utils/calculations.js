@@ -13,14 +13,15 @@ export const calcStepGoal = (gender, weight, bodyFat, targetWeight) => {
   return steps;
 };
 
-export const calcTotalSteps = (stepCounts) => {
-  let totalSteps = parseInt(0);
-  for (let i = 0; i < stepCounts?.length; i++) {
-    totalSteps += parseInt(stepCounts[i].steps);
+export const calcTotalSteps = (steps) => {
+  console.log("calculating total steps...", steps);
+  let totalSteps = 0;
+  for (let i = 0; i < steps?.length; i++) {
+    totalSteps += Number(steps[i].steps.S);
   }
   return totalSteps;
 };
 
 export const calcWeightDiff = (weights) => {
-  console.log(weights);
+  // console.log(weights);
 };

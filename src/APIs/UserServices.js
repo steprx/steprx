@@ -1,14 +1,16 @@
+import { ExecuteStatementCommand } from "@aws-sdk/client-dynamodb";
 import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { ddbDocClient } from "../libs/ddbDocClient.js";
 import { useUserStore } from "../Stores/UserStore.js";
 
-export const putInfo = async (user, payload) => {
+export const putInfo = async (uuid, payload) => {
   // const key = user;
   const params = {
     TableName: "info",
     Item: {
-      uuid: user,
-      age: payload?.age,
+      uuid: uuid,
+      date: payload?.date,
+      birthdate: payload?.birthdate,
       weight: payload?.weight,
       heightFt: payload?.heightFt,
       heightIn: payload?.heightIn,
@@ -26,6 +28,21 @@ export const putInfo = async (user, payload) => {
   }
 };
 
+export const getAllInfo = async (username) => {
+  const params = {
+    Statement: "SELECT * FROM info WHERE uuid=?",
+    Parameters: [{ S: username }],
+  };
+  try {
+    console.log("getting user info...", username);
+    const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
+    console.log("data: ", data.Items);
+    return data.Items;
+  } catch (err) {
+    console.log("Error getting all info", err);
+  }
+};
+
 export const getInfo = async (payload) => {
   const params = {
     TableName: "info",
@@ -40,16 +57,14 @@ export const getInfo = async (payload) => {
   }
 };
 
-export const putSteps = async (user, payload) => {
-  console.log("putting steps", payload);
-  const id = (Date.now() * Math.random()).toFixed(0).toString();
+export const putSteps = async (user, date, steps) => {
+  console.log("putting steps", date, steps);
   const params = {
     TableName: "steps",
     Item: {
       uuid: user,
-      id: id,
-      date: payload?.date,
-      steps: payload?.steps,
+      date: date,
+      steps: steps,
     },
   };
   try {
@@ -60,16 +75,31 @@ export const putSteps = async (user, payload) => {
   }
 };
 
-export const getSteps = async (payload) => {
+export const getAllSteps = async (username) => {
   const params = {
-    TableName: "info",
-    Key: { uuid: payload.username },
+    Statement: "SELECT * FROM steps WHERE uuid=?",
+    Parameters: [{ S: username }],
+  };
+  try {
+    const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
+    console.log(data.Items);
+    return data.Items;
+  } catch (err) {
+    console.log("Error getting all steps", err);
+  }
+};
+
+export const getSteps = async (username, date) => {
+  console.log(date);
+  const params = {
+    TableName: "steps",
+    Key: { uuid: username, date: date },
   };
   try {
     const data = await ddbDocClient.send(new GetCommand(params));
     console.log(data.Item);
     return data.Item;
   } catch (err) {
-    console.log("Error", err);
+    console.log("Error getting steps", err);
   }
 };
