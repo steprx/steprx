@@ -1,5 +1,11 @@
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  BrowserRouter,
+  createBrowserRouter,
+  Route,
+  RouterProvider,
+  Routes,
+} from "react-router-dom";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import ErrorPage from "./errorPage";
 import Dashboard from "./routes/Dashboard";
@@ -8,32 +14,23 @@ import LandingPage from "./routes/Landing";
 import Profile from "./routes/Profile";
 import { create } from "zustand";
 import { useUserStore } from "./Stores/UserStore";
-
-const authRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <LandingPage />,
-    errorElement: <ErrorPage />,
-  },
-]);
-
-const mainRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-    children: [
-      { index: true, element: <Dashboard /> },
-      { path: "profile", element: <Profile /> },
-    ],
-  },
-]);
+import { useEffect } from "react";
+import PrivateRoutes from "./routes/PrivateRoutes";
 
 const App = () => {
-  const userSubmit = useUserStore((state) => state.userSubmit);
-
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <RouterProvider router={userSubmit ? mainRouter : authRouter} />
+      <BrowserRouter>
+        <Routes>
+          <Route element={<PrivateRoutes />}>
+            <Route element={<Home />} path="/" exact>
+              <Route element={<Dashboard />} index />
+              <Route element={<Profile />} path="/profile" />
+            </Route>
+          </Route>
+          <Route element={<LandingPage />} path="/login" />
+        </Routes>
+      </BrowserRouter>
     </LocalizationProvider>
   );
 };
