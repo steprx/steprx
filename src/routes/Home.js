@@ -11,13 +11,33 @@ import {
 import { useState } from "react";
 import { AddStepsDialog, AddWeighInDialog } from "../components/Dialogs";
 import { Addchart, AddCircle, Logout, Settings } from "@mui/icons-material";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { signOut } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
+import { useStepCountStore } from "../Stores/StepCountStore";
+import { useInfoStore } from "../Stores/InfoStore";
+import { useWeightStore } from "../Stores/WeightStore";
+import { useDialogStore } from "../Stores/DialogStore";
 
 const Home = () => {
+  const resetUser = useUserStore((state) => state.reset);
+  const resetSteps = useStepCountStore((state) => state.reset);
+  const resetInfo = useInfoStore((state) => state.reset);
+  const resetWeight = useWeightStore((state) => state.reset);
+  const resetDialogs = useDialogStore((state) => state.reset);
+  const resetStores = () => {
+    resetUser();
+    resetSteps();
+    resetInfo();
+    resetWeight();
+    resetDialogs();
+  };
+  const navigate = useNavigate();
+  const attributes = useUserStore((state) => state.userAttributes);
+  const userInfo = useUserStore((state) => state.userInfo);
+  const user = useUserStore((state) => state.currentUser);
+  console.log("attributes", attributes, "info", userInfo, "user", user);
   const [open, setOpen] = useState(false);
-  const setUserSubmit = useUserStore((state) => state.setUserSubmit);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -33,11 +53,14 @@ const Home = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const logout = () => {
-    signOut().then(() => setUserSubmit(false));
+  const logout = async () => {
+    handleClose();
+    resetStores();
+    console.clear();
+    signOut().then(() => localStorage.clear());
   };
 
-  return (
+  return attributes && userInfo && user ? (
     <Box>
       <Box
         p={2}
@@ -89,9 +112,8 @@ const Home = () => {
           Settings
         </MenuItem>
         <MenuItem
-          onClick={() => {
-            handleClose();
-            logout();
+          onClick={async () => {
+            await logout().then(() => navigate("/login"));
           }}
         >
           <ListItemIcon>
@@ -106,6 +128,10 @@ const Home = () => {
         handleClose={() => setDataOpen(false)}
       />
       <Outlet />
+    </Box>
+  ) : (
+    <Box>
+      <Typography>Loading...</Typography>
     </Box>
   );
 };

@@ -1,24 +1,28 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 
+const initialState = {
+  age: null,
+  gender: null,
+  weight: null,
+  height: null,
+  bodyFat: null,
+  targetWeightLoss: null,
+  waist: null,
+  neck: null,
+};
 const store = (set) => ({
-  age: 0,
-  gender: "male",
-  weight: 0,
-  height: 0,
-  bodyFat: 0,
-  targetWeight: 0,
-  waist: 0,
-  neck: 0,
+  ...initialState,
   setAge: (age) => set((state) => ({ age: age })),
   setGender: (gender) => set((state) => ({ gender: gender })),
   setWeight: (weight) => set((state) => ({ weight: weight })),
   setHeight: (height) => set((state) => ({ height: height })),
   setBodyFat: (bodyFat) => set((state) => ({ bodyFat: bodyFat })),
-  setTargetWeight: (targetWeight) =>
-    set((state) => ({ targetWeight: targetWeight })),
+  setTargetWeight: (targetWeightLoss) =>
+    set((state) => ({ targetWeightLoss: targetWeightLoss })),
   setWaist: (waist) => set((state) => ({ waist: waist })),
   setNeck: (neck) => set((state) => ({ neck: neck })),
+  reset: () => set(initialState),
 });
 
-export const useInfoStore = create(devtools(store));
+export const useInfoStore = create(devtools(persist(store, { name: "info" })));

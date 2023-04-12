@@ -1,7 +1,5 @@
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { useEffect } from "react";
-import { getAllInfo, getAllSteps, getInfo } from "../APIs/UserServices";
-import { useInfoStore } from "../Stores/InfoStore";
 import { useStepCountStore } from "../Stores/StepCountStore";
 import { useUserStore } from "../Stores/UserStore";
 import { useWeightStore } from "../Stores/WeightStore";
@@ -12,27 +10,35 @@ import {
 } from "../utils/calculations";
 
 const Stats = () => {
-  const { userSub } = useUserStore((state) => state.currentUser);
-  const currentUser = useUserStore((state) => state.currentUser);
+  const { sub } = useUserStore((state) => state.userAttributes);
+  const steps = useStepCountStore((state) => state.countsData);
   const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
   const totalSteps = useStepCountStore((state) => state.totalSteps);
   const weights = useWeightStore((state) => state.weights);
-  const userInfo = useUserStore((state) => state.userInfo);
-  const setUserInfo = useUserStore((state) => state.setUserInfo);
   const setStepGoal = useStepCountStore((state) => state.setStepGoal);
-  // const stepGoal = useStepCountStore((state) => state.stepGoal);
-  const gender = userInfo?.at(0)?.sex.S;
-  const weight = userInfo?.at(0)?.weight.S;
-  const bodyFat = userInfo?.at(0)?.bodyFat.S;
-  const targetWeight = userInfo?.at(0)?.targetWeight.S;
-  const stepGoal = calcStepGoal(gender, weight, bodyFat, targetWeight);
+  const stepGoal = useStepCountStore((state) => state.stepGoal);
+  const userInfo = useUserStore((state) => state.userInfo);
+
   useEffect(() => {
-    getAllInfo(userSub).then((res) => setUserInfo(res));
-    getAllSteps(userSub).then((res) => setTotalSteps(calcTotalSteps(res)));
-    setStepGoal(stepGoal);
+    async function getData() {
+      const gender = userInfo?.at(0)?.sex.S;
+      const weight = userInfo?.at(0)?.weight.S;
+      const bodyFat = userInfo?.at(0)?.bodyFat.S;
+      const targetWeightLoss = userInfo?.at(0)?.targetWeightLoss.S;
+      const stepGoal = calcStepGoal(gender, weight, bodyFat, targetWeightLoss);
+      console.log("step goal:", stepGoal);
+      setStepGoal(stepGoal);
+      setTotalSteps(calcTotalSteps(steps));
+    }
+    getData();
   }, []);
   const weightDiff = calcWeightDiff(weights);
-  return (
+  console.log("post useEffect", sub);
+  return !stepGoal ? (
+    <Box>
+      <Typography>Loading...</Typography>
+    </Box>
+  ) : (
     <Box m={2} p={1}>
       <Paper elevation={3} m={2}>
         <Grid container alignItems="center">
@@ -40,13 +46,13 @@ const Stats = () => {
             <Typography align="center" variant="h6">
               Total Steps
             </Typography>
-            {totalSteps === 0 ? (
+            {!totalSteps ? (
               <Typography align="center" variant="body1">
                 Add your steps to see your total step count
               </Typography>
             ) : (
               <Typography align="center" variant="h2">
-                {totalSteps.toFixed(0)}
+                {totalSteps?.toFixed(0)}
               </Typography>
             )}
             <Typography align="center" variant="h5">
@@ -58,7 +64,7 @@ const Stats = () => {
               Daily Step Goal
             </Typography>
             <Typography align="center" variant="h2">
-              {stepGoal.toFixed(0)}
+              {stepGoal?.toFixed(0)}
             </Typography>
             <Typography align="center" variant="h4">
               steps

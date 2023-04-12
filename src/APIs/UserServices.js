@@ -15,7 +15,7 @@ export const putInfo = async (uuid, payload) => {
       heightFt: payload?.heightFt,
       heightIn: payload?.heightIn,
       bodyFat: payload?.bodyFat,
-      targetWeight: payload?.targetWeight,
+      targetWeightLoss: payload?.targetWeightLoss,
       waist: payload?.waist,
       neck: payload?.neck,
       sex: payload?.sex,
@@ -81,6 +81,7 @@ export const getAllSteps = async (username) => {
     Parameters: [{ S: username }],
   };
   try {
+    console.log("getting all steps...", username);
     const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
     console.log(data.Items);
     return data.Items;

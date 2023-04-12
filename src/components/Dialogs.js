@@ -14,18 +14,32 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
 import moment from "moment";
-import { Link } from "react-router-dom";
-import { confirmSignUp, getUserInfo, signIn, signUp } from "../utils/auth";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  confirmSignUp,
+  getSession,
+  getUserInfo,
+  signIn,
+  signUp,
+} from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useDialogStore } from "../Stores/DialogStore";
-import { getAllSteps, getSteps, putInfo, putSteps } from "../APIs/UserServices";
+import {
+  getAllInfo,
+  getAllSteps,
+  putInfo,
+  putSteps,
+} from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
-import { calcTotalSteps } from "../utils/calculations";
 
 export const ParentDialog = (props) => {
+  const navigate = useNavigate();
   const currentUser = useUserStore((state) => state.currentUser);
   const setUser = useUserStore((state) => state.setCurrentUser);
   const setUserAttributes = useUserStore((state) => state.setUserAttributes);
+  const setUserInfo = useUserStore((state) => state.setUserInfo);
+  const setSession = useUserStore((state) => state.setSession);
+  const setCountsData = useStepCountStore((state) => state.setCountsData);
   const userAttributes = useUserStore((state) => state.userAttributes);
   const setUserSubmit = useUserStore((state) => state.setUserSubmit);
   const handleClose = () => {
@@ -203,16 +217,21 @@ export const ParentDialog = (props) => {
       heightFt: null,
       heightIn: null,
       bodyFat: null,
-      targetWeight: null,
+      targetWeightLoss: null,
       waist: null,
       neck: null,
       sex: "",
       date: today,
     });
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
       console.log(currentUser, inputs);
-      putInfo(userSub, inputs).catch((err) => alert(err));
-      setUserSubmit(true);
+      await putInfo(userSub, inputs)
+        .then(() =>
+          getSession().then((res) => localStorage.setItem("token", res))
+        )
+        .then(() => getUserInfo(userSub).then((res) => setUserAttributes(res)))
+        .then(() => getAllInfo(userSub).then((res) => setUserInfo(res)))
+        .catch((err) => alert(err));
     };
 
     return (
@@ -278,12 +297,12 @@ export const ParentDialog = (props) => {
               />
               <TextField
                 size="small"
-                label="Target Weight"
+                label="Target Weight Loss (%)"
                 variant="outlined"
                 fullWidth
                 required
                 onChange={(event) =>
-                  setInputs({ ...inputs, targetWeight: event.target.value })
+                  setInputs({ ...inputs, targetWeightLoss: event.target.value })
                 }
               />
             </Stack>
@@ -327,7 +346,7 @@ export const ParentDialog = (props) => {
                 </RadioGroup>
               </FormControl>
               <DatePicker
-                label="Date"
+                label="Date of Visit"
                 disableFuture
                 value={value}
                 onChange={handleChange}
@@ -341,7 +360,9 @@ export const ParentDialog = (props) => {
             component={Link}
             to={`/`}
             variant="contained"
-            onClick={() => handleSubmit(inputs)}
+            onClick={async () =>
+              await handleSubmit(inputs).then(() => navigate("/"))
+            }
           >
             Submit
           </Button>
@@ -391,11 +412,13 @@ export const ParentDialog = (props) => {
       email: "",
       password: "",
     });
-    const authUser = (inputs) => {
-      signIn(inputs)
-        .catch((err) => alert(err))
-        .then((res) => setUser(res))
-        .then(() => setUserSubmit(true));
+    const authUser = async (inputs) => {
+      const user = await signIn(inputs).catch((err) => alert(err));
+      setUser(user);
+      getSession().then((res) => localStorage.setItem("token", res));
+      getUserInfo().then((res) => setUserAttributes(res));
+      getAllInfo(user.username).then((res) => setUserInfo(res));
+      getAllSteps(user.username).then((res) => setCountsData(res));
     };
 
     return (
@@ -424,7 +447,12 @@ export const ParentDialog = (props) => {
             />
           </Stack>
           <Stack spacing={1}>
-            <Button variant="contained" onClick={() => authUser(inputs)}>
+            <Button
+              variant="contained"
+              onClick={async () =>
+                await authUser(inputs).then(() => navigate("/"))
+              }
+            >
               Sign In
             </Button>
             <Button size="small" onClick={() => setView(2)}>
@@ -483,9 +511,6 @@ export const AddStepsDialog = (props) => {
     props.handleClose(false);
   };
   const handleSubmit = () => {
-    // console.log(steps);
-    // const totalSteps = steps + inputs.steps;
-    // console.log(steps);
     putSteps(username, inputs.date, inputs.steps)
       .then(() => getAllSteps(username))
       .then((res) => setCountsData(res))

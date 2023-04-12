@@ -1,15 +1,16 @@
-export const calcStepGoal = (gender, weight, bodyFat, targetWeight) => {
+export const calcStepGoal = (gender, weight, bodyFat, targetWeightLoss) => {
   const toKg = 0.453592;
-  const wkg = weight * toKg;
-  const fmkg = wkg * (bodyFat / 100);
-  const ffmkg = wkg - fmkg;
-  const targetWkg = targetWeight * toKg;
-  const targetFmkg = targetWkg - ffmkg;
-  const targetBodyFat = (targetFmkg / targetWkg) * 100;
+  const currentWeightKG = weight * toKg;
+  const currentFatMass = currentWeightKG * (bodyFat / 100);
+  const currentFatFreeMass = currentWeightKG - currentFatMass;
+  const targetWeightLossKG = currentWeightKG * (targetWeightLoss / 100);
+  const targetWeightKG = currentWeightKG - targetWeightLossKG;
+  const targetFatMassKG = currentFatMass - targetWeightLossKG;
+  const targetBodyFat = (targetFatMassKG / targetWeightKG) * 100;
   const steps =
     gender === "male"
-      ? (39377.34 / targetBodyFat ** 1.3405) * fmkg
-      : (261425.4 / targetBodyFat ** 1.8797) * fmkg;
+      ? (39377.34 / targetBodyFat ** 1.3405) * currentFatMass
+      : (261425.4 / targetBodyFat ** 1.8797) * currentFatMass;
   return steps;
 };
 

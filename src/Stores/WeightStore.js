@@ -1,10 +1,16 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 
-const store = (set) => ({
+const initialState = {
   weights: [],
+};
+const store = (set) => ({
+  ...initialState,
   addWeight: (weight) =>
     set((state) => ({ weights: [...state.weights, weight] })),
+  reset: () => set(initialState),
 });
 
-export const useWeightStore = create(devtools(store));
+export const useWeightStore = create(
+  devtools(persist(store, { name: "weight" }))
+);
