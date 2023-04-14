@@ -31,6 +31,7 @@ import {
   putSteps,
 } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
+import { calcTotalSteps } from "../utils/calculations";
 
 export const ParentDialog = (props) => {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ export const ParentDialog = (props) => {
   const setUserInfo = useUserStore((state) => state.setUserInfo);
   const setSession = useUserStore((state) => state.setSession);
   const setCountsData = useStepCountStore((state) => state.setCountsData);
+  const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
   const userAttributes = useUserStore((state) => state.userAttributes);
   const setUserSubmit = useUserStore((state) => state.setUserSubmit);
   const handleClose = () => {
@@ -435,7 +437,10 @@ export const ParentDialog = (props) => {
       });
       getUserInfo().then((res) => setUserAttributes(res));
       getAllInfo(user.username).then((res) => setUserInfo(res));
-      getAllSteps(user.username).then((res) => setCountsData(res));
+      getAllSteps(user.username).then((res) => {
+        setTotalSteps(calcTotalSteps(res));
+        setCountsData(res);
+      });
     };
 
     return (

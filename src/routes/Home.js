@@ -55,9 +55,11 @@ const Home = () => {
   };
   const logout = async () => {
     handleClose();
-    resetStores();
-    console.clear();
-    signOut().then(() => localStorage.clear());
+    signOut().then(() => {
+      resetStores();
+      console.clear();
+      localStorage.clear();
+    });
   };
 
   return attributes && userInfo && user ? (
