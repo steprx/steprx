@@ -31,6 +31,7 @@ import {
   putSteps,
 } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
+import { calcTotalSteps } from "../utils/calculations";
 
 export const ParentDialog = (props) => {
   const navigate = useNavigate();
@@ -227,7 +228,12 @@ export const ParentDialog = (props) => {
       console.log(currentUser, inputs);
       await putInfo(userSub, inputs)
         .then(() =>
-          getSession().then((res) => localStorage.setItem("token", res))
+          getSession().then((res) => {
+            localStorage.setItem("token", res);
+            localStorage.setItem("access", res.getAccessToken());
+            localStorage.setItem("id", res.getIdToken());
+            localStorage.setItem("refresh", res.getRefreshToken());
+          })
         )
         .then(() => getUserInfo(userSub).then((res) => setUserAttributes(res)))
         .then(() => getAllInfo(userSub).then((res) => setUserInfo(res)))
@@ -415,7 +421,16 @@ export const ParentDialog = (props) => {
     const authUser = async (inputs) => {
       const user = await signIn(inputs).catch((err) => alert(err));
       setUser(user);
-      getSession().then((res) => localStorage.setItem("token", res));
+      await getSession().then((res) => {
+        localStorage.setItem("token", res);
+        localStorage.setItem("access", res.getAccessToken().jwtToken);
+        localStorage.setItem("id", res.getIdToken().jwtToken);
+        localStorage.setItem("refresh", res.getRefreshToken().getToken());
+        localStorage.setItem(
+          "groups",
+          res.getAccessToken().payload["cognito:groups"]
+        );
+      });
       getUserInfo().then((res) => setUserAttributes(res));
       getAllInfo(user.username).then((res) => setUserInfo(res));
       getAllSteps(user.username).then((res) => setCountsData(res));
@@ -450,7 +465,12 @@ export const ParentDialog = (props) => {
             <Button
               variant="contained"
               onClick={async () =>
-                await authUser(inputs).then(() => navigate("/"))
+                await authUser(inputs).then(() => {
+                  console.log(localStorage.getItem("groups"));
+                  localStorage.getItem("groups") === "admin"
+                    ? navigate("/admin")
+                    : navigate("/");
+                })
               }
             >
               Sign In
@@ -492,7 +512,7 @@ export const ParentDialog = (props) => {
 };
 
 export const AddStepsDialog = (props) => {
-  const { username } = useUserStore((state) => state.currentUser);
+  const { userSub } = useUserStore((state) => state.currentUser);
   const today = moment().format("l");
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
@@ -510,12 +530,14 @@ export const AddStepsDialog = (props) => {
   const handleClose = () => {
     props.handleClose(false);
   };
-  const handleSubmit = () => {
-    putSteps(username, inputs.date, inputs.steps)
-      .then(() => getAllSteps(username))
-      .then((res) => setCountsData(res))
-      .then(() => setTotalSteps(Number(inputs.steps) + totalSteps))
-      .then(() => addStepCount(inputs))
+  const handleSubmit = async () => {
+    await putSteps(userSub, inputs.date, inputs.steps)
+      .then(async () => {
+        const steps = await getAllSteps(userSub);
+        setCountsData(steps);
+        setTotalSteps(calcTotalSteps(steps));
+        addStepCount(inputs);
+      })
       .then(() => handleClose());
   };
   return (

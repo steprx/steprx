@@ -5,14 +5,15 @@ import { useUserStore } from "../Stores/UserStore";
 const Profile = () => {
   const userAttributes = useUserStore((state) => state.userAttributes);
   const name = userAttributes.given_name + " " + userAttributes.family_name;
-  const age = useInfoStore((state) => state.age);
-  const weight = useInfoStore((state) => state.weight);
-  const height = useInfoStore((state) => state.height);
-  const bodyFat = useInfoStore((state) => state.bodyFat);
-  const targetWeightLoss = useInfoStore((state) => state.targetWeightLoss);
-  const sex = useInfoStore((state) => state.gender);
-  const waist = useInfoStore((state) => state.waist);
-  const neck = useInfoStore((state) => state.neck);
+  const userInfo = useUserStore((state) => state.userInfo);
+  const age = "temp";
+  const weight = userInfo?.at(0)?.weight.S;
+  const height = "temp";
+  const bodyFat = userInfo?.at(0)?.bodyFat.S;
+  const targetWeightLoss = userInfo?.at(0)?.targetWeightLoss.S;
+  const sex = userInfo?.at(0)?.sex.S;
+  const waist = userInfo?.at(0)?.waist.S;
+  const neck = userInfo?.at(0)?.neck.S;
   return (
     <Box p={2}>
       <Typography variant="h4" align="center">
