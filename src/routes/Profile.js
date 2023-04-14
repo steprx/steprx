@@ -3,17 +3,17 @@ import { useInfoStore } from "../Stores/InfoStore";
 import { useUserStore } from "../Stores/UserStore";
 
 const Profile = () => {
-  const currentUser = useUserStore((state) => state.currentUser);
   const userAttributes = useUserStore((state) => state.userAttributes);
   const name = userAttributes.given_name + " " + userAttributes.family_name;
-  const age = useInfoStore((state) => state.age);
-  const weight = useInfoStore((state) => state.weight);
-  const height = useInfoStore((state) => state.height);
-  const bodyFat = useInfoStore((state) => state.bodyFat);
-  const targetWeight = useInfoStore((state) => state.targetWeight);
-  const sex = useInfoStore((state) => state.gender);
-  const waist = useInfoStore((state) => state.waist);
-  const neck = useInfoStore((state) => state.neck);
+  const userInfo = useUserStore((state) => state.userInfo);
+  const age = "temp";
+  const weight = userInfo?.at(0)?.weight.S;
+  const height = "temp";
+  const bodyFat = userInfo?.at(0)?.bodyFat.S;
+  const targetWeightLoss = userInfo?.at(0)?.targetWeightLoss.S;
+  const sex = userInfo?.at(0)?.sex.S;
+  const waist = userInfo?.at(0)?.waist.S;
+  const neck = userInfo?.at(0)?.neck.S;
   return (
     <Box p={2}>
       <Typography variant="h4" align="center">
@@ -63,7 +63,7 @@ const Profile = () => {
         <Grid item xs={12} md={6}>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="h5">Target Weight:</Typography>
-            <TextField size="small" disabled defaultValue={targetWeight} />
+            <TextField size="small" disabled defaultValue={targetWeightLoss} />
           </Stack>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -85,68 +85,6 @@ const Profile = () => {
           </Stack>
         </Grid>
       </Grid>
-      {/* <Grid container spacing={2} my={2}>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Name:</Typography>
-            <Typography variant="h5">Test User</Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Email:</Typography>
-            <Typography variant="h5">jdoubled05@gmail.com</Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Age:</Typography>
-            <Typography variant="h5">21</Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Weight:</Typography>
-            <Typography variant="h5">225</Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Height:</Typography>
-            <Typography variant="h5">6' 4"</Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Body Fat Percentage:</Typography>
-            <Typography variant="h5">35%</Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Target Weight:</Typography>
-            <Typography variant="h5">210</Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Sex:</Typography>
-            <Typography variant="h5">Male</Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Waist:</Typography>
-            <Typography variant="h5">38</Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Neck:</Typography>
-            <Typography variant="h5">17</Typography>
-          </Stack>
-        </Grid>
-      </Grid> */}
       <Box display="flex" justifyContent="center" my={2}>
         <Button variant="contained">Save Changes</Button>
         {/* <Button>Edit Profile</Button> */}

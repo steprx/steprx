@@ -1,16 +1,22 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 
-const store = (set) => ({
+const initialState = {
   currentUser: null,
   userInfo: null,
   userAttributes: null,
-  userSubmit: false,
+  // userSubmit: false,
+  session: null,
+};
+const store = (set) => ({
+  ...initialState,
   setCurrentUser: (user) => set((state) => ({ currentUser: user })),
   setUserInfo: (info) => set((state) => ({ userInfo: info })),
   setUserAttributes: (attributes) =>
     set((state) => ({ userAttributes: attributes })),
-  setUserSubmit: (submit) => set((state) => ({ userSubmit: submit })),
+  // setUserSubmit: (submit) => set((state) => ({ userSubmit: submit })),
+  setSession: (session) => set((state) => ({ session: session })),
+  reset: () => set(initialState),
 });
 
-export const useUserStore = create(devtools(store));
+export const useUserStore = create(devtools(persist(store, { name: "user" })));

@@ -1,8 +1,6 @@
 import { Grid, Typography } from "@mui/material";
-import { useEffect } from "react";
 import {
   Bar,
-  BarChart,
   ComposedChart,
   Line,
   LineChart,
@@ -11,29 +9,14 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  getAllInfo,
-  getAllSteps,
-  getInfo,
-  getSteps,
-} from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
 import { useUserStore } from "../Stores/UserStore";
-import { DailyData } from "../utils/userOLD";
 
 export const Charts = () => {
-  const currentCounts = useStepCountStore((state) => state.currentCounts);
-  const addCount = useStepCountStore((state) => state.addCount);
   const stepGoal = useStepCountStore((state) => state.stepGoal);
-  const setUserInfo = useUserStore((state) => state.setUserInfo);
   const userInfo = useUserStore((state) => state.userInfo);
-  const setCountsData = useStepCountStore((state) => state.setCountsData);
   const countsData = useStepCountStore((state) => state.countsData);
-  const { username } = useUserStore((state) => state.currentUser);
-  useEffect(() => {
-    getAllInfo(username).then((res) => setUserInfo(res));
-    getAllSteps(username).then((res) => setCountsData(res));
-  }, []);
+
   const formatWeights = (item) => {
     return {
       date: item.date.S,
@@ -44,7 +27,7 @@ export const Charts = () => {
     return {
       date: item.date.S,
       steps: item.steps.S,
-      stepGoal: stepGoal.toFixed(0),
+      stepGoal: stepGoal?.toFixed(0),
     };
   };
   const formatBodyFats = (item) => {
@@ -56,6 +39,7 @@ export const Charts = () => {
   const weightData = userInfo?.map(formatWeights);
   const stepsData = countsData?.map(formatSteps);
   const bodyFatData = userInfo?.map(formatBodyFats);
+  console.log(stepsData);
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} sm={4}>
@@ -69,7 +53,7 @@ export const Charts = () => {
         </ResponsiveContainer>
       </Grid>
       <Grid item xs={12} sm={4}>
-        {stepsData ? (
+        {stepsData.length !== 0 ? (
           <ResponsiveContainer width="100%" aspect={1}>
             <ComposedChart data={stepsData}>
               <XAxis dataKey="date" padding={{ left: 20, right: 20 }} />

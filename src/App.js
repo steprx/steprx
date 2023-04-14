@@ -1,39 +1,31 @@
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import ErrorPage from "./errorPage";
 import Dashboard from "./routes/Dashboard";
 import Home from "./routes/Home";
 import LandingPage from "./routes/Landing";
 import Profile from "./routes/Profile";
-import { create } from "zustand";
-import { useUserStore } from "./Stores/UserStore";
-
-const authRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <LandingPage />,
-    errorElement: <ErrorPage />,
-  },
-]);
-
-const mainRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-    children: [
-      { index: true, element: <Dashboard /> },
-      { path: "profile", element: <Profile /> },
-    ],
-  },
-]);
+import PrivateRoutes from "./routes/PrivateRoutes";
+import AdminRoutes from "./routes/AdminRoutes";
+import AdminDashboard from "./routes/AdminDashboard";
 
 const App = () => {
-  const userSubmit = useUserStore((state) => state.userSubmit);
-
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
-      <RouterProvider router={userSubmit ? mainRouter : authRouter} />
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AdminRoutes />}>
+            <Route element={<AdminDashboard />} path="/admin" />
+          </Route>
+          <Route element={<PrivateRoutes />}>
+            <Route element={<Home />} path="/" exact>
+              <Route element={<Dashboard />} index />
+              <Route element={<Profile />} path="/profile" />
+            </Route>
+          </Route>
+          <Route element={<LandingPage />} path="/login" />
+        </Routes>
+      </BrowserRouter>
     </LocalizationProvider>
   );
 };

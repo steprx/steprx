@@ -2,15 +2,17 @@ import {
   Avatar,
   Box,
   Divider,
+  Grid,
   IconButton,
   ListItemIcon,
   Menu,
   MenuItem,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddStepsDialog, AddWeighInDialog } from "../components/Dialogs";
 import { Addchart, AddCircle, Logout, Settings } from "@mui/icons-material";
+import { DataGrid } from "@mui/x-data-grid";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { signOut } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
@@ -18,8 +20,10 @@ import { useStepCountStore } from "../Stores/StepCountStore";
 import { useInfoStore } from "../Stores/InfoStore";
 import { useWeightStore } from "../Stores/WeightStore";
 import { useDialogStore } from "../Stores/DialogStore";
+import { getAllData } from "../APIs/AdminServices";
+import ExportExcel from "../utils/excelExport";
 
-const Home = () => {
+const AdminDashboard = () => {
   const resetUser = useUserStore((state) => state.reset);
   const resetSteps = useStepCountStore((state) => state.reset);
   const resetInfo = useInfoStore((state) => state.reset);
@@ -33,10 +37,6 @@ const Home = () => {
     resetDialogs();
   };
   const navigate = useNavigate();
-  const attributes = useUserStore((state) => state.userAttributes);
-  const userInfo = useUserStore((state) => state.userInfo);
-  const user = useUserStore((state) => state.currentUser);
-  console.log("attributes", attributes, "info", userInfo, "user", user);
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -59,8 +59,45 @@ const Home = () => {
     console.clear();
     signOut().then(() => localStorage.clear());
   };
-
-  return attributes && userInfo && user ? (
+  //   const array = [{ id: 1, weight: 222 }];
+  const [array, setArray] = useState([]);
+  useEffect(() => {
+    const formatData = (item) => {
+      const datum = {
+        id: item.uuid?.S,
+        weight: item.weight?.S,
+        bodyFat: item.bodyFat?.S,
+        targetWeightLoss: item.targetWeightLoss?.S,
+        waist: item.waist?.S,
+        neck: item.neck?.S,
+      };
+      console.log(datum);
+      return datum;
+    };
+    const getData = async () => {
+      const data = await getAllData().then((res) => res.map(formatData));
+      setArray(data);
+    };
+    getData();
+  }, []);
+  //   const array = getData().then((res) => res.map(formatData));
+  //   const allData = array?.map(formatData)
+  console.log(array);
+  const columns = [
+    { field: "id", headerName: "ID", width: 50 },
+    { field: "weight", headerName: "Weight", width: 150 },
+    { field: "bodyFat", headerName: "Body Fat %", width: 150 },
+    {
+      field: "targetWeightLoss",
+      headerName: "Target Weight Loss %",
+      width: 150,
+    },
+    { field: "waist", headerName: "Waist", width: 150 },
+    { field: "neck", headerName: "Neck", width: 150 },
+  ];
+  const rows = array;
+  const excel = JSON.stringify(array);
+  return (
     <Box>
       <Box
         p={2}
@@ -70,9 +107,7 @@ const Home = () => {
         justifyContent="space-between"
         sx={{ backgroundColor: "primary.light" }}
       >
-        <IconButton onClick={() => handleOpen()}>
-          <AddCircle sx={{ color: "#ffffff" }} />
-        </IconButton>
+        <ExportExcel excelData={excel} fileName={"Step Data"} />
         <Typography
           component={Link}
           to={`/`}
@@ -81,7 +116,7 @@ const Home = () => {
           variant="h5"
           sx={{ textDecoration: "none" }}
         >
-          stepRx
+          stepRx Admin
         </Typography>
         <Avatar onClick={handleClick} />
       </Box>
@@ -127,13 +162,18 @@ const Home = () => {
         open={dataOpen}
         handleClose={() => setDataOpen(false)}
       />
-      <Outlet />
-    </Box>
-  ) : (
-    <Box>
-      <Typography>Loading...</Typography>
+      <Grid container p={2}>
+        <Grid item xs={12}>
+          <DataGrid
+            sx={{ height: "100%", minHeight: 500 }}
+            rows={rows}
+            columns={columns}
+          />
+        </Grid>
+      </Grid>
+      {/* <Outlet /> */}
     </Box>
   );
 };
 
-export default Home;
+export default AdminDashboard;

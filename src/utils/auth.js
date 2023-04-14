@@ -42,11 +42,23 @@ export async function signIn(payload) {
   }
 }
 
+export async function getSession() {
+  try {
+    console.log("getting user session...");
+    const session = await Auth.currentSession();
+    console.log(session);
+    return session;
+  } catch (error) {
+    console.log("error getting session", error);
+  }
+}
+
 export async function getUserInfo() {
   try {
     console.log("getting current user...");
     const user = await Auth.currentAuthenticatedUser();
     const { attributes } = user;
+    console.log(attributes);
     return attributes;
   } catch (error) {
     console.log("error getting info", error);

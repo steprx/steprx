@@ -14,18 +14,32 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { useState } from "react";
 import moment from "moment";
-import { Link } from "react-router-dom";
-import { confirmSignUp, getUserInfo, signIn, signUp } from "../utils/auth";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  confirmSignUp,
+  getSession,
+  getUserInfo,
+  signIn,
+  signUp,
+} from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useDialogStore } from "../Stores/DialogStore";
-import { getAllSteps, getSteps, putInfo, putSteps } from "../APIs/UserServices";
+import {
+  getAllInfo,
+  getAllSteps,
+  putInfo,
+  putSteps,
+} from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
-import { calcTotalSteps } from "../utils/calculations";
 
 export const ParentDialog = (props) => {
+  const navigate = useNavigate();
   const currentUser = useUserStore((state) => state.currentUser);
   const setUser = useUserStore((state) => state.setCurrentUser);
   const setUserAttributes = useUserStore((state) => state.setUserAttributes);
+  const setUserInfo = useUserStore((state) => state.setUserInfo);
+  const setSession = useUserStore((state) => state.setSession);
+  const setCountsData = useStepCountStore((state) => state.setCountsData);
   const userAttributes = useUserStore((state) => state.userAttributes);
   const setUserSubmit = useUserStore((state) => state.setUserSubmit);
   const handleClose = () => {
@@ -128,12 +142,18 @@ export const ParentDialog = (props) => {
               variant="outlined"
               fullWidth
               required
+<<<<<<< HEAD
               onChange={(event) => {
                 const value = event.target.value;
                 setInputs({ ...inputs, firstName: value });
               }}
               error={firstNameError}
               helperText={firstNameError ? "Enter a valid First Name" : ""}
+=======
+              onChange={(event) =>
+                setInputs({ ...inputs, firstName: event.target.value })
+              }
+>>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
             />
             <TextField
               size="small"
@@ -141,12 +161,18 @@ export const ParentDialog = (props) => {
               variant="outlined"
               fullWidth
               required
+<<<<<<< HEAD
               onChange={(event) => {
                 const value = event.target.value;
                 setInputs({ ...inputs, lastName: value });
               }}
               error={lastNameError}
               helperText={lastNameError ? "Enter a valid Last Name" : ""}
+=======
+              onChange={(event) =>
+                setInputs({ ...inputs, lastName: event.target.value })
+              }
+>>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
             />
             <TextField
               size="small"
@@ -154,12 +180,18 @@ export const ParentDialog = (props) => {
               variant="outlined"
               fullWidth
               required
+<<<<<<< HEAD
               onChange={(event) => {
                 const value = event.target.value;
                 setInputs({ ...inputs, email: value });
               }}
               error={emailError}
               helperText={emailError ? "Enter a valid Email" : ""}
+=======
+              onChange={(event) =>
+                setInputs({ ...inputs, email: event.target.value })
+              }
+>>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
             />
             <TextField
               size="small"
@@ -255,17 +287,31 @@ export const ParentDialog = (props) => {
       heightFt: null,
       heightIn: null,
       bodyFat: null,
-      targetWeight: null,
+      targetWeightLoss: null,
       waist: null,
       neck: null,
       sex: "",
       date: today,
     });
+<<<<<<< HEAD
 
     const handleSubmit = () => {
+=======
+    const handleSubmit = async () => {
+>>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
       console.log(currentUser, inputs);
-      putInfo(userSub, inputs).catch((err) => alert(err));
-      setUserSubmit(true);
+      await putInfo(userSub, inputs)
+        .then(() =>
+          getSession().then((res) => {
+            localStorage.setItem("token", res);
+            localStorage.setItem("access", res.getAccessToken());
+            localStorage.setItem("id", res.getIdToken());
+            localStorage.setItem("refresh", res.getRefreshToken());
+          })
+        )
+        .then(() => getUserInfo(userSub).then((res) => setUserAttributes(res)))
+        .then(() => getAllInfo(userSub).then((res) => setUserInfo(res)))
+        .catch((err) => alert(err));
     };
 
     const [weightError, setWeightError] = useState(false);
@@ -377,6 +423,7 @@ export const ParentDialog = (props) => {
               />
               <TextField
                 size="small"
+<<<<<<< HEAD
                 label="Target % Weight Loss"
                 variant="outlined"
                 fullWidth
@@ -388,6 +435,14 @@ export const ParentDialog = (props) => {
                 error={targetWeightError}
                 helperText={
                   targetWeightError ? "Must be 1 or 2 digits." : ""
+=======
+                label="Target Weight Loss (%)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, targetWeightLoss: event.target.value })
+>>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
                 }
               />
             </Stack>
@@ -437,7 +492,7 @@ export const ParentDialog = (props) => {
                 </RadioGroup>
               </FormControl>
               <DatePicker
-                label="Date"
+                label="Date of Visit"
                 disableFuture
                 value={value}
                 onChange={handleChange}
@@ -451,7 +506,13 @@ export const ParentDialog = (props) => {
             component={Link}
             to={`/`}
             variant="contained"
+<<<<<<< HEAD
            onClick={handleFormSubmission}
+=======
+            onClick={async () =>
+              await handleSubmit(inputs).then(() => navigate("/"))
+            }
+>>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
           >
             Submit
           </Button>
@@ -501,11 +562,22 @@ export const ParentDialog = (props) => {
       email: "",
       password: "",
     });
-    const authUser = (inputs) => {
-      signIn(inputs)
-        .catch((err) => alert(err))
-        .then((res) => setUser(res))
-        .then(() => setUserSubmit(true));
+    const authUser = async (inputs) => {
+      const user = await signIn(inputs).catch((err) => alert(err));
+      setUser(user);
+      await getSession().then((res) => {
+        localStorage.setItem("token", res);
+        localStorage.setItem("access", res.getAccessToken().jwtToken);
+        localStorage.setItem("id", res.getIdToken().jwtToken);
+        localStorage.setItem("refresh", res.getRefreshToken().getToken());
+        localStorage.setItem(
+          "groups",
+          res.getAccessToken().payload["cognito:groups"]
+        );
+      });
+      getUserInfo().then((res) => setUserAttributes(res));
+      getAllInfo(user.username).then((res) => setUserInfo(res));
+      getAllSteps(user.username).then((res) => setCountsData(res));
     };
 
     return (
@@ -534,7 +606,17 @@ export const ParentDialog = (props) => {
             />
           </Stack>
           <Stack spacing={1}>
-            <Button variant="contained" onClick={() => authUser(inputs)}>
+            <Button
+              variant="contained"
+              onClick={async () =>
+                await authUser(inputs).then(() => {
+                  console.log(localStorage.getItem("groups"));
+                  localStorage.getItem("groups") === "admin"
+                    ? navigate("/admin")
+                    : navigate("/");
+                })
+              }
+            >
               Sign In
             </Button>
             <Button size="small" onClick={() => setView(2)}>
@@ -574,7 +656,7 @@ export const ParentDialog = (props) => {
 };
 
 export const AddStepsDialog = (props) => {
-  const { username } = useUserStore((state) => state.currentUser);
+  const { userSub } = useUserStore((state) => state.currentUser);
   const today = moment().format("l");
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
@@ -592,15 +674,14 @@ export const AddStepsDialog = (props) => {
   const handleClose = () => {
     props.handleClose(false);
   };
-  const handleSubmit = () => {
-    // console.log(steps);
-    // const totalSteps = steps + inputs.steps;
-    // console.log(steps);
-    putSteps(username, inputs.date, inputs.steps)
-      .then(() => getAllSteps(username))
-      .then((res) => setCountsData(res))
-      .then(() => setTotalSteps(Number(inputs.steps) + totalSteps))
-      .then(() => addStepCount(inputs))
+  const handleSubmit = async () => {
+    await putSteps(userSub, inputs.date, inputs.steps)
+      .then(async () => {
+        const steps = await getAllSteps(userSub);
+        setCountsData(steps);
+        setTotalSteps(calcTotalSteps(steps));
+        addStepCount(inputs);
+      })
       .then(() => handleClose());
   };
   return (

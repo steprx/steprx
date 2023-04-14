@@ -20,7 +20,7 @@ export const Health = () => {
     weight: 225,
     height: 0,
     bodyFat: 30,
-    targetWeight: 210,
+    targetWeightLoss: 210,
     waist: 0,
     neck: 0,
   });
