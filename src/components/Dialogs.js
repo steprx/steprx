@@ -117,6 +117,7 @@ export const ParentDialog = (props) => {
               label="First Name"
               variant="outlined"
               fullWidth
+              required
               onChange={(event) =>
                 setInputs({ ...inputs, firstName: event.target.value })
               }
@@ -126,6 +127,7 @@ export const ParentDialog = (props) => {
               label="Last Name"
               variant="outlined"
               fullWidth
+              required
               onChange={(event) =>
                 setInputs({ ...inputs, lastName: event.target.value })
               }
@@ -135,6 +137,7 @@ export const ParentDialog = (props) => {
               label="Email Address"
               variant="outlined"
               fullWidth
+              required
               onChange={(event) =>
                 setInputs({ ...inputs, email: event.target.value })
               }
