@@ -31,6 +31,7 @@ import {
   putSteps,
 } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
+import { calcTotalSteps } from "../utils/calculations";
 
 export const ParentDialog = (props) => {
   const navigate = useNavigate();
@@ -142,18 +143,12 @@ export const ParentDialog = (props) => {
               variant="outlined"
               fullWidth
               required
-<<<<<<< HEAD
               onChange={(event) => {
                 const value = event.target.value;
                 setInputs({ ...inputs, firstName: value });
               }}
               error={firstNameError}
               helperText={firstNameError ? "Enter a valid First Name" : ""}
-=======
-              onChange={(event) =>
-                setInputs({ ...inputs, firstName: event.target.value })
-              }
->>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
             />
             <TextField
               size="small"
@@ -161,18 +156,12 @@ export const ParentDialog = (props) => {
               variant="outlined"
               fullWidth
               required
-<<<<<<< HEAD
               onChange={(event) => {
                 const value = event.target.value;
                 setInputs({ ...inputs, lastName: value });
               }}
               error={lastNameError}
               helperText={lastNameError ? "Enter a valid Last Name" : ""}
-=======
-              onChange={(event) =>
-                setInputs({ ...inputs, lastName: event.target.value })
-              }
->>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
             />
             <TextField
               size="small"
@@ -180,18 +169,12 @@ export const ParentDialog = (props) => {
               variant="outlined"
               fullWidth
               required
-<<<<<<< HEAD
               onChange={(event) => {
                 const value = event.target.value;
                 setInputs({ ...inputs, email: value });
               }}
               error={emailError}
               helperText={emailError ? "Enter a valid Email" : ""}
-=======
-              onChange={(event) =>
-                setInputs({ ...inputs, email: event.target.value })
-              }
->>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
             />
             <TextField
               size="small"
@@ -293,12 +276,7 @@ export const ParentDialog = (props) => {
       sex: "",
       date: today,
     });
-<<<<<<< HEAD
-
-    const handleSubmit = () => {
-=======
     const handleSubmit = async () => {
->>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
       console.log(currentUser, inputs);
       await putInfo(userSub, inputs)
         .then(() =>
@@ -416,14 +394,12 @@ export const ParentDialog = (props) => {
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, bodyFat: value });
-                //   setBodyFatError(!value.match(/^\d{1,2}(\.\d{1,2})?$/));
                 }}
                 error={bodyFatError}
                 helperText={bodyFatError ? "Must be 1 or 2 digits." : ""}
               />
               <TextField
                 size="small"
-<<<<<<< HEAD
                 label="Target % Weight Loss"
                 variant="outlined"
                 fullWidth
@@ -435,14 +411,6 @@ export const ParentDialog = (props) => {
                 error={targetWeightError}
                 helperText={
                   targetWeightError ? "Must be 1 or 2 digits." : ""
-=======
-                label="Target Weight Loss (%)"
-                variant="outlined"
-                fullWidth
-                required
-                onChange={(event) =>
-                  setInputs({ ...inputs, targetWeightLoss: event.target.value })
->>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
                 }
               />
             </Stack>
@@ -506,13 +474,9 @@ export const ParentDialog = (props) => {
             component={Link}
             to={`/`}
             variant="contained"
-<<<<<<< HEAD
-           onClick={handleFormSubmission}
-=======
             onClick={async () =>
               await handleSubmit(inputs).then(() => navigate("/"))
             }
->>>>>>> 1ce95bf8c24cc33671e02e2fef35d4a1b1264899
           >
             Submit
           </Button>
