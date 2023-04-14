@@ -91,6 +91,30 @@ export const ParentDialog = (props) => {
         .then(() => setView(3));
     };
 
+    const [firstNameError, setFirstNameError] = useState(false);
+    const [lastNameError, setLastNameError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [passwordConfirmError, setPasswordConfirmError] = useState(false);
+
+    const handleCreateSubmission = () => {
+      let isFirstNameValid = inputs.firstName.match(/^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/);
+      let isLastNameValid = inputs.lastName.match(/^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/);
+      let isEmailValid = inputs.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+      let isPasswordValid = inputs.password.match(/^(?!\s+)(?!.*\s+$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ])[A-Za-z0-9$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ]{8,256}$/);
+      let isPasswordConfirmValid = inputs.password.match(/^(?!\s+)(?!.*\s+$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ])[A-Za-z0-9$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ]{8,256}$/);
+
+      setFirstNameError(!isFirstNameValid);
+      setLastNameError(!isLastNameValid);
+      setEmailError(!isEmailValid);
+      setPasswordError(!isPasswordValid);
+      setPasswordConfirmError(!isPasswordConfirmValid);
+
+      if(isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid && isPasswordConfirmValid) {
+          createUser(inputs);
+      }
+  };
+
     return (
       <Box p={2}>
         <Stack justifyContent="center" spacing={2}>
@@ -103,27 +127,39 @@ export const ParentDialog = (props) => {
               label="First Name"
               variant="outlined"
               fullWidth
-              onChange={(event) =>
-                setInputs({ ...inputs, firstName: event.target.value })
-              }
+              required
+              onChange={(event) => {
+                const value = event.target.value;
+                setInputs({ ...inputs, firstName: value });
+              }}
+              error={firstNameError}
+              helperText={firstNameError ? "Enter a valid First Name" : ""}
             />
             <TextField
               size="small"
               label="Last Name"
               variant="outlined"
               fullWidth
-              onChange={(event) =>
-                setInputs({ ...inputs, lastName: event.target.value })
-              }
+              required
+              onChange={(event) => {
+                const value = event.target.value;
+                setInputs({ ...inputs, lastName: value });
+              }}
+              error={lastNameError}
+              helperText={lastNameError ? "Enter a valid Last Name" : ""}
             />
             <TextField
               size="small"
               label="Email Address"
               variant="outlined"
               fullWidth
-              onChange={(event) =>
-                setInputs({ ...inputs, email: event.target.value })
-              }
+              required
+              onChange={(event) => {
+                const value = event.target.value;
+                setInputs({ ...inputs, email: value });
+              }}
+              error={emailError}
+              helperText={emailError ? "Enter a valid Email" : ""}
             />
             <TextField
               size="small"
@@ -131,17 +167,33 @@ export const ParentDialog = (props) => {
               variant="outlined"
               type="password"
               fullWidth
-              onChange={(event) =>
-                setInputs({ ...inputs, password: event.target.value })
-              }
+              required
+              onChange={(event) => {
+                const value = event.target.value;
+                setInputs({ ...inputs, password: value });
+              }}
+              error={passwordError}
+              helperText={passwordError ? "Enter a valid Password" : ""}
+            />
+            <TextField
+              size="small"
+              label="Confirm Password"
+              variant="outlined"
+              type="password"
+              fullWidth
+              required
+              onChange={(event) => {
+                const value = event.target.value;
+                setInputs({ ...inputs, passwordConfirm: value });
+              }}
+              error={passwordConfirmError}
+              helperText={passwordConfirmError ? "Passwords must match" : ""}
             />
           </Stack>
           <Stack spacing={1}>
             <Button
               variant="contained"
-              onClick={() => {
-                createUser(inputs);
-              }}
+              onClick={handleCreateSubmission}
             >
               Create Account
             </Button>
@@ -209,17 +261,51 @@ export const ParentDialog = (props) => {
       sex: "",
       date: today,
     });
+
     const handleSubmit = () => {
       console.log(currentUser, inputs);
       putInfo(userSub, inputs).catch((err) => alert(err));
       setUserSubmit(true);
     };
 
+    const [weightError, setWeightError] = useState(false);
+    const [heightFtError, setHeightFtError] = useState(false);
+    const [heightInError, setHeightInError] = useState(false);
+    const [bodyFatError, setBodyFatError] = useState(false);
+    const [targetWeightError, setTargetWeightError] = useState(false);
+    const [waistError, setWaistError] = useState(false);
+    const [neckError, setNeckError] = useState(false);
+
+    const handleFormSubmission = () => {
+      let isWeightValid = inputs.weight.match(/^\d{3}(\.\d{1,2})?$/);
+      let isHeightFtValid = inputs.heightFt.match(/^\d{1}$/);
+      let isHeightInValid = inputs.heightIn.match(/^\d{1,2}$/);
+      let isBodyFatValid = inputs.bodyFat.match(/^\d{1,2}(\.\d{1,2})?$/);
+      let isTargetWeightValid = inputs.targetWeight.match(/^\d{1,2}?$/);
+      let isNeckValid = inputs.neck.match(/^\d{1,2}(\.\d{1,2})?$/);
+      let isWaitValid = inputs.waist.match(/^\d{1,2}(\.\d{1,2})?$/);
+  
+      setWeightError(!isWeightValid);
+      setHeightFtError(!isHeightFtValid);
+      setHeightInError(!isHeightInValid);
+      setBodyFatError(!isBodyFatValid);
+      setTargetWeightError(!isTargetWeightValid);
+      setNeckError(!isNeckValid);
+      setWaistError(!isWaitValid);
+  
+      if(isWeightValid && isHeightFtValid && isHeightInValid && isBodyFatValid && isTargetWeightValid && isNeckValid && isWaitValid) {
+          handleSubmit(inputs);
+      }
+  };
+
     return (
       <Box p={2}>
         <Stack justifyContent="center" spacing={2}>
           <Typography align="center" variant="h6">
             Let's get some basic info
+          </Typography>
+          <Typography align="center" variant="h10">
+            *Required field
           </Typography>
           <Stack spacing={2} justifyContent="center">
             <Stack direction="row" spacing={1}>
@@ -238,9 +324,12 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, weight: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, weight: value });
+                }}
+                error={weightError}
+                helperText={weightError ? "Must be 3 digits" : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -250,9 +339,12 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, heightFt: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, heightFt: value });
+                }}
+                error={heightFtError}
+                helperText={heightFtError ? "Must be 1 digit" : ""}
               />
               <TextField
                 size="small"
@@ -260,53 +352,71 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, heightIn: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, heightIn: value });
+                }}
+                error={heightInError}
+                helperText={heightInError ? "Must be 1 or 2 digits." : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
               <TextField
                 size="small"
-                label="Body Fat %"
+                label="Body Fat (%)"
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, bodyFat: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, bodyFat: value });
+                //   setBodyFatError(!value.match(/^\d{1,2}(\.\d{1,2})?$/));
+                }}
+                error={bodyFatError}
+                helperText={bodyFatError ? "Must be 1 or 2 digits." : ""}
               />
               <TextField
                 size="small"
-                label="Target Weight"
+                label="Target % Weight Loss"
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, targetWeight: event.target.value })
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, targetWeight: value });
+               }}
+                error={targetWeightError}
+                helperText={
+                  targetWeightError ? "Must be 1 or 2 digits." : ""
                 }
               />
             </Stack>
             <Stack direction="row" spacing={1}>
-              <TextField
-                size="small"
-                label="Waist (in)"
-                variant="outlined"
-                fullWidth
-                required
-                onChange={(event) =>
-                  setInputs({ ...inputs, waist: event.target.value })
-                }
-              />
               <TextField
                 size="small"
                 label="Neck (in)"
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, neck: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, neck: value });
+                }}
+                error={neckError}
+                helperText={neckError ? "Must be 1 or 2 digits." : ""}
+              />
+              <TextField
+                size="small"
+                label="Waist (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, waist: value });
+                }}
+                error={waistError}
+                helperText={waistError ? "Must be 1 or 2 digits." : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -341,7 +451,7 @@ export const ParentDialog = (props) => {
             component={Link}
             to={`/`}
             variant="contained"
-            onClick={() => handleSubmit(inputs)}
+           onClick={handleFormSubmission}
           >
             Submit
           </Button>
