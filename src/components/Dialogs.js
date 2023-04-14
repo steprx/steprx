@@ -31,7 +31,6 @@ import {
   putSteps,
 } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
-import { calcTotalSteps } from "../utils/calculations";
 
 export const ParentDialog = (props) => {
   const navigate = useNavigate();
