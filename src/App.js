@@ -6,6 +6,13 @@ import {
   RouterProvider,
   Routes,
 } from "react-router-dom";
+import {
+  BrowserRouter,
+  createBrowserRouter,
+  Route,
+  RouterProvider,
+  Routes,
+} from "react-router-dom";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import ErrorPage from "./errorPage";
 import Dashboard from "./routes/Dashboard";
@@ -16,12 +23,17 @@ import { create } from "zustand";
 import { useUserStore } from "./Stores/UserStore";
 import { useEffect } from "react";
 import PrivateRoutes from "./routes/PrivateRoutes";
+import AdminRoutes from "./routes/AdminRoutes";
+import AdminDashboard from "./routes/AdminDashboard";
 
 const App = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <BrowserRouter>
         <Routes>
+          <Route element={<AdminRoutes />}>
+            <Route element={<AdminDashboard />} path="/admin" />
+          </Route>
           <Route element={<PrivateRoutes />}>
             <Route element={<Home />} path="/" exact>
               <Route element={<Dashboard />} index />
