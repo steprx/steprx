@@ -37,6 +37,8 @@ export const ParentDialog = (props) => {
   const navigate = useNavigate();
   const currentUser = useUserStore((state) => state.currentUser);
   const setUser = useUserStore((state) => state.setCurrentUser);
+  const setUuid = useUserStore((state) => state.setUuid);
+  const uuid = useUserStore((state) => state.uuid);
   const setUserAttributes = useUserStore((state) => state.setUserAttributes);
   const setUserInfo = useUserStore((state) => state.setUserInfo);
   const setSession = useUserStore((state) => state.setSession);
@@ -100,10 +102,10 @@ export const ParentDialog = (props) => {
       time: time.getTime(),
     });
 
-    const createUser = (inputs) => {
+    const createUser = async (inputs) => {
       signUp(inputs)
         .catch((err) => alert(err))
-        .then((res) => setUser(res))
+        .then((res) => setUuid(res))
         .then(() => setView(3));
     };
 
@@ -150,6 +152,7 @@ export const ParentDialog = (props) => {
               variant="outlined"
               type="password"
               fullWidth
+              required
               onChange={(event) =>
                 setInputs({ ...inputs, password: event.target.value })
               }
@@ -177,7 +180,9 @@ export const ParentDialog = (props) => {
     const [code, setCode] = useState(null);
 
     const confirmUser = (code) => {
-      confirmSignUp(currentUser.user.username, code)
+      console.log(currentUser);
+      // confirmSignUp(currentUser?.username, code)
+      confirmSignUp(uuid, code)
         .catch((err) => alert(err))
         .then(() => setView(4));
     };
@@ -201,17 +206,18 @@ export const ParentDialog = (props) => {
   };
 
   const HealthDialog = (props) => {
-    const today = moment().format("l");
-    const { userSub } = useUserStore((state) => state.currentUser);
+    const today = Date.parse(moment());
+    // const { username } = useUserStore((state) => state.currentUser);
     const [value, setValue] = useState(moment());
     const [birthdate, setBirthdate] = useState(moment());
     const handleBirthdateChange = (newValue) => {
       setBirthdate(newValue);
-      setInputs({ ...inputs, birthdate: newValue.format("l") });
+      console.log(newValue);
+      setInputs({ ...inputs, birthdate: Date.parse(newValue) });
     };
     const handleChange = (newValue) => {
       setValue(newValue);
-      setInputs({ ...inputs, date: newValue.format("l") });
+      setInputs({ ...inputs, date: Date.parse(newValue) });
     };
     const handleRadioChange = (event) => {
       setInputs({ ...inputs, sex: event.target.value });
@@ -230,7 +236,8 @@ export const ParentDialog = (props) => {
     });
     const handleSubmit = async () => {
       console.log(currentUser, inputs);
-      await putInfo(userSub, inputs)
+      console.log(uuid, inputs);
+      await putInfo(uuid, inputs)
         .then(() =>
           getSession().then((res) => {
             localStorage.setItem("token", res);
@@ -239,8 +246,8 @@ export const ParentDialog = (props) => {
             localStorage.setItem("refresh", res.getRefreshToken());
           })
         )
-        .then(() => getUserInfo(userSub).then((res) => setUserAttributes(res)))
-        .then(() => getAllInfo(userSub).then((res) => setUserInfo(res)))
+        .then(() => getUserInfo(uuid).then((res) => setUserAttributes(res)))
+        .then(() => getAllInfo(uuid).then((res) => setUserInfo(res)))
         .catch((err) => alert(err));
     };
 
@@ -424,7 +431,8 @@ export const ParentDialog = (props) => {
     });
     const authUser = async (inputs) => {
       const user = await signIn(inputs).catch((err) => alert(err));
-      setUser(user);
+      setUuid(user);
+      console.log(user);
       await getSession().then((res) => {
         localStorage.setItem("token", res);
         localStorage.setItem("access", res.getAccessToken().jwtToken);
@@ -436,8 +444,12 @@ export const ParentDialog = (props) => {
         );
       });
       getUserInfo().then((res) => setUserAttributes(res));
-      getAllInfo(user.username).then((res) => setUserInfo(res));
-      getAllSteps(user.username).then((res) => {
+      getAllInfo(user).then((res) => {
+        console.log(res);
+        setUserInfo(res);
+      });
+      getAllSteps(user).then((res) => {
+        console.log(res);
         setTotalSteps(calcTotalSteps(res));
         setCountsData(res);
       });
@@ -519,8 +531,10 @@ export const ParentDialog = (props) => {
 };
 
 export const AddStepsDialog = (props) => {
-  const { userSub } = useUserStore((state) => state.currentUser);
-  const today = moment().format("l");
+  const currentUser = useUserStore((state) => state.currentUser);
+  // const { username } = useUserStore((state) => state.currentUser);
+  const uuid = useUserStore((state) => state.uuid);
+  const today = Date.parse(moment());
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
     date: today,
@@ -532,15 +546,17 @@ export const AddStepsDialog = (props) => {
   const setCountsData = useStepCountStore((state) => state.setCountsData);
   const handleChange = (newValue) => {
     setValue(newValue);
-    setInputs({ ...inputs, date: newValue.format("l") });
+    console.log(Date.parse(moment()));
+    setInputs({ ...inputs, date: Date.parse(newValue) });
   };
   const handleClose = () => {
     props.handleClose(false);
   };
   const handleSubmit = async () => {
-    await putSteps(userSub, inputs.date, inputs.steps)
+    console.log(currentUser);
+    await putSteps(uuid, inputs.date, inputs.steps)
       .then(async () => {
-        const steps = await getAllSteps(userSub);
+        const steps = await getAllSteps(uuid);
         setCountsData(steps);
         setTotalSteps(calcTotalSteps(steps));
         addStepCount(inputs);
@@ -592,6 +608,35 @@ export const AddStepsDialog = (props) => {
 };
 
 export const AddWeighInDialog = (props) => {
+  const today = Date.parse(moment());
+  // const { username } = useUserStore((state) => state.currentUser);
+  const currentUser = useUserStore((state) => state.currentUser);
+  const uuid = useUserStore((state) => state.uuid);
+  const setUserAttributes = useUserStore((state) => state.setUserAttributes);
+  const setUserInfo = useUserStore((state) => state.setUserInfo);
+  const navigate = useNavigate();
+  const [value, setValue] = useState(moment());
+  const handleChange = (newValue) => {
+    setValue(newValue);
+    setInputs({ ...inputs, date: Date.parse(newValue) });
+  };
+  const [inputs, setInputs] = useState({
+    weight: null,
+    heightFt: null,
+    heightIn: null,
+    bodyFat: null,
+    targetWeightLoss: null,
+    waist: null,
+    neck: null,
+    date: today,
+  });
+  const handleSubmit = async () => {
+    console.log(currentUser, inputs);
+    await putInfo(uuid, inputs)
+      .then(() => getUserInfo(uuid).then((res) => setUserAttributes(res)))
+      .then(() => getAllInfo(uuid).then((res) => setUserInfo(res)))
+      .catch((err) => alert(err));
+  };
   const handleClose = () => {
     props.handleClose(false);
   };
@@ -600,16 +645,109 @@ export const AddWeighInDialog = (props) => {
       <Box p={2}>
         <Stack justifyContent="center" spacing={2}>
           <Typography align="center" variant="h6">
-            Sign In
+            Weigh In
           </Typography>
           <Stack spacing={2} justifyContent="center">
-            <TextField size="small" label="Email Address" variant="outlined" />
-            <TextField size="small" label="Password" variant="outlined" />
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Weight (lbs)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, weight: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Height (ft)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, heightFt: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Height (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, heightIn: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Body Fat %"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, bodyFat: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Target Weight Loss (%)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, targetWeightLoss: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Waist (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, waist: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Neck (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, neck: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <DatePicker
+                label="Date of Visit"
+                disableFuture
+                value={value}
+                onChange={handleChange}
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </Stack>
           </Stack>
-          <Stack spacing={1}>
-            <Button variant="contained">Sign In</Button>
-            <Button size="small">Don't have an account?</Button>
-          </Stack>
+          <Button
+            component={Link}
+            to={`/`}
+            variant="contained"
+            onClick={async () =>
+              await handleSubmit(inputs).then(() => navigate("/"))
+            }
+          >
+            Submit
+          </Button>
         </Stack>
       </Box>
     </Dialog>

@@ -21,10 +21,14 @@ const Stats = () => {
 
   useEffect(() => {
     async function getData() {
-      const gender = userInfo?.at(0)?.sex.S;
-      const weight = userInfo?.at(0)?.weight.S;
-      const bodyFat = userInfo?.at(0)?.bodyFat.S;
-      const targetWeightLoss = userInfo?.at(0)?.targetWeightLoss.S;
+      const i = userInfo?.length - 1;
+      console.log(userInfo);
+      console.log(i);
+      console.log(userInfo?.at(i));
+      const gender = userInfo?.at(i)?.sex.S;
+      const weight = userInfo?.at(i)?.weight.S;
+      const bodyFat = userInfo?.at(i)?.bodyFat.S;
+      const targetWeightLoss = userInfo?.at(i)?.targetWeightLoss.S;
       const stepGoal = calcStepGoal(gender, weight, bodyFat, targetWeightLoss);
       console.log("step goal:", stepGoal);
       setStepGoal(stepGoal);

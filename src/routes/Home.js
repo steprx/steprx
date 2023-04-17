@@ -35,8 +35,8 @@ const Home = () => {
   const navigate = useNavigate();
   const attributes = useUserStore((state) => state.userAttributes);
   const userInfo = useUserStore((state) => state.userInfo);
-  const user = useUserStore((state) => state.currentUser);
-  console.log("attributes", attributes, "info", userInfo, "user", user);
+  const uuid = useUserStore((state) => state.uuid);
+  console.log("attributes", attributes, "info", userInfo, "user", uuid);
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -62,7 +62,7 @@ const Home = () => {
     });
   };
 
-  return attributes && userInfo && user ? (
+  return attributes && userInfo && uuid ? (
     <Box>
       <Box
         p={2}
@@ -101,7 +101,12 @@ const Home = () => {
           <Typography mx={1}>Profile</Typography>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            setDataOpen(true);
+            handleClose();
+          }}
+        >
           <ListItemIcon>
             <Addchart fontSize="small" />
           </ListItemIcon>

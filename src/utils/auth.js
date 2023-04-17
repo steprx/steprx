@@ -16,7 +16,8 @@ export async function signUp(payload) {
         enabled: true,
       },
     });
-    return user;
+    console.log(user);
+    return user.userSub;
   } catch (error) {
     console.log("error signing up:", error);
   }
@@ -35,8 +36,8 @@ export async function confirmSignUp(username, code) {
 export async function signIn(payload) {
   console.log("signing in...");
   try {
-    const user = await Auth.signIn(payload.email, payload.password);
-    return user;
+    const { username } = await Auth.signIn(payload.email, payload.password);
+    return username;
   } catch (error) {
     console.log("error signing in", error);
   }

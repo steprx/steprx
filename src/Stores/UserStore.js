@@ -5,7 +5,7 @@ const initialState = {
   currentUser: null,
   userInfo: null,
   userAttributes: null,
-  // userSubmit: false,
+  uuid: null,
   session: null,
 };
 const store = (set) => ({
@@ -14,7 +14,7 @@ const store = (set) => ({
   setUserInfo: (info) => set((state) => ({ userInfo: info })),
   setUserAttributes: (attributes) =>
     set((state) => ({ userAttributes: attributes })),
-  // setUserSubmit: (submit) => set((state) => ({ userSubmit: submit })),
+  setUuid: (uuid) => set((state) => ({ uuid: uuid })),
   setSession: (session) => set((state) => ({ session: session })),
   reset: () => set(initialState),
 });

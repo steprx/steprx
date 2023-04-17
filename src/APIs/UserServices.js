@@ -63,7 +63,7 @@ export const putSteps = async (user, date, steps) => {
     TableName: "steps",
     Item: {
       uuid: user,
-      date: date,
+      date: date.toString(),
       steps: steps,
     },
   };
