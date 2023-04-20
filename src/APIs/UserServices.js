@@ -104,3 +104,42 @@ export const getSteps = async (username, date) => {
     console.log("Error getting steps", err);
   }
 };
+
+export const putWeighIn = async (uuid, payload) => {
+  const params = {
+    TableName: "weigh_ins",
+    Item: {
+      uuid: uuid,
+      date: payload?.date.toString(),
+      birthdate: payload?.birthdate,
+      weight: payload?.weight,
+      heightFt: payload?.heightFt,
+      heightIn: payload?.heightIn,
+      bodyFat: payload?.bodyFat,
+      targetWeightLoss: payload?.targetWeightLoss,
+      waist: payload?.waist,
+      neck: payload?.neck,
+      sex: payload?.sex,
+    },
+  };
+  try {
+    const data = await ddbDocClient.send(new PutCommand(params));
+  } catch (err) {
+    console.log("Error", err);
+  }
+};
+
+export const getAllWeighIns = async (username) => {
+  const params = {
+    Statement: "SELECT * FROM weigh_ins WHERE uuid=?",
+    Parameters: [{ S: username }],
+  };
+  try {
+    console.log("getting user weight ins...", username);
+    const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
+    console.log("data: ", data.Items);
+    return data.Items;
+  } catch (err) {
+    console.log("Error getting all weigh_ins", err);
+  }
+};

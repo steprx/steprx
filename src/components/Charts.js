@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { useStepCountStore } from "../Stores/StepCountStore";
 import { useUserStore } from "../Stores/UserStore";
+import moment from "moment";
 
 export const Charts = () => {
   const stepGoal = useStepCountStore((state) => state.stepGoal);
@@ -19,20 +20,20 @@ export const Charts = () => {
 
   const formatWeights = (item) => {
     return {
-      date: item.date.S,
+      date: moment(Number(item.date.S)).format("l"),
       weight: item.weight.S,
     };
   };
   const formatSteps = (item) => {
     return {
-      date: item.date.S,
+      date: moment(Number(item.date.S)).format("l"),
       steps: item.steps.S,
       stepGoal: stepGoal?.toFixed(0),
     };
   };
   const formatBodyFats = (item) => {
     return {
-      date: item.date.S,
+      date: moment(Number(item.date.S)).format("l"),
       bodyFat: item.bodyFat.S,
     };
   };
@@ -60,7 +61,7 @@ export const Charts = () => {
               <YAxis domain={["auto", "auto"]} />
               <Tooltip />
               <Bar dataKey="steps" fill="#8884d8" />
-              <Line type="basis" dataKey="steps" stroke="#8884d8" />
+              {/* <Line type="basis" dataKey="steps" stroke="#8884d8" /> */}
               <Line dataKey="stepGoal" stroke="#808080" />
             </ComposedChart>
             {/* <LineChart data={data}>

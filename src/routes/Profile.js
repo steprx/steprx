@@ -1,14 +1,18 @@
 import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material";
 import { useInfoStore } from "../Stores/InfoStore";
 import { useUserStore } from "../Stores/UserStore";
+import { calcAge, calcHeight } from "../utils/calculations";
 
 const Profile = () => {
   const userAttributes = useUserStore((state) => state.userAttributes);
   const name = userAttributes.given_name + " " + userAttributes.family_name;
   const userInfo = useUserStore((state) => state.userInfo);
-  const age = "temp";
+  const age = calcAge(userInfo?.at(0)?.birthdate.N);
   const weight = userInfo?.at(0)?.weight.S;
-  const height = "temp";
+  const height = calcHeight(
+    userInfo?.at(0)?.heightFt.S,
+    userInfo?.at(0)?.heightIn.S
+  );
   const bodyFat = userInfo?.at(0)?.bodyFat.S;
   const targetWeightLoss = userInfo?.at(0)?.targetWeightLoss.S;
   const sex = userInfo?.at(0)?.sex.S;
