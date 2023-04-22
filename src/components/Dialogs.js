@@ -27,8 +27,10 @@ import { useDialogStore } from "../Stores/DialogStore";
 import {
   getAllInfo,
   getAllSteps,
+  getAllWeighIns,
   putInfo,
   putSteps,
+  putWeighIn,
 } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
 import { calcTotalSteps } from "../utils/calculations";
@@ -93,20 +95,33 @@ export const ParentDialog = (props) => {
 
   const SignUpDialog = (props) => {
     const time = new Date();
+    const [error, setError] = useState(false);
+    const [helperText, setHelperText] = useState(null);
 
     const [inputs, setInputs] = useState({
       firstName: "",
       lastName: "",
       email: "",
+      username: "",
       password: "",
+      confirm: "",
       time: time.getTime(),
     });
 
     const createUser = async (inputs) => {
-      signUp(inputs)
-        .catch((err) => alert(err))
-        .then((res) => setUuid(res))
-        .then(() => setView(3));
+      if (inputs.password === inputs.confirm) {
+        const user = await signUp(inputs).catch((err) => alert(err));
+        // .then((res) => setUuid(res.userSub))
+        // .then(res=> setUserAttributes(res.user))
+        // .then(() => setView(3));
+        console.log(user, user.userSub, user.user);
+        setUuid(user.userSub);
+        setUser(user.user);
+        setView(3);
+      } else {
+        setError(true);
+        setHelperText("Passwords dont match");
+      }
     };
 
     return (
@@ -116,47 +131,76 @@ export const ParentDialog = (props) => {
             Create an Account
           </Typography>
           <Stack spacing={2} justifyContent="center">
-            <TextField
-              size="small"
-              label="First Name"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(event) =>
-                setInputs({ ...inputs, firstName: event.target.value })
-              }
-            />
-            <TextField
-              size="small"
-              label="Last Name"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(event) =>
-                setInputs({ ...inputs, lastName: event.target.value })
-              }
-            />
-            <TextField
-              size="small"
-              label="Email Address"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(event) =>
-                setInputs({ ...inputs, email: event.target.value })
-              }
-            />
-            <TextField
-              size="small"
-              label="Password"
-              variant="outlined"
-              type="password"
-              fullWidth
-              required
-              onChange={(event) =>
-                setInputs({ ...inputs, password: event.target.value })
-              }
-            />
+            <Stack spacing={1} direction="row">
+              <TextField
+                size="small"
+                label="First Name"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, firstName: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Last Name"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, lastName: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack spacing={1} direction="row">
+              <TextField
+                size="small"
+                label="Email Address"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, email: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Username"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, username: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack spacing={1} direction="row">
+              <TextField
+                size="small"
+                label="Password"
+                variant="outlined"
+                type="password"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, password: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Confirm Password"
+                variant="outlined"
+                type="password"
+                fullWidth
+                required
+                error={error}
+                helperText={helperText}
+                onChange={(event) =>
+                  setInputs({ ...inputs, confirm: event.target.value })
+                }
+              />
+            </Stack>
           </Stack>
           <Stack spacing={1}>
             <Button
@@ -181,8 +225,7 @@ export const ParentDialog = (props) => {
 
     const confirmUser = (code) => {
       console.log(currentUser);
-      // confirmSignUp(currentUser?.username, code)
-      confirmSignUp(uuid, code)
+      confirmSignUp(currentUser?.username, code)
         .catch((err) => alert(err))
         .then(() => setView(4));
     };
@@ -285,7 +328,6 @@ export const ParentDialog = (props) => {
                 label="Height (ft)"
                 variant="outlined"
                 fullWidth
-                required
                 onChange={(event) =>
                   setInputs({ ...inputs, heightFt: event.target.value })
                 }
@@ -295,7 +337,6 @@ export const ParentDialog = (props) => {
                 label="Height (in)"
                 variant="outlined"
                 fullWidth
-                required
                 onChange={(event) =>
                   setInputs({ ...inputs, heightIn: event.target.value })
                 }
@@ -329,7 +370,6 @@ export const ParentDialog = (props) => {
                 label="Waist (in)"
                 variant="outlined"
                 fullWidth
-                required
                 onChange={(event) =>
                   setInputs({ ...inputs, waist: event.target.value })
                 }
@@ -339,7 +379,6 @@ export const ParentDialog = (props) => {
                 label="Neck (in)"
                 variant="outlined"
                 fullWidth
-                required
                 onChange={(event) =>
                   setInputs({ ...inputs, neck: event.target.value })
                 }
@@ -396,9 +435,9 @@ export const ParentDialog = (props) => {
       <Box p={2}>
         <Stack spacing={2}>
           <Typography align="center">
-            The research being used for this program has not yet been done to
-            include anyone outside of this age range. You are more than welcome
-            to still utilize the service, however, results may vary.
+            The research study does not include those who are outside of this
+            age range at this time. You are more than welcome to still utilize
+            this service; however, results may vary.
           </Typography>
           <Stack direction="row" spacing={1} justifyContent="center">
             <Button
@@ -547,6 +586,7 @@ export const AddStepsDialog = (props) => {
   const handleChange = (newValue) => {
     setValue(newValue);
     console.log(Date.parse(moment()));
+    console.log(moment(1681704731000).format("l"));
     setInputs({ ...inputs, date: Date.parse(newValue) });
   };
   const handleClose = () => {
@@ -632,10 +672,11 @@ export const AddWeighInDialog = (props) => {
   });
   const handleSubmit = async () => {
     console.log(currentUser, inputs);
-    await putInfo(uuid, inputs)
+    await putWeighIn(uuid, inputs)
       .then(() => getUserInfo(uuid).then((res) => setUserAttributes(res)))
-      .then(() => getAllInfo(uuid).then((res) => setUserInfo(res)))
-      .catch((err) => alert(err));
+      .then(() => getAllWeighIns(uuid).then((res) => setUserInfo(res)))
+      .catch((err) => alert(err))
+      .then(() => handleClose());
   };
   const handleClose = () => {
     props.handleClose(false);

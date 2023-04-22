@@ -4,7 +4,7 @@ export async function signUp(payload) {
   console.log("creating user...");
   try {
     const user = await Auth.signUp({
-      username: payload.email,
+      username: payload.username,
       password: payload.password,
       attributes: {
         email: payload.email,
@@ -17,7 +17,7 @@ export async function signUp(payload) {
       },
     });
     console.log(user);
-    return user.userSub;
+    return user;
   } catch (error) {
     console.log("error signing up:", error);
   }

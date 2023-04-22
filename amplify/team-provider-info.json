@@ -13,11 +13,11 @@
     },
     "categories": {
       "auth": {
-        "steprxc66d5217": {
-          "userPoolId": "us-east-1_Bs0e3Aq8k",
+        "steprxb088608a": {
+          "userPoolId": "us-east-1_nVAnayHkh",
           "userPoolName": "users",
-          "webClientId": "t9fvbtptpg0qsb9hi8jng66q4",
-          "nativeClientId": "t9fvbtptpg0qsb9hi8jng66q4"
+          "webClientId": "162h1oov1nc8i4amtdu7nbk63a",
+          "nativeClientId": "162h1oov1nc8i4amtdu7nbk63a"
         }
       }
     }
