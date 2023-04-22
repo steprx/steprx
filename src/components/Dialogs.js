@@ -110,10 +110,14 @@ export const ParentDialog = (props) => {
 
     const createUser = async (inputs) => {
       if (inputs.password === inputs.confirm) {
-        signUp(inputs)
-          .catch((err) => alert(err))
-          .then((res) => setUuid(res))
-          .then(() => setView(3));
+        const user = await signUp(inputs).catch((err) => alert(err));
+        // .then((res) => setUuid(res.userSub))
+        // .then(res=> setUserAttributes(res.user))
+        // .then(() => setView(3));
+        console.log(user, user.userSub, user.user);
+        setUuid(user.userSub);
+        setUser(user.user);
+        setView(3);
       } else {
         setError(true);
         setHelperText("Passwords dont match");
@@ -127,70 +131,76 @@ export const ParentDialog = (props) => {
             Create an Account
           </Typography>
           <Stack spacing={2} justifyContent="center">
-            <TextField
-              size="small"
-              label="First Name"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(event) =>
-                setInputs({ ...inputs, firstName: event.target.value })
-              }
-            />
-            <TextField
-              size="small"
-              label="Last Name"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(event) =>
-                setInputs({ ...inputs, lastName: event.target.value })
-              }
-            />
-            <TextField
-              size="small"
-              label="Email Address"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(event) =>
-                setInputs({ ...inputs, email: event.target.value })
-              }
-            />
-            <TextField
-              size="small"
-              label="Username"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(event) =>
-                setInputs({ ...inputs, username: event.target.value })
-              }
-            />
-            <TextField
-              size="small"
-              label="Password"
-              variant="outlined"
-              type="password"
-              fullWidth
-              required
-              onChange={(event) =>
-                setInputs({ ...inputs, password: event.target.value })
-              }
-            />
-            <TextField
-              size="small"
-              label="Confirm Password"
-              variant="outlined"
-              type="password"
-              fullWidth
-              required
-              error={error}
-              helperText={helperText}
-              onChange={(event) =>
-                setInputs({ ...inputs, confirm: event.target.value })
-              }
-            />
+            <Stack spacing={1} direction="row">
+              <TextField
+                size="small"
+                label="First Name"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, firstName: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Last Name"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, lastName: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack spacing={1} direction="row">
+              <TextField
+                size="small"
+                label="Email Address"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, email: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Username"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, username: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack spacing={1} direction="row">
+              <TextField
+                size="small"
+                label="Password"
+                variant="outlined"
+                type="password"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, password: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Confirm Password"
+                variant="outlined"
+                type="password"
+                fullWidth
+                required
+                error={error}
+                helperText={helperText}
+                onChange={(event) =>
+                  setInputs({ ...inputs, confirm: event.target.value })
+                }
+              />
+            </Stack>
           </Stack>
           <Stack spacing={1}>
             <Button
@@ -215,8 +225,7 @@ export const ParentDialog = (props) => {
 
     const confirmUser = (code) => {
       console.log(currentUser);
-      // confirmSignUp(currentUser?.username, code)
-      confirmSignUp(uuid, code)
+      confirmSignUp(currentUser?.username, code)
         .catch((err) => alert(err))
         .then(() => setView(4));
     };
@@ -319,7 +328,6 @@ export const ParentDialog = (props) => {
                 label="Height (ft)"
                 variant="outlined"
                 fullWidth
-                required
                 onChange={(event) =>
                   setInputs({ ...inputs, heightFt: event.target.value })
                 }
@@ -329,7 +337,6 @@ export const ParentDialog = (props) => {
                 label="Height (in)"
                 variant="outlined"
                 fullWidth
-                required
                 onChange={(event) =>
                   setInputs({ ...inputs, heightIn: event.target.value })
                 }
@@ -363,7 +370,6 @@ export const ParentDialog = (props) => {
                 label="Waist (in)"
                 variant="outlined"
                 fullWidth
-                required
                 onChange={(event) =>
                   setInputs({ ...inputs, waist: event.target.value })
                 }
@@ -373,7 +379,6 @@ export const ParentDialog = (props) => {
                 label="Neck (in)"
                 variant="outlined"
                 fullWidth
-                required
                 onChange={(event) =>
                   setInputs({ ...inputs, neck: event.target.value })
                 }
