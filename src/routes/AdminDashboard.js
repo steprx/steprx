@@ -55,9 +55,12 @@ const AdminDashboard = () => {
   };
   const logout = async () => {
     handleClose();
-    resetStores();
-    console.clear();
-    signOut().then(() => localStorage.clear());
+    signOut().then(() => {
+      navigate("/login");
+      resetStores();
+      console.clear();
+      localStorage.clear();
+    });
   };
   //   const array = [{ id: 1, weight: 222 }];
   const [array, setArray] = useState([]);

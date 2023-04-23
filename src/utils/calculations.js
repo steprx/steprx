@@ -32,6 +32,24 @@ export const calcTotalSteps = (steps) => {
   return totalSteps;
 };
 
-export const calcWeightDiff = (weights) => {
-  // console.log(weights);
+export const calcWeightDiff = (oldWeight, newWeight) => {
+  console.log("calculating weight loss...");
+  const loss = Number(oldWeight) - Number(newWeight);
+  return loss;
+};
+
+export const calcAge = (birthdate) => {
+  const today = new Date();
+  const dob = new Date(Number(birthdate));
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  console.log(today, birthdate, dob, age, m);
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+  return age;
+};
+
+export const calcHeight = (feet, inches) => {
+  return Number(feet) * 12 + Number(inches);
 };

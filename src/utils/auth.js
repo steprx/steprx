@@ -4,7 +4,7 @@ export async function signUp(payload) {
   console.log("creating user...");
   try {
     const user = await Auth.signUp({
-      username: payload.email,
+      username: payload.username,
       password: payload.password,
       attributes: {
         email: payload.email,
@@ -16,6 +16,7 @@ export async function signUp(payload) {
         enabled: true,
       },
     });
+    console.log(user);
     return user;
   } catch (error) {
     console.log("error signing up:", error);
@@ -36,6 +37,7 @@ export async function signIn(payload) {
   console.log("signing in...");
   try {
     const user = await Auth.signIn(payload.email, payload.password);
+    console.log(user);
     return user;
   } catch (error) {
     console.log("error signing in", error);
@@ -53,7 +55,7 @@ export async function getSession() {
   }
 }
 
-export async function getUserInfo() {
+export async function getUserAttributes() {
   try {
     console.log("getting current user...");
     const user = await Auth.currentAuthenticatedUser();

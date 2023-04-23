@@ -18,7 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   confirmSignUp,
   getSession,
-  getUserInfo,
+  getUserAttributes,
   signIn,
   signUp,
 } from "../utils/auth";
@@ -27,20 +27,30 @@ import { useDialogStore } from "../Stores/DialogStore";
 import {
   getAllInfo,
   getAllSteps,
+  getAllWeighIns,
   putInfo,
   putSteps,
+  putWeighIn,
 } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
-import { calcTotalSteps } from "../utils/calculations";
+import {
+  calcStepGoal,
+  calcTotalSteps,
+  calcWeightDiff,
+} from "../utils/calculations";
 
 export const ParentDialog = (props) => {
   const navigate = useNavigate();
   const currentUser = useUserStore((state) => state.currentUser);
   const setUser = useUserStore((state) => state.setCurrentUser);
+  const setUuid = useUserStore((state) => state.setUuid);
+  const uuid = useUserStore((state) => state.uuid);
   const setUserAttributes = useUserStore((state) => state.setUserAttributes);
   const setUserInfo = useUserStore((state) => state.setUserInfo);
+  const setWeighIns = useUserStore((state) => state.setWeighIns);
   const setSession = useUserStore((state) => state.setSession);
   const setCountsData = useStepCountStore((state) => state.setCountsData);
+  const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
   const userAttributes = useUserStore((state) => state.userAttributes);
   const setUserSubmit = useUserStore((state) => state.setUserSubmit);
   const handleClose = () => {
@@ -90,45 +100,34 @@ export const ParentDialog = (props) => {
 
   const SignUpDialog = (props) => {
     const time = new Date();
+    const [error, setError] = useState(false);
+    const [helperText, setHelperText] = useState(null);
 
     const [inputs, setInputs] = useState({
       firstName: "",
       lastName: "",
       email: "",
+      username: "",
       password: "",
+      confirm: "",
       time: time.getTime(),
     });
 
-    const createUser = (inputs) => {
-      signUp(inputs)
-        .catch((err) => alert(err))
-        .then((res) => setUser(res))
-        .then(() => setView(3));
-    };
-
-    const [firstNameError, setFirstNameError] = useState(false);
-    const [lastNameError, setLastNameError] = useState(false);
-    const [emailError, setEmailError] = useState(false);
-    const [passwordError, setPasswordError] = useState(false);
-    const [passwordConfirmError, setPasswordConfirmError] = useState(false);
-
-    const handleCreateSubmission = () => {
-      let isFirstNameValid = inputs.firstName.match(/^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/);
-      let isLastNameValid = inputs.lastName.match(/^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/);
-      let isEmailValid = inputs.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
-      let isPasswordValid = inputs.password.match(/^(?!\s+)(?!.*\s+$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ])[A-Za-z0-9$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ]{8,256}$/);
-      let isPasswordConfirmValid = inputs.password.match(/^(?!\s+)(?!.*\s+$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ])[A-Za-z0-9$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ]{8,256}$/);
-
-      setFirstNameError(!isFirstNameValid);
-      setLastNameError(!isLastNameValid);
-      setEmailError(!isEmailValid);
-      setPasswordError(!isPasswordValid);
-      setPasswordConfirmError(!isPasswordConfirmValid);
-
-      if(isFirstNameValid && isLastNameValid && isEmailValid && isPasswordValid && isPasswordConfirmValid) {
-          createUser(inputs);
+    const createUser = async (inputs) => {
+      if (inputs.password === inputs.confirm) {
+        const user = await signUp(inputs).catch((err) => alert(err));
+        // .then((res) => setUuid(res.userSub))
+        // .then(res=> setUserAttributes(res.user))
+        // .then(() => setView(3));
+        console.log(user, user.userSub, user.user);
+        setUuid(user.userSub);
+        setUser(user.user);
+        setView(3);
+      } else {
+        setError(true);
+        setHelperText("Passwords dont match");
       }
-  };
+    };
 
     return (
       <Box p={2}>
@@ -137,78 +136,83 @@ export const ParentDialog = (props) => {
             Create an Account
           </Typography>
           <Stack spacing={2} justifyContent="center">
-            <TextField
-              size="small"
-              label="First Name"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(event) => {
-                const value = event.target.value;
-                setInputs({ ...inputs, firstName: value });
-              }}
-              error={firstNameError}
-              helperText={firstNameError ? "Enter a valid First Name" : ""}
-            />
-            <TextField
-              size="small"
-              label="Last Name"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(event) => {
-                const value = event.target.value;
-                setInputs({ ...inputs, lastName: value });
-              }}
-              error={lastNameError}
-              helperText={lastNameError ? "Enter a valid Last Name" : ""}
-            />
-            <TextField
-              size="small"
-              label="Email Address"
-              variant="outlined"
-              fullWidth
-              required
-              onChange={(event) => {
-                const value = event.target.value;
-                setInputs({ ...inputs, email: value });
-              }}
-              error={emailError}
-              helperText={emailError ? "Enter a valid Email" : ""}
-            />
-            <TextField
-              size="small"
-              label="Password"
-              variant="outlined"
-              type="password"
-              fullWidth
-              required
-              onChange={(event) => {
-                const value = event.target.value;
-                setInputs({ ...inputs, password: value });
-              }}
-              error={passwordError}
-              helperText={passwordError ? "Enter a valid Password" : ""}
-            />
-            <TextField
-              size="small"
-              label="Confirm Password"
-              variant="outlined"
-              type="password"
-              fullWidth
-              required
-              onChange={(event) => {
-                const value = event.target.value;
-                setInputs({ ...inputs, passwordConfirm: value });
-              }}
-              error={passwordConfirmError}
-              helperText={passwordConfirmError ? "Passwords must match" : ""}
-            />
+            <Stack spacing={1} direction="row">
+              <TextField
+                size="small"
+                label="First Name"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, firstName: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Last Name"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, lastName: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack spacing={1} direction="row">
+              <TextField
+                size="small"
+                label="Email Address"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, email: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Username"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, username: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack spacing={1} direction="row">
+              <TextField
+                size="small"
+                label="Password"
+                variant="outlined"
+                type="password"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, password: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Confirm Password"
+                variant="outlined"
+                type="password"
+                fullWidth
+                required
+                error={error}
+                helperText={helperText}
+                onChange={(event) =>
+                  setInputs({ ...inputs, confirm: event.target.value })
+                }
+              />
+            </Stack>
           </Stack>
           <Stack spacing={1}>
             <Button
               variant="contained"
-              onClick={handleCreateSubmission}
+              onClick={() => {
+                createUser(inputs);
+              }}
             >
               Create Account
             </Button>
@@ -225,7 +229,8 @@ export const ParentDialog = (props) => {
     const [code, setCode] = useState(null);
 
     const confirmUser = (code) => {
-      confirmSignUp(currentUser.user.username, code)
+      console.log(currentUser);
+      confirmSignUp(currentUser?.username, code)
         .catch((err) => alert(err))
         .then(() => setView(4));
     };
@@ -249,17 +254,18 @@ export const ParentDialog = (props) => {
   };
 
   const HealthDialog = (props) => {
-    const today = moment().format("l");
-    const { userSub } = useUserStore((state) => state.currentUser);
+    const today = Date.parse(moment());
+    // const { username } = useUserStore((state) => state.currentUser);
     const [value, setValue] = useState(moment());
     const [birthdate, setBirthdate] = useState(moment());
     const handleBirthdateChange = (newValue) => {
       setBirthdate(newValue);
-      setInputs({ ...inputs, birthdate: newValue.format("l") });
+      console.log(newValue);
+      setInputs({ ...inputs, birthdate: Date.parse(newValue) });
     };
     const handleChange = (newValue) => {
       setValue(newValue);
-      setInputs({ ...inputs, date: newValue.format("l") });
+      setInputs({ ...inputs, date: Date.parse(newValue) });
     };
     const handleRadioChange = (event) => {
       setInputs({ ...inputs, sex: event.target.value });
@@ -278,58 +284,28 @@ export const ParentDialog = (props) => {
     });
     const handleSubmit = async () => {
       console.log(currentUser, inputs);
-      await putInfo(userSub, inputs)
-        .then(() =>
+      console.log(uuid, inputs);
+      await putWeighIn(uuid, inputs)
+        .then(() => {
+          putInfo(uuid, inputs);
           getSession().then((res) => {
             localStorage.setItem("token", res);
             localStorage.setItem("access", res.getAccessToken());
             localStorage.setItem("id", res.getIdToken());
             localStorage.setItem("refresh", res.getRefreshToken());
-          })
-        )
-        .then(() => getUserInfo(userSub).then((res) => setUserAttributes(res)))
-        .then(() => getAllInfo(userSub).then((res) => setUserInfo(res)))
+          });
+        })
+        .then(() => getUserAttributes().then((res) => setUserAttributes(res)))
+        .then(() => getAllInfo(uuid).then((res) => setUserInfo(res)))
+        .then(() => getAllWeighIns(uuid).then((res) => setWeighIns(res)))
         .catch((err) => alert(err));
     };
-
-    const [weightError, setWeightError] = useState(false);
-    const [heightFtError, setHeightFtError] = useState(false);
-    const [heightInError, setHeightInError] = useState(false);
-    const [bodyFatError, setBodyFatError] = useState(false);
-    const [targetWeightError, setTargetWeightError] = useState(false);
-    const [waistError, setWaistError] = useState(false);
-    const [neckError, setNeckError] = useState(false);
-
-    const handleFormSubmission = () => {
-      let isWeightValid = inputs.weight.match(/^\d{3}(\.\d{1,2})?$/);
-      let isHeightFtValid = inputs.heightFt.match(/^\d{1}$/);
-      let isHeightInValid = inputs.heightIn.match(/^\d{1,2}$/);
-      let isBodyFatValid = inputs.bodyFat.match(/^\d{1,2}(\.\d{1,2})?$/);
-      let isTargetWeightValid = inputs.targetWeight.match(/^\d{1,2}?$/);
-      let isNeckValid = inputs.neck.match(/^\d{1,2}(\.\d{1,2})?$/);
-      let isWaitValid = inputs.waist.match(/^\d{1,2}(\.\d{1,2})?$/);
-  
-      setWeightError(!isWeightValid);
-      setHeightFtError(!isHeightFtValid);
-      setHeightInError(!isHeightInValid);
-      setBodyFatError(!isBodyFatValid);
-      setTargetWeightError(!isTargetWeightValid);
-      setNeckError(!isNeckValid);
-      setWaistError(!isWaitValid);
-  
-      if(isWeightValid && isHeightFtValid && isHeightInValid && isBodyFatValid && isTargetWeightValid && isNeckValid && isWaitValid) {
-          handleSubmit(inputs);
-      }
-  };
 
     return (
       <Box p={2}>
         <Stack justifyContent="center" spacing={2}>
           <Typography align="center" variant="h6">
             Let's get some basic info
-          </Typography>
-          <Typography align="center" variant="h10">
-            *Required field
           </Typography>
           <Stack spacing={2} justifyContent="center">
             <Stack direction="row" spacing={1}>
@@ -348,12 +324,9 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setInputs({ ...inputs, weight: value });
-                }}
-                error={weightError}
-                helperText={weightError ? "Must be 3 digits" : ""}
+                onChange={(event) =>
+                  setInputs({ ...inputs, weight: event.target.value })
+                }
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -362,84 +335,60 @@ export const ParentDialog = (props) => {
                 label="Height (ft)"
                 variant="outlined"
                 fullWidth
-                required
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setInputs({ ...inputs, heightFt: value });
-                }}
-                error={heightFtError}
-                helperText={heightFtError ? "Must be 1 digit" : ""}
+                onChange={(event) =>
+                  setInputs({ ...inputs, heightFt: event.target.value })
+                }
               />
               <TextField
                 size="small"
                 label="Height (in)"
                 variant="outlined"
                 fullWidth
-                required
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setInputs({ ...inputs, heightIn: value });
-                }}
-                error={heightInError}
-                helperText={heightInError ? "Must be 1 or 2 digits." : ""}
-              />
-            </Stack>
-            <Stack direction="row" spacing={1}>
-              <TextField
-                size="small"
-                label="Body Fat (%)"
-                variant="outlined"
-                fullWidth
-                required
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setInputs({ ...inputs, bodyFat: value });
-                }}
-                error={bodyFatError}
-                helperText={bodyFatError ? "Must be 1 or 2 digits." : ""}
-              />
-              <TextField
-                size="small"
-                label="Target % Weight Loss"
-                variant="outlined"
-                fullWidth
-                required
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setInputs({ ...inputs, targetWeight: value });
-               }}
-                error={targetWeightError}
-                helperText={
-                  targetWeightError ? "Must be 1 or 2 digits." : ""
+                onChange={(event) =>
+                  setInputs({ ...inputs, heightIn: event.target.value })
                 }
               />
             </Stack>
             <Stack direction="row" spacing={1}>
               <TextField
                 size="small"
-                label="Neck (in)"
+                label="Body Fat %"
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setInputs({ ...inputs, neck: value });
-                }}
-                error={neckError}
-                helperText={neckError ? "Must be 1 or 2 digits." : ""}
+                onChange={(event) =>
+                  setInputs({ ...inputs, bodyFat: event.target.value })
+                }
               />
+              <TextField
+                size="small"
+                label="Target Weight Loss (%)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, targetWeightLoss: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
               <TextField
                 size="small"
                 label="Waist (in)"
                 variant="outlined"
                 fullWidth
-                required
-                onChange={(event) => {
-                  const value = event.target.value;
-                  setInputs({ ...inputs, waist: value });
-                }}
-                error={waistError}
-                helperText={waistError ? "Must be 1 or 2 digits." : ""}
+                onChange={(event) =>
+                  setInputs({ ...inputs, waist: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Neck (in)"
+                variant="outlined"
+                fullWidth
+                onChange={(event) =>
+                  setInputs({ ...inputs, neck: event.target.value })
+                }
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -493,9 +442,9 @@ export const ParentDialog = (props) => {
       <Box p={2}>
         <Stack spacing={2}>
           <Typography align="center">
-            The research being used for this program has not yet been done to
-            include anyone outside of this age range. You are more than welcome
-            to still utilize the service, however, results may vary.
+            The research study does not include those who are outside of this
+            age range at this time. You are more than welcome to still utilize
+            this service; however, results may vary.
           </Typography>
           <Stack direction="row" spacing={1} justifyContent="center">
             <Button
@@ -528,7 +477,8 @@ export const ParentDialog = (props) => {
     });
     const authUser = async (inputs) => {
       const user = await signIn(inputs).catch((err) => alert(err));
-      setUser(user);
+      setUuid(user.attributes.sub);
+      console.log(user.attributes.sub);
       await getSession().then((res) => {
         localStorage.setItem("token", res);
         localStorage.setItem("access", res.getAccessToken().jwtToken);
@@ -539,9 +489,17 @@ export const ParentDialog = (props) => {
           res.getAccessToken().payload["cognito:groups"]
         );
       });
-      getUserInfo().then((res) => setUserAttributes(res));
-      getAllInfo(user.username).then((res) => setUserInfo(res));
-      getAllSteps(user.username).then((res) => setCountsData(res));
+      getUserAttributes().then((res) => setUserAttributes(res));
+      getAllInfo(user.username).then((res) => {
+        console.log(res);
+        setUserInfo(res);
+      });
+      getAllWeighIns(uuid).then((res) => setWeighIns(res));
+      getAllSteps(user.username).then((res) => {
+        console.log(res);
+        setTotalSteps(calcTotalSteps(res));
+        setCountsData(res);
+      });
     };
 
     return (
@@ -620,8 +578,10 @@ export const ParentDialog = (props) => {
 };
 
 export const AddStepsDialog = (props) => {
-  const { userSub } = useUserStore((state) => state.currentUser);
-  const today = moment().format("l");
+  const currentUser = useUserStore((state) => state.currentUser);
+  // const { username } = useUserStore((state) => state.currentUser);
+  const uuid = useUserStore((state) => state.uuid);
+  const today = Date.parse(moment());
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
     date: today,
@@ -633,15 +593,18 @@ export const AddStepsDialog = (props) => {
   const setCountsData = useStepCountStore((state) => state.setCountsData);
   const handleChange = (newValue) => {
     setValue(newValue);
-    setInputs({ ...inputs, date: newValue.format("l") });
+    console.log(Date.parse(moment()));
+    console.log(moment(1681704731000).format("l"));
+    setInputs({ ...inputs, date: Date.parse(newValue) });
   };
   const handleClose = () => {
     props.handleClose(false);
   };
   const handleSubmit = async () => {
-    await putSteps(userSub, inputs.date, inputs.steps)
+    console.log(currentUser);
+    await putSteps(uuid, inputs.date, inputs.steps)
       .then(async () => {
-        const steps = await getAllSteps(userSub);
+        const steps = await getAllSteps(uuid);
         setCountsData(steps);
         setTotalSteps(calcTotalSteps(steps));
         addStepCount(inputs);
@@ -693,6 +656,61 @@ export const AddStepsDialog = (props) => {
 };
 
 export const AddWeighInDialog = (props) => {
+  const today = Date.parse(moment());
+  // const { username } = useUserStore((state) => state.currentUser);
+  const userInfo = useUserStore((state) => state.userInfo);
+  const weighIns = useUserStore((state) => state.weighIns);
+  const currentUser = useUserStore((state) => state.currentUser);
+  const uuid = useUserStore((state) => state.uuid);
+  const setUserAttributes = useUserStore((state) => state.setUserAttributes);
+  const setWeighIns = useUserStore((state) => state.setWeighIns);
+  const setWeightLoss = useStepCountStore((state) => state.setWeightLoss);
+  const setStepGoal = useStepCountStore((state) => state.setStepGoal);
+  const navigate = useNavigate();
+  const [value, setValue] = useState(moment());
+  const handleChange = (newValue) => {
+    setValue(newValue);
+    setInputs({ ...inputs, date: Date.parse(newValue) });
+  };
+  const [inputs, setInputs] = useState({
+    weight: null,
+    heightFt: null,
+    heightIn: null,
+    bodyFat: null,
+    targetWeightLoss: null,
+    waist: null,
+    neck: null,
+    date: today,
+  });
+  const handleSubmit = async () => {
+    console.log(currentUser, inputs);
+    await putWeighIn(uuid, inputs)
+      .then(async () => {
+        await getUserAttributes(uuid).then((res) => setUserAttributes(res));
+        await getAllWeighIns(uuid).then((res) => setWeighIns(res));
+        const i = weighIns?.length - 1;
+        const gender = userInfo?.at(i)?.sex.S;
+        const weight = weighIns?.at(i)?.weight.S;
+        const bodyFat = weighIns?.at(i)?.bodyFat.S;
+        const targetWeightLoss = weighIns?.at(i)?.targetWeightLoss.S;
+        const stepGoal = await calcStepGoal(
+          gender,
+          weight,
+          bodyFat,
+          targetWeightLoss
+        );
+        const weightDiff = await calcWeightDiff(
+          weighIns?.at(0)?.weight.S,
+          weighIns?.at(i)?.weight.S
+        );
+        console.log("weight lost:", weightDiff);
+        console.log("step goal:", stepGoal);
+        setStepGoal(stepGoal);
+        setWeightLoss(weightDiff);
+      })
+      .catch((err) => alert(err))
+      .then(() => handleClose());
+  };
   const handleClose = () => {
     props.handleClose(false);
   };
@@ -701,16 +719,109 @@ export const AddWeighInDialog = (props) => {
       <Box p={2}>
         <Stack justifyContent="center" spacing={2}>
           <Typography align="center" variant="h6">
-            Sign In
+            Weigh In
           </Typography>
           <Stack spacing={2} justifyContent="center">
-            <TextField size="small" label="Email Address" variant="outlined" />
-            <TextField size="small" label="Password" variant="outlined" />
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Weight (lbs)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, weight: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Height (ft)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, heightFt: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Height (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, heightIn: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Body Fat %"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, bodyFat: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Target Weight Loss (%)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, targetWeightLoss: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                size="small"
+                label="Waist (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, waist: event.target.value })
+                }
+              />
+              <TextField
+                size="small"
+                label="Neck (in)"
+                variant="outlined"
+                fullWidth
+                required
+                onChange={(event) =>
+                  setInputs({ ...inputs, neck: event.target.value })
+                }
+              />
+            </Stack>
+            <Stack direction="row" spacing={1}>
+              <DatePicker
+                label="Date of Visit"
+                disableFuture
+                value={value}
+                onChange={handleChange}
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </Stack>
           </Stack>
-          <Stack spacing={1}>
-            <Button variant="contained">Sign In</Button>
-            <Button size="small">Don't have an account?</Button>
-          </Stack>
+          <Button
+            component={Link}
+            to={`/`}
+            variant="contained"
+            onClick={async () =>
+              await handleSubmit(inputs).then(() => navigate("/"))
+            }
+          >
+            Submit
+          </Button>
         </Stack>
       </Box>
     </Dialog>

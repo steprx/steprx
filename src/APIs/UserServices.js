@@ -6,18 +6,10 @@ import { useUserStore } from "../Stores/UserStore.js";
 export const putInfo = async (uuid, payload) => {
   // const key = user;
   const params = {
-    TableName: "info",
+    TableName: "user_info",
     Item: {
       uuid: uuid,
-      date: payload?.date,
       birthdate: payload?.birthdate,
-      weight: payload?.weight,
-      heightFt: payload?.heightFt,
-      heightIn: payload?.heightIn,
-      bodyFat: payload?.bodyFat,
-      targetWeightLoss: payload?.targetWeightLoss,
-      waist: payload?.waist,
-      neck: payload?.neck,
       sex: payload?.sex,
     },
   };
@@ -30,7 +22,7 @@ export const putInfo = async (uuid, payload) => {
 
 export const getAllInfo = async (username) => {
   const params = {
-    Statement: "SELECT * FROM info WHERE uuid=?",
+    Statement: "SELECT * FROM user_info WHERE uuid=?",
     Parameters: [{ S: username }],
   };
   try {
@@ -45,7 +37,7 @@ export const getAllInfo = async (username) => {
 
 export const getInfo = async (payload) => {
   const params = {
-    TableName: "info",
+    TableName: "user_info",
     Key: { uuid: payload },
   };
   try {
@@ -63,7 +55,7 @@ export const putSteps = async (user, date, steps) => {
     TableName: "steps",
     Item: {
       uuid: user,
-      date: date,
+      date: date.toString(),
       steps: steps,
     },
   };
@@ -102,5 +94,42 @@ export const getSteps = async (username, date) => {
     return data.Item;
   } catch (err) {
     console.log("Error getting steps", err);
+  }
+};
+
+export const putWeighIn = async (uuid, payload) => {
+  const params = {
+    TableName: "weigh_ins",
+    Item: {
+      uuid: uuid,
+      date: payload?.date.toString(),
+      weight: payload?.weight,
+      heightFt: payload?.heightFt,
+      heightIn: payload?.heightIn,
+      bodyFat: payload?.bodyFat,
+      targetWeightLoss: payload?.targetWeightLoss,
+      waist: payload?.waist,
+      neck: payload?.neck,
+    },
+  };
+  try {
+    const data = await ddbDocClient.send(new PutCommand(params));
+  } catch (err) {
+    console.log("Error", err);
+  }
+};
+
+export const getAllWeighIns = async (username) => {
+  const params = {
+    Statement: "SELECT * FROM weigh_ins WHERE uuid=?",
+    Parameters: [{ S: username }],
+  };
+  try {
+    console.log("getting user weigh ins...", username);
+    const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
+    console.log("weigh ins: ", data.Items);
+    return data.Items;
+  } catch (err) {
+    console.log("Error getting all weigh ins", err);
   }
 };
