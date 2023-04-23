@@ -20,21 +20,22 @@ const Stats = () => {
   const setStepGoal = useStepCountStore((state) => state.setStepGoal);
   const stepGoal = useStepCountStore((state) => state.stepGoal);
   const userInfo = useUserStore((state) => state.userInfo);
+  const weighIns = useUserStore((state) => state.weighIns);
 
   useEffect(() => {
     async function getData() {
-      const i = userInfo?.length - 1;
-      console.log(userInfo);
+      const i = weighIns?.length - 1;
+      console.log(weighIns);
       console.log(i);
-      console.log(userInfo?.at(i));
+      console.log(weighIns?.at(i));
       const gender = userInfo?.at(i)?.sex.S;
-      const weight = userInfo?.at(i)?.weight.S;
-      const bodyFat = userInfo?.at(i)?.bodyFat.S;
-      const targetWeightLoss = userInfo?.at(i)?.targetWeightLoss.S;
+      const weight = weighIns?.at(i)?.weight.S;
+      const bodyFat = weighIns?.at(i)?.bodyFat.S;
+      const targetWeightLoss = weighIns?.at(i)?.targetWeightLoss.S;
       const stepGoal = calcStepGoal(gender, weight, bodyFat, targetWeightLoss);
       const weightDiff = calcWeightDiff(
-        userInfo?.at(0)?.weight.S,
-        userInfo?.at(i)?.weight.S
+        weighIns?.at(0)?.weight.S,
+        weighIns?.at(i)?.weight.S
       );
       console.log("weight lost:", weightDiff);
       console.log("step goal:", stepGoal);
@@ -92,7 +93,7 @@ const Stats = () => {
               </Typography>
             ) : (
               <Typography align="center" variant="h3">
-                {weightLoss?.toFixed(0)}
+                {weightLoss}
               </Typography>
             )}
             <Typography align="center" variant="h5">

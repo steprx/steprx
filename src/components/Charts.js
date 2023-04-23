@@ -15,7 +15,7 @@ import moment from "moment";
 
 export const Charts = () => {
   const stepGoal = useStepCountStore((state) => state.stepGoal);
-  const userInfo = useUserStore((state) => state.userInfo);
+  const weighIns = useUserStore((state) => state.weighIns);
   const countsData = useStepCountStore((state) => state.countsData);
 
   const formatWeights = (item) => {
@@ -37,9 +37,9 @@ export const Charts = () => {
       bodyFat: item.bodyFat.S,
     };
   };
-  const weightData = userInfo?.map(formatWeights);
+  const weightData = weighIns?.map(formatWeights);
   const stepsData = countsData?.map(formatSteps);
-  const bodyFatData = userInfo?.map(formatBodyFats);
+  const bodyFatData = weighIns?.map(formatBodyFats);
   console.log(stepsData);
   return (
     <Grid container spacing={1}>

@@ -36,7 +36,17 @@ const Home = () => {
   const attributes = useUserStore((state) => state.userAttributes);
   const userInfo = useUserStore((state) => state.userInfo);
   const uuid = useUserStore((state) => state.uuid);
-  console.log("attributes", attributes, "info", userInfo, "user", uuid);
+  const weighIns = useUserStore((state) => state.weighIns);
+  console.log(
+    "attributes",
+    attributes,
+    "info",
+    userInfo,
+    "user",
+    uuid,
+    "weigh ins",
+    weighIns
+  );
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
