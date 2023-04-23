@@ -477,8 +477,8 @@ export const ParentDialog = (props) => {
     });
     const authUser = async (inputs) => {
       const user = await signIn(inputs).catch((err) => alert(err));
-      setUuid(user);
-      console.log(user);
+      setUuid(user.attributes.sub);
+      console.log(user.attributes.sub);
       await getSession().then((res) => {
         localStorage.setItem("token", res);
         localStorage.setItem("access", res.getAccessToken().jwtToken);
@@ -490,12 +490,12 @@ export const ParentDialog = (props) => {
         );
       });
       getUserAttributes().then((res) => setUserAttributes(res));
-      getAllInfo(user).then((res) => {
+      getAllInfo(user.username).then((res) => {
         console.log(res);
         setUserInfo(res);
       });
       getAllWeighIns(uuid).then((res) => setWeighIns(res));
-      getAllSteps(user).then((res) => {
+      getAllSteps(user.username).then((res) => {
         console.log(res);
         setTotalSteps(calcTotalSteps(res));
         setCountsData(res);

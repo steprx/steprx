@@ -36,8 +36,9 @@ export async function confirmSignUp(username, code) {
 export async function signIn(payload) {
   console.log("signing in...");
   try {
-    const { username } = await Auth.signIn(payload.email, payload.password);
-    return username;
+    const user = await Auth.signIn(payload.email, payload.password);
+    console.log(user);
+    return user;
   } catch (error) {
     console.log("error signing in", error);
   }
