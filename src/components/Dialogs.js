@@ -18,7 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   confirmSignUp,
   getSession,
-  getUserInfo,
+  getUserAttributes,
   signIn,
   signUp,
 } from "../utils/auth";
@@ -33,7 +33,11 @@ import {
   putWeighIn,
 } from "../APIs/UserServices";
 import { useStepCountStore } from "../Stores/StepCountStore";
-import { calcTotalSteps } from "../utils/calculations";
+import {
+  calcStepGoal,
+  calcTotalSteps,
+  calcWeightDiff,
+} from "../utils/calculations";
 
 export const ParentDialog = (props) => {
   const navigate = useNavigate();
@@ -43,6 +47,7 @@ export const ParentDialog = (props) => {
   const uuid = useUserStore((state) => state.uuid);
   const setUserAttributes = useUserStore((state) => state.setUserAttributes);
   const setUserInfo = useUserStore((state) => state.setUserInfo);
+  const setWeighIns = useUserStore((state) => state.setWeighIns);
   const setSession = useUserStore((state) => state.setSession);
   const setCountsData = useStepCountStore((state) => state.setCountsData);
   const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
@@ -280,17 +285,19 @@ export const ParentDialog = (props) => {
     const handleSubmit = async () => {
       console.log(currentUser, inputs);
       console.log(uuid, inputs);
-      await putInfo(uuid, inputs)
-        .then(() =>
+      await putWeighIn(uuid, inputs)
+        .then(() => {
+          putInfo(uuid, inputs);
           getSession().then((res) => {
             localStorage.setItem("token", res);
             localStorage.setItem("access", res.getAccessToken());
             localStorage.setItem("id", res.getIdToken());
             localStorage.setItem("refresh", res.getRefreshToken());
-          })
-        )
-        .then(() => getUserInfo(uuid).then((res) => setUserAttributes(res)))
+          });
+        })
+        .then(() => getUserAttributes().then((res) => setUserAttributes(res)))
         .then(() => getAllInfo(uuid).then((res) => setUserInfo(res)))
+        .then(() => getAllWeighIns(uuid).then((res) => setWeighIns(res)))
         .catch((err) => alert(err));
     };
 
@@ -482,11 +489,12 @@ export const ParentDialog = (props) => {
           res.getAccessToken().payload["cognito:groups"]
         );
       });
-      getUserInfo().then((res) => setUserAttributes(res));
+      getUserAttributes().then((res) => setUserAttributes(res));
       getAllInfo(user).then((res) => {
         console.log(res);
         setUserInfo(res);
       });
+      getAllWeighIns(uuid).then((res) => setWeighIns(res));
       getAllSteps(user).then((res) => {
         console.log(res);
         setTotalSteps(calcTotalSteps(res));
@@ -650,10 +658,14 @@ export const AddStepsDialog = (props) => {
 export const AddWeighInDialog = (props) => {
   const today = Date.parse(moment());
   // const { username } = useUserStore((state) => state.currentUser);
+  const userInfo = useUserStore((state) => state.userInfo);
+  const weighIns = useUserStore((state) => state.weighIns);
   const currentUser = useUserStore((state) => state.currentUser);
   const uuid = useUserStore((state) => state.uuid);
   const setUserAttributes = useUserStore((state) => state.setUserAttributes);
-  const setUserInfo = useUserStore((state) => state.setUserInfo);
+  const setWeighIns = useUserStore((state) => state.setWeighIns);
+  const setWeightLoss = useStepCountStore((state) => state.setWeightLoss);
+  const setStepGoal = useStepCountStore((state) => state.setStepGoal);
   const navigate = useNavigate();
   const [value, setValue] = useState(moment());
   const handleChange = (newValue) => {
@@ -673,8 +685,29 @@ export const AddWeighInDialog = (props) => {
   const handleSubmit = async () => {
     console.log(currentUser, inputs);
     await putWeighIn(uuid, inputs)
-      .then(() => getUserInfo(uuid).then((res) => setUserAttributes(res)))
-      .then(() => getAllWeighIns(uuid).then((res) => setUserInfo(res)))
+      .then(async () => {
+        await getUserAttributes(uuid).then((res) => setUserAttributes(res));
+        await getAllWeighIns(uuid).then((res) => setWeighIns(res));
+        const i = weighIns?.length - 1;
+        const gender = userInfo?.at(i)?.sex.S;
+        const weight = weighIns?.at(i)?.weight.S;
+        const bodyFat = weighIns?.at(i)?.bodyFat.S;
+        const targetWeightLoss = weighIns?.at(i)?.targetWeightLoss.S;
+        const stepGoal = await calcStepGoal(
+          gender,
+          weight,
+          bodyFat,
+          targetWeightLoss
+        );
+        const weightDiff = await calcWeightDiff(
+          weighIns?.at(0)?.weight.S,
+          weighIns?.at(i)?.weight.S
+        );
+        console.log("weight lost:", weightDiff);
+        console.log("step goal:", stepGoal);
+        setStepGoal(stepGoal);
+        setWeightLoss(weightDiff);
+      })
       .catch((err) => alert(err))
       .then(() => handleClose());
   };

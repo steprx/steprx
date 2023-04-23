@@ -54,7 +54,7 @@ export async function getSession() {
   }
 }
 
-export async function getUserInfo() {
+export async function getUserAttributes() {
   try {
     console.log("getting current user...");
     const user = await Auth.currentAuthenticatedUser();

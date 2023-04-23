@@ -6,18 +6,10 @@ import { useUserStore } from "../Stores/UserStore.js";
 export const putInfo = async (uuid, payload) => {
   // const key = user;
   const params = {
-    TableName: "info",
+    TableName: "user_info",
     Item: {
       uuid: uuid,
-      date: payload?.date,
       birthdate: payload?.birthdate,
-      weight: payload?.weight,
-      heightFt: payload?.heightFt,
-      heightIn: payload?.heightIn,
-      bodyFat: payload?.bodyFat,
-      targetWeightLoss: payload?.targetWeightLoss,
-      waist: payload?.waist,
-      neck: payload?.neck,
       sex: payload?.sex,
     },
   };
@@ -30,7 +22,7 @@ export const putInfo = async (uuid, payload) => {
 
 export const getAllInfo = async (username) => {
   const params = {
-    Statement: "SELECT * FROM info WHERE uuid=?",
+    Statement: "SELECT * FROM user_info WHERE uuid=?",
     Parameters: [{ S: username }],
   };
   try {
@@ -45,7 +37,7 @@ export const getAllInfo = async (username) => {
 
 export const getInfo = async (payload) => {
   const params = {
-    TableName: "info",
+    TableName: "user_info",
     Key: { uuid: payload },
   };
   try {
@@ -111,7 +103,6 @@ export const putWeighIn = async (uuid, payload) => {
     Item: {
       uuid: uuid,
       date: payload?.date.toString(),
-      birthdate: payload?.birthdate,
       weight: payload?.weight,
       heightFt: payload?.heightFt,
       heightIn: payload?.heightIn,
@@ -119,7 +110,6 @@ export const putWeighIn = async (uuid, payload) => {
       targetWeightLoss: payload?.targetWeightLoss,
       waist: payload?.waist,
       neck: payload?.neck,
-      sex: payload?.sex,
     },
   };
   try {
@@ -135,11 +125,11 @@ export const getAllWeighIns = async (username) => {
     Parameters: [{ S: username }],
   };
   try {
-    console.log("getting user weight ins...", username);
+    console.log("getting user weigh ins...", username);
     const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
-    console.log("data: ", data.Items);
+    console.log("weigh ins: ", data.Items);
     return data.Items;
   } catch (err) {
-    console.log("Error getting all weigh_ins", err);
+    console.log("Error getting all weigh ins", err);
   }
 };

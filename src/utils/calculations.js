@@ -32,8 +32,10 @@ export const calcTotalSteps = (steps) => {
   return totalSteps;
 };
 
-export const calcWeightDiff = (weights) => {
-  // console.log(weights);
+export const calcWeightDiff = (oldWeight, newWeight) => {
+  console.log("calculating weight loss...");
+  const loss = Number(oldWeight) - Number(newWeight);
+  return loss;
 };
 
 export const calcAge = (birthdate) => {
