@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Dialog,
   FormControl,
   FormControlLabel,
@@ -58,8 +59,7 @@ export const ParentDialog = (props) => {
   };
 
   const nameRegex = /^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/;
-  const emailRegex =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/g;
+  const emailRegex = /^\w\w*(?:(?:\.|-)?\w+)*@\w+\-?\w*(?:\.[a-z]{2,})+$/g;
   const passwordRegex =
     /^(?!\s+)(?!.*\s+$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ])[A-Za-z0-9$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ]{8,256}$/g;
   const usernameRegex = /.+/;
@@ -148,28 +148,32 @@ export const ParentDialog = (props) => {
     const [firstNameError, setFirstNameError] = useState(false);
     const [lastNameError, setLastNameError] = useState(false);
     const [emailError, setEmailError] = useState(false);
-    const [passwordError, setPasswordError] = useState(false);
     const [usernameError, setUsernameError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [confirmError, setConfirmError] = useState(false);
 
     const handleCreateSubmission = () => {
       let isFirstNameValid = inputs.firstName.match(nameRegex);
       let isLastNameValid = inputs.lastName.match(nameRegex);
       let isEmailValid = inputs.email.match(emailRegex);
-      let isPasswordValid = inputs.password.match(passwordRegex);
       let isUsernameValid = inputs.username.match(usernameRegex);
+      let isPasswordValid = inputs.password.match(passwordRegex);
+      let isConfirmValid = inputs.confirm.match(passwordRegex);
 
       setFirstNameError(!isFirstNameValid);
       setLastNameError(!isLastNameValid);
       setEmailError(!isEmailValid);
-      setPasswordError(!isPasswordValid);
       setUsernameError(!isUsernameValid);
+      setPasswordError(!isPasswordValid);
+      setUsernameError(!isConfirmValid);
 
       if (
         isFirstNameValid &&
         isLastNameValid &&
         isEmailValid &&
+        isUsernameValid &&
         isPasswordValid &&
-        isUsernameValid
+        isConfirmValid
       ) {
         createUser(inputs);
       }
@@ -232,7 +236,7 @@ export const ParentDialog = (props) => {
                 required
                 onChange={(event) => {
                   const value = event.target.value;
-                  setInputs({ ...inputs, password: value });
+                  setInputs({ ...inputs, username: value });
                 }}
                 error={usernameError}
                 helperText={usernameError ? "Enter a valid Username" : ""}
@@ -262,9 +266,12 @@ export const ParentDialog = (props) => {
                 required
                 error={error}
                 helperText={helperText}
-                onChange={(event) =>
-                  setInputs({ ...inputs, confirm: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, password: value });
+                }}
+                error={passwordError}
+                helperText={passwordError ? "Enter a valid Password" : ""}
               />
             </Stack>
           </Stack>
