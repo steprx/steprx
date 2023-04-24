@@ -38,6 +38,13 @@ import {
   calcTotalSteps,
   calcWeightDiff,
 } from "../utils/calculations";
+import {
+  isBlank,
+  validateEmail,
+  validateName,
+  validatePassword,
+  validateUsername,
+} from "../utils/validations";
 
 export const ParentDialog = (props) => {
   const navigate = useNavigate();
@@ -107,9 +114,6 @@ export const ParentDialog = (props) => {
 
   const SignUpDialog = (props) => {
     const time = new Date();
-    const [error, setError] = useState(false);
-    const [helperText, setHelperText] = useState(null);
-
     const [inputs, setInputs] = useState({
       firstName: "",
       lastName: "",
@@ -120,17 +124,10 @@ export const ParentDialog = (props) => {
       time: time.getTime(),
     });
 
-    const [errors, setErrors] = useState({
-      firstName: "",
-      lastName: "",
-      email: "",
-      username: "",
-      password: "",
-      confirm: "",
-    });
-
     const createUser = async (inputs) => {
-      if (inputs.password === inputs.confirm) {
+      const inputsValid = validateInputs(inputs);
+      if (inputsValid) {
+        console.log(inputsValid);
         const user = await signUp(inputs).catch((err) => alert(err));
         // .then((res) => setUuid(res.userSub))
         // .then(res=> setUserAttributes(res.user))
@@ -140,8 +137,8 @@ export const ParentDialog = (props) => {
         setUser(user.user);
         setView(3);
       } else {
-        setError(true);
-        setHelperText("Passwords dont match");
+        console.log(inputsValid);
+        validateInputs(inputs);
       }
     };
 
@@ -260,8 +257,8 @@ export const ParentDialog = (props) => {
                 type="password"
                 fullWidth
                 required
-                error={error}
-                helperText={helperText}
+                error={errors.confirm}
+                helperText={helperTexts.confirm}
                 onChange={(event) =>
                   setInputs({ ...inputs, confirm: event.target.value })
                 }
