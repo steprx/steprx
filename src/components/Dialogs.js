@@ -57,6 +57,13 @@ export const ParentDialog = (props) => {
     props.handleClose(false);
   };
 
+  const nameRegex = /^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/;
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/g;
+  const passwordRegex =
+    /^(?!\s+)(?!.*\s+$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ])[A-Za-z0-9$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ]{8,256}$/g;
+  const usernameRegex = /.+/;
+
   const EntryDialog = (props) => {
     const handleClick = (button) => {
       button === "yes" ? setView(2) : setView(5);
@@ -113,6 +120,15 @@ export const ParentDialog = (props) => {
       time: time.getTime(),
     });
 
+    const [errors, setErrors] = useState({
+      firstName: "",
+      lastName: "",
+      email: "",
+      username: "",
+      password: "",
+      confirm: "",
+    });
+
     const createUser = async (inputs) => {
       if (inputs.password === inputs.confirm) {
         const user = await signUp(inputs).catch((err) => alert(err));
@@ -126,6 +142,36 @@ export const ParentDialog = (props) => {
       } else {
         setError(true);
         setHelperText("Passwords dont match");
+      }
+    };
+
+    const [firstNameError, setFirstNameError] = useState(false);
+    const [lastNameError, setLastNameError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+    const [usernameError, setUsernameError] = useState(false);
+
+    const handleCreateSubmission = () => {
+      let isFirstNameValid = inputs.firstName.match(nameRegex);
+      let isLastNameValid = inputs.lastName.match(nameRegex);
+      let isEmailValid = inputs.email.match(emailRegex);
+      let isPasswordValid = inputs.password.match(passwordRegex);
+      let isUsernameValid = inputs.username.match(usernameRegex);
+
+      setFirstNameError(!isFirstNameValid);
+      setLastNameError(!isLastNameValid);
+      setEmailError(!isEmailValid);
+      setPasswordError(!isPasswordValid);
+      setUsernameError(!isUsernameValid);
+
+      if (
+        isFirstNameValid &&
+        isLastNameValid &&
+        isEmailValid &&
+        isPasswordValid &&
+        isUsernameValid
+      ) {
+        createUser(inputs);
       }
     };
 
@@ -143,9 +189,12 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, firstName: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, firstName: value });
+                }}
+                error={firstNameError}
+                helperText={firstNameError ? "Enter a valid First Name" : ""}
               />
               <TextField
                 size="small"
@@ -153,9 +202,12 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, lastName: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, lastName: value });
+                }}
+                error={lastNameError}
+                helperText={lastNameError ? "Enter a valid Last Name" : ""}
               />
             </Stack>
             <Stack spacing={1} direction="row">
@@ -165,9 +217,12 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, email: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, email: value });
+                }}
+                error={emailError}
+                helperText={emailError ? "Enter a valid Email" : ""}
               />
               <TextField
                 size="small"
@@ -175,9 +230,12 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, username: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, password: value });
+                }}
+                error={usernameError}
+                helperText={usernameError ? "Enter a valid Username" : ""}
               />
             </Stack>
             <Stack spacing={1} direction="row">
@@ -188,9 +246,12 @@ export const ParentDialog = (props) => {
                 type="password"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, password: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, password: value });
+                }}
+                error={passwordError}
+                helperText={passwordError ? "Enter a valid Password" : ""}
               />
               <TextField
                 size="small"
@@ -208,12 +269,7 @@ export const ParentDialog = (props) => {
             </Stack>
           </Stack>
           <Stack spacing={1}>
-            <Button
-              variant="contained"
-              onClick={() => {
-                createUser(inputs);
-              }}
-            >
+            <Button variant="contained" onClick={handleCreateSubmission}>
               Create Account
             </Button>
             <Button size="small" onClick={() => setView(6)}>
@@ -582,6 +638,7 @@ export const AddStepsDialog = (props) => {
   // const { username } = useUserStore((state) => state.currentUser);
   const uuid = useUserStore((state) => state.uuid);
   const today = Date.parse(moment());
+  const lastYear = moment().subtract(365, "days").calendar();
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
     date: today,
@@ -622,6 +679,7 @@ export const AddStepsDialog = (props) => {
             <DatePicker
               label="Date"
               disableFuture
+              minDate={lastYear}
               value={value}
               onChange={handleChange}
               renderInput={(params) => (
