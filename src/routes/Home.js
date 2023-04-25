@@ -15,21 +15,15 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { signOut } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useStepCountStore } from "../Stores/StepCountStore";
-import { useInfoStore } from "../Stores/InfoStore";
-import { useWeightStore } from "../Stores/WeightStore";
 import { useDialogStore } from "../Stores/DialogStore";
 
 const Home = () => {
   const resetUser = useUserStore((state) => state.reset);
   const resetSteps = useStepCountStore((state) => state.reset);
-  const resetInfo = useInfoStore((state) => state.reset);
-  const resetWeight = useWeightStore((state) => state.reset);
   const resetDialogs = useDialogStore((state) => state.reset);
   const resetStores = () => {
     resetUser();
     resetSteps();
-    resetInfo();
-    resetWeight();
     resetDialogs();
   };
   const navigate = useNavigate();
@@ -52,9 +46,6 @@ const Home = () => {
     setOpen(true);
   };
   const [dataOpen, setDataOpen] = useState(false);
-  const handleDataOpen = () => {
-    setDataOpen(true);
-  };
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -122,7 +113,7 @@ const Home = () => {
           </ListItemIcon>
           Add Data
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem component={Link} to={`settings`} onClick={handleClose}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>

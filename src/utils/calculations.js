@@ -22,7 +22,7 @@ export const calcStepGoal = (gender, weight, bodyFat, targetWeightLoss) => {
       : (261425.4 / targetBodyFat ** 1.8797) * currentFatMass;
   return steps;
 };
-/* */
+
 export const calcTotalSteps = (steps) => {
   console.log("calculating total steps...", steps);
   let totalSteps = 0;

@@ -2,7 +2,6 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useStepCountStore } from "../Stores/StepCountStore";
 import { useUserStore } from "../Stores/UserStore";
-import { useWeightStore } from "../Stores/WeightStore";
 import {
   calcStepGoal,
   calcTotalSteps,
@@ -14,7 +13,6 @@ const Stats = () => {
   const steps = useStepCountStore((state) => state.countsData);
   const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
   const totalSteps = useStepCountStore((state) => state.totalSteps);
-  const weights = useWeightStore((state) => state.weights);
   const weightLoss = useStepCountStore((state) => state.weightLoss);
   const setWeightLoss = useStepCountStore((state) => state.setWeightLoss);
   const setStepGoal = useStepCountStore((state) => state.setStepGoal);

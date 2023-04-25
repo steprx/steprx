@@ -49,11 +49,8 @@ export const ParentDialog = (props) => {
   const setUserAttributes = useUserStore((state) => state.setUserAttributes);
   const setUserInfo = useUserStore((state) => state.setUserInfo);
   const setWeighIns = useUserStore((state) => state.setWeighIns);
-  const setSession = useUserStore((state) => state.setSession);
   const setCountsData = useStepCountStore((state) => state.setCountsData);
   const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
-  const userAttributes = useUserStore((state) => state.userAttributes);
-  const setUserSubmit = useUserStore((state) => state.setUserSubmit);
   const handleClose = () => {
     props.handleClose(false);
   };
@@ -131,9 +128,6 @@ export const ParentDialog = (props) => {
     const createUser = async (inputs) => {
       if (inputs.password === inputs.confirm) {
         const user = await signUp(inputs).catch((err) => alert(err));
-        // .then((res) => setUuid(res.userSub))
-        // .then(res=> setUserAttributes(res.user))
-        // .then(() => setView(3));
         console.log(user, user.userSub, user.user);
         setUuid(user.userSub);
         setUser(user.user);
@@ -195,7 +189,7 @@ export const ParentDialog = (props) => {
                   setInputs({ ...inputs, firstName: value });
                 }}
                 error={firstNameError}
-                helperText={firstNameError ? "Enter a valid First Name" : ""}
+                helperText={firstNameError ? "Enter a valid first name" : ""}
               />
               <TextField
                 size="small"
@@ -208,7 +202,7 @@ export const ParentDialog = (props) => {
                   setInputs({ ...inputs, lastName: value });
                 }}
                 error={lastNameError}
-                helperText={lastNameError ? "Enter a valid Last Name" : ""}
+                helperText={lastNameError ? "Enter a valid last name" : ""}
               />
             </Stack>
             <Stack spacing={1} direction="row">
@@ -223,7 +217,7 @@ export const ParentDialog = (props) => {
                   setInputs({ ...inputs, email: value });
                 }}
                 error={emailError}
-                helperText={emailError ? "Enter a valid Email" : ""}
+                helperText={emailError ? "Enter a valid email" : ""}
               />
               <TextField
                 size="small"
@@ -236,7 +230,7 @@ export const ParentDialog = (props) => {
                   setInputs({ ...inputs, username: value });
                 }}
                 error={usernameError}
-                helperText={usernameError ? "Enter a valid Username" : ""}
+                helperText={usernameError ? "Enter a valid username" : ""}
               />
             </Stack>
             <Stack spacing={1} direction="row">
@@ -252,7 +246,7 @@ export const ParentDialog = (props) => {
                   setInputs({ ...inputs, password: value });
                 }}
                 error={passwordError}
-                helperText={passwordError ? "Enter a valid Password" : ""}
+                helperText={passwordError ? "Enter a valid password" : ""}
               />
               <TextField
                 size="small"
@@ -313,7 +307,6 @@ export const ParentDialog = (props) => {
 
   const HealthDialog = (props) => {
     const today = Date.parse(moment());
-    // const { username } = useUserStore((state) => state.currentUser);
     const [value, setValue] = useState(moment());
     const [birthdate, setBirthdate] = useState(moment());
     const handleBirthdateChange = (newValue) => {
@@ -613,7 +606,7 @@ export const ParentDialog = (props) => {
         console.log(res);
         setUserInfo(res);
       });
-      getAllWeighIns(uuid).then((res) => setWeighIns(res));
+      getAllWeighIns(user.attributes.sub).then((res) => setWeighIns(res));
       getAllSteps(user.username).then((res) => {
         console.log(res);
         setTotalSteps(calcTotalSteps(res));
@@ -630,7 +623,7 @@ export const ParentDialog = (props) => {
           <Stack spacing={2} justifyContent="center">
             <TextField
               size="small"
-              label="Email Address"
+              label="Username or Email Address"
               variant="outlined"
               onChange={(event) =>
                 setInputs({ ...inputs, email: event.target.value })
@@ -698,7 +691,6 @@ export const ParentDialog = (props) => {
 
 export const AddStepsDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
-  // const { username } = useUserStore((state) => state.currentUser);
   const uuid = useUserStore((state) => state.uuid);
   const today = Date.parse(moment());
   const lastYear = moment().subtract(365, "days").calendar();
@@ -778,7 +770,6 @@ export const AddStepsDialog = (props) => {
 
 export const AddWeighInDialog = (props) => {
   const today = Date.parse(moment());
-  // const { username } = useUserStore((state) => state.currentUser);
   const userInfo = useUserStore((state) => state.userInfo);
   const weighIns = useUserStore((state) => state.weighIns);
   const currentUser = useUserStore((state) => state.currentUser);

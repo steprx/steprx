@@ -1,5 +1,4 @@
 import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material";
-import { useInfoStore } from "../Stores/InfoStore";
 import { useUserStore } from "../Stores/UserStore";
 import { calcAge, calcHeight } from "../utils/calculations";
 
@@ -91,7 +90,6 @@ const Profile = () => {
       </Grid>
       <Box display="flex" justifyContent="center" my={2}>
         <Button variant="contained">Save Changes</Button>
-        {/* <Button>Edit Profile</Button> */}
       </Box>
     </Box>
   );

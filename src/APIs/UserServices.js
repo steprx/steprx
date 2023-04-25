@@ -1,10 +1,8 @@
 import { ExecuteStatementCommand } from "@aws-sdk/client-dynamodb";
 import { GetCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { ddbDocClient } from "../libs/ddbDocClient.js";
-import { useUserStore } from "../Stores/UserStore.js";
 
 export const putInfo = async (uuid, payload) => {
-  // const key = user;
   const params = {
     TableName: "user_info",
     Item: {

@@ -61,15 +61,8 @@ export const Charts = () => {
               <YAxis domain={["auto", "auto"]} />
               <Tooltip />
               <Bar dataKey="steps" fill="#8884d8" />
-              {/* <Line type="basis" dataKey="steps" stroke="#8884d8" /> */}
               <Line dataKey="stepGoal" stroke="#808080" />
             </ComposedChart>
-            {/* <LineChart data={data}>
-            <XAxis dataKey="date" padding={{ left: 20, right: 20 }} />
-            <YAxis domain={["auto", "auto"]} />
-            <Tooltip />
-            <Line type="basis" dataKey="steps" stroke="#8884d8" />
-          </LineChart> */}
           </ResponsiveContainer>
         ) : (
           <Typography align="center" variant="body1">

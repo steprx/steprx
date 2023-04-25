@@ -1,10 +1,8 @@
 import {
   Avatar,
   Box,
-  Divider,
   FormControl,
   Grid,
-  IconButton,
   InputLabel,
   ListItemIcon,
   Menu,
@@ -13,15 +11,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { AddStepsDialog, AddWeighInDialog } from "../components/Dialogs";
-import { Addchart, AddCircle, Logout, Settings } from "@mui/icons-material";
+import { Logout } from "@mui/icons-material";
 import { DataGrid } from "@mui/x-data-grid";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useStepCountStore } from "../Stores/StepCountStore";
-import { useInfoStore } from "../Stores/InfoStore";
-import { useWeightStore } from "../Stores/WeightStore";
 import { useDialogStore } from "../Stores/DialogStore";
 import { getAllData, getAllSteps, getAllWeights } from "../APIs/AdminServices";
 import ExportExcel from "../utils/excelExport";
@@ -31,25 +26,13 @@ import moment from "moment";
 const AdminDashboard = () => {
   const resetUser = useUserStore((state) => state.reset);
   const resetSteps = useStepCountStore((state) => state.reset);
-  const resetInfo = useInfoStore((state) => state.reset);
-  const resetWeight = useWeightStore((state) => state.reset);
   const resetDialogs = useDialogStore((state) => state.reset);
   const resetStores = () => {
     resetUser();
     resetSteps();
-    resetInfo();
-    resetWeight();
     resetDialogs();
   };
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const [dataOpen, setDataOpen] = useState(false);
-  const handleDataOpen = () => {
-    setDataOpen(true);
-  };
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -67,7 +50,6 @@ const AdminDashboard = () => {
       localStorage.clear();
     });
   };
-  //   const array = [{ id: 1, weight: 222 }];
   const [info, setInfo] = useState([]);
   const [steps, setSteps] = useState([]);
   const [weight, setWeight] = useState([]);
@@ -122,8 +104,6 @@ const AdminDashboard = () => {
     };
     getData();
   }, []);
-  //   const array = getData().then((res) => res.map(formatData));
-  //   const allData = array?.map(formatData)
   console.log(info);
   const infoColumns = [
     { field: "uuid", headerName: "UUID", width: 200 },
@@ -238,7 +218,6 @@ const AdminDashboard = () => {
           )}
         </Grid>
       </Grid>
-      {/* <Outlet /> */}
     </Box>
   );
 };
