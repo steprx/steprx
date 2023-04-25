@@ -58,11 +58,19 @@ export const ParentDialog = (props) => {
     props.handleClose(false);
   };
 
-  const nameRegex = /^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/;
+  const nameRegex = /^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/g;
   const emailRegex = /^\w\w*(?:(?:\.|-)?\w+)*@\w+\-?\w*(?:\.[a-z]{2,})+$/g;
   const passwordRegex =
     /^(?!\s+)(?!.*\s+$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ])[A-Za-z0-9$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ]{8,256}$/g;
-  const usernameRegex = /.+/;
+  const usernameRegex = /.+/g;
+  const weightRegex =
+    /^(1[5-9][0-9]|[2-9][0-9]{2}|1[0-3][0-9]{2}|1400)(\.\d{1,2})?$/g;
+  const heightFtRegex = /^[4-8]$/g;
+  const heightInRegex = /^([1-9]|1[0-2])$/g;
+  const bodyFatRegex = /^(1[5-9]|[2-9][0-9])(\.\d{1,2})?$/g;
+  const targetWeightLossRegex = /^(0*(?:[1-9]|[1-5][0-9]|60))(?:\.\d{1,2})?$/g;
+  const waistRegex = /^(1[3-9]|[2-5][0-9]|6[0-5])(\.\d{1,2})?$/g;
+  const neckRegex = /^(1\d|2\d|40)(\.\d{1,2})?$/g;
 
   const EntryDialog = (props) => {
     const handleClick = (button) => {
@@ -120,15 +128,6 @@ export const ParentDialog = (props) => {
       time: time.getTime(),
     });
 
-    const [errors, setErrors] = useState({
-      firstName: "",
-      lastName: "",
-      email: "",
-      username: "",
-      password: "",
-      confirm: "",
-    });
-
     const createUser = async (inputs) => {
       if (inputs.password === inputs.confirm) {
         const user = await signUp(inputs).catch((err) => alert(err));
@@ -139,9 +138,6 @@ export const ParentDialog = (props) => {
         setUuid(user.userSub);
         setUser(user.user);
         setView(3);
-      } else {
-        setError(true);
-        setHelperText("Passwords dont match");
       }
     };
 
@@ -159,13 +155,14 @@ export const ParentDialog = (props) => {
       let isUsernameValid = inputs.username.match(usernameRegex);
       let isPasswordValid = inputs.password.match(passwordRegex);
       let isConfirmValid = inputs.confirm.match(passwordRegex);
+      let isPasswordMatched = inputs.password === inputs.confirm;
 
       setFirstNameError(!isFirstNameValid);
       setLastNameError(!isLastNameValid);
       setEmailError(!isEmailValid);
       setUsernameError(!isUsernameValid);
       setPasswordError(!isPasswordValid);
-      setUsernameError(!isConfirmValid);
+      setConfirmError(!isConfirmValid || !isPasswordMatched);
 
       if (
         isFirstNameValid &&
@@ -264,14 +261,12 @@ export const ParentDialog = (props) => {
                 type="password"
                 fullWidth
                 required
-                error={error}
-                helperText={helperText}
                 onChange={(event) => {
                   const value = event.target.value;
-                  setInputs({ ...inputs, password: value });
+                  setInputs({ ...inputs, confirm: value });
                 }}
-                error={passwordError}
-                helperText={passwordError ? "Enter a valid Password" : ""}
+                error={confirmError}
+                helperText={confirmError ? "Enter a valid Password" : ""}
               />
             </Stack>
           </Stack>
@@ -364,6 +359,38 @@ export const ParentDialog = (props) => {
         .catch((err) => alert(err));
     };
 
+    const handleCreateUserStats = () => {
+      let isWeightValid = inputs.weight.match(weightRegex);
+      let isHeightFtValid = inputs.heightFt.match(heightFtRegex);
+      let isHeightInValid = inputs.heightIn.match(heightInRegex);
+      let isBodyFatValid = inputs.bodyFat.match(bodyFatRegex);
+      let isTargetWeightLossValid = inputs.targetWeightLoss.match(
+        targetWeightLossRegex
+      );
+      let isWaistValid = inputs.waist.match(waistRegex);
+      let isNeckValid = inputs.neck.match(neckRegex);
+
+      setWeightError(!isWeightValid);
+      setHeightFtError(!isHeightFtValid);
+      setHeightInError(!isHeightInValid);
+      setBodyFatdError(!isBodyFatValid);
+      setTargetWeightLossError(!isTargetWeightLossValid);
+      setWaistError(!isWaistValid);
+      setNeckValid(!isNeckValid);
+
+      if (
+        isWeightValid &&
+        isHeightInValid &&
+        isHeightFtValid &&
+        isBodyFatValid &&
+        isTargetWeightLossValid &&
+        isWaistValid &&
+        isNeckValid
+      ) {
+        handleSubmit(inputs);
+      }
+    };
+
     return (
       <Box p={2}>
         <Stack justifyContent="center" spacing={2}>
@@ -387,8 +414,13 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, weight: event.target.value })
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, weight: value });
+                }}
+                error={formSubmitted && weightError}
+                helperText={
+                  formSubmitted && weightError ? "Must be 150-1400" : ""
                 }
               />
             </Stack>
@@ -398,18 +430,24 @@ export const ParentDialog = (props) => {
                 label="Height (ft)"
                 variant="outlined"
                 fullWidth
-                onChange={(event) =>
-                  setInputs({ ...inputs, heightFt: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, heightFt: value });
+                }}
+                error={heightFtError}
+                helperText={heightFtError ? "Must be 4-8" : ""}
               />
               <TextField
                 size="small"
                 label="Height (in)"
                 variant="outlined"
                 fullWidth
-                onChange={(event) =>
-                  setInputs({ ...inputs, heightIn: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, heightIn: value });
+                }}
+                error={heightInError}
+                helperText={heightInError ? "Must be 1-12" : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -419,8 +457,13 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, bodyFat: event.target.value })
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, bodyFat: value });
+                }}
+                error={formSubmitted && bodyFatError}
+                helperText={
+                  formSubmitted && bodyFatError ? "Must be 15-99" : ""
                 }
               />
               <TextField
@@ -429,8 +472,13 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
-                onChange={(event) =>
-                  setInputs({ ...inputs, targetWeightLoss: event.target.value })
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, targetWeightLoss: value });
+                }}
+                error={formSubmitted && targetWeightLossError}
+                helperText={
+                  formSubmitted && targetWeightLossError ? "Must be 1-60" : ""
                 }
               />
             </Stack>
@@ -440,18 +488,24 @@ export const ParentDialog = (props) => {
                 label="Waist (in)"
                 variant="outlined"
                 fullWidth
-                onChange={(event) =>
-                  setInputs({ ...inputs, waist: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, waist: value });
+                }}
+                error={waistError}
+                helperText={waistError ? "Must be 13-65." : ""}
               />
               <TextField
                 size="small"
                 label="Neck (in)"
                 variant="outlined"
                 fullWidth
-                onChange={(event) =>
-                  setInputs({ ...inputs, neck: event.target.value })
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInputs({ ...inputs, neck: value });
+                }}
+                error={neckError}
+                helperText={neckError ? "Must be 10-30." : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
