@@ -359,6 +359,14 @@ export const ParentDialog = (props) => {
         .catch((err) => alert(err));
     };
 
+    const [weightError, setWeightError] = useState(false);
+    const [heightFtError, setHeightFtError] = useState(false);
+    const [heightInError, setHeightInError] = useState(false);
+    const [bodyFatError, setBodyFatError] = useState(false);
+    const [targetWeightLossError, setTargetWeightLossError] = useState(false);
+    const [waistError, setWaistError] = useState(false);
+    const [neckError, setNeckError] = useState(false);
+
     const handleCreateUserStats = () => {
       let isWeightValid = inputs.weight.match(weightRegex);
       let isHeightFtValid = inputs.heightFt.match(heightFtRegex);
@@ -373,10 +381,10 @@ export const ParentDialog = (props) => {
       setWeightError(!isWeightValid);
       setHeightFtError(!isHeightFtValid);
       setHeightInError(!isHeightInValid);
-      setBodyFatdError(!isBodyFatValid);
+      setBodyFatError(!isBodyFatValid);
       setTargetWeightLossError(!isTargetWeightLossValid);
       setWaistError(!isWaistValid);
-      setNeckValid(!isNeckValid);
+      setNeckError(!isNeckValid);
 
       if (
         isWeightValid &&
@@ -387,11 +395,7 @@ export const ParentDialog = (props) => {
         isWaistValid &&
         isNeckValid
       ) {
-<<<<<<< Updated upstream
         handleSubmit(inputs);
-=======
-        createUser(inputs);
->>>>>>> Stashed changes
       }
     };
 
@@ -422,10 +426,8 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, weight: value });
                 }}
-                error={formSubmitted && weightError}
-                helperText={
-                  formSubmitted && weightError ? "Must be 150-1400" : ""
-                }
+                error={weightError}
+                helperText={weightError ? "Must be 150-1400" : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -465,10 +467,8 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, bodyFat: value });
                 }}
-                error={formSubmitted && bodyFatError}
-                helperText={
-                  formSubmitted && bodyFatError ? "Must be 15-99" : ""
-                }
+                error={bodyFatError}
+                helperText={bodyFatError ? "Must be 15-99" : ""}
               />
               <TextField
                 size="small"
@@ -480,10 +480,8 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, targetWeightLoss: value });
                 }}
-                error={formSubmitted && targetWeightLossError}
-                helperText={
-                  formSubmitted && targetWeightLossError ? "Must be 1-60" : ""
-                }
+                error={targetWeightLossError}
+                helperText={targetWeightLossError ? "Must be 1-60" : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
