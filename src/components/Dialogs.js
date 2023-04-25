@@ -387,7 +387,11 @@ export const ParentDialog = (props) => {
         isWaistValid &&
         isNeckValid
       ) {
+<<<<<<< Updated upstream
         handleSubmit(inputs);
+=======
+        createUser(inputs);
+>>>>>>> Stashed changes
       }
     };
 
