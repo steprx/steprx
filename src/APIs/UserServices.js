@@ -116,7 +116,7 @@ export const putWeighIn = async (uuid, payload) => {
     },
   };
   try {
-    await api.post("/info/save", params.Item);
+    await api.post("/stats/save", params.Item);
     // const data = await ddbDocClient.send(new PutCommand(params));
   } catch (err) {
     console.log("Error", err);
