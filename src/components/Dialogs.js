@@ -720,13 +720,13 @@ export const ParentDialog = (props) => {
           res.getAccessToken().payload["cognito:groups"]
         );
       });
-      await getUserAttributes().then((res) => setUserAttributes(res));
-      await getAllInfo(user.attributes.sub).then((res) => {
+      getUserAttributes().then((res) => setUserAttributes(res));
+      getAllInfo(user.attributes.sub).then((res) => {
         console.log(res);
         setUserInfo(res);
       });
-      await getAllWeighIns(user.attributes.sub).then((res) => setWeighIns(res));
-      await getAllSteps(user.attributes.sub)?.then((res) => {
+      getAllWeighIns(user.attributes.sub).then((res) => setWeighIns(res));
+      getAllSteps(user.attributes.sub)?.then((res) => {
         console.log(res);
         setTotalSteps(calcTotalSteps(res));
         setCountsData(res);
