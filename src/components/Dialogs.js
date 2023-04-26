@@ -723,9 +723,9 @@ export const ParentDialog = (props) => {
           res.getAccessToken().payload["cognito:groups"]
         );
       });
-      getUserAttributes().then((res) => setUserAttributes(res));
+      await getUserAttributes().then((res) => setUserAttributes(res));
       getAllInfo(user.attributes.sub).then((res) => {
-        console.log(res);
+        console.log("userInfo:", res);
         setUserInfo(res);
       });
       getAllWeighIns(user.attributes.sub).then((res) => setWeighIns(res));
