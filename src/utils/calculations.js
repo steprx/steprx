@@ -22,16 +22,34 @@ export const calcStepGoal = (gender, weight, bodyFat, targetWeightLoss) => {
       : (261425.4 / targetBodyFat ** 1.8797) * currentFatMass;
   return steps;
 };
-/* */
+
 export const calcTotalSteps = (steps) => {
   console.log("calculating total steps...", steps);
   let totalSteps = 0;
   for (let i = 0; i < steps?.length; i++) {
-    totalSteps += Number(steps[i].steps.S);
+    totalSteps += Number(steps[i].steps);
   }
   return totalSteps;
 };
 
-export const calcWeightDiff = (weights) => {
-  // console.log(weights);
+export const calcWeightDiff = (oldWeight, newWeight) => {
+  console.log("calculating weight loss...");
+  const loss = Number(oldWeight) - Number(newWeight);
+  return loss;
+};
+
+export const calcAge = (birthdate) => {
+  const today = new Date();
+  const dob = new Date(Number(birthdate));
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  console.log(today, birthdate, dob, age, m);
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+  return age;
+};
+
+export const calcHeight = (feet, inches) => {
+  return Number(feet) * 12 + Number(inches);
 };

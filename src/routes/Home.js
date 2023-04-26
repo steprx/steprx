@@ -15,36 +15,37 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { signOut } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useStepCountStore } from "../Stores/StepCountStore";
-import { useInfoStore } from "../Stores/InfoStore";
-import { useWeightStore } from "../Stores/WeightStore";
 import { useDialogStore } from "../Stores/DialogStore";
 
 const Home = () => {
   const resetUser = useUserStore((state) => state.reset);
   const resetSteps = useStepCountStore((state) => state.reset);
-  const resetInfo = useInfoStore((state) => state.reset);
-  const resetWeight = useWeightStore((state) => state.reset);
   const resetDialogs = useDialogStore((state) => state.reset);
   const resetStores = () => {
     resetUser();
     resetSteps();
-    resetInfo();
-    resetWeight();
     resetDialogs();
   };
   const navigate = useNavigate();
   const attributes = useUserStore((state) => state.userAttributes);
   const userInfo = useUserStore((state) => state.userInfo);
-  const user = useUserStore((state) => state.currentUser);
-  console.log("attributes", attributes, "info", userInfo, "user", user);
+  const uuid = useUserStore((state) => state.uuid);
+  const weighIns = useUserStore((state) => state.weighIns);
+  console.log(
+    "attributes",
+    attributes,
+    "info",
+    userInfo,
+    "user",
+    uuid,
+    "weigh ins",
+    weighIns
+  );
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
   const [dataOpen, setDataOpen] = useState(false);
-  const handleDataOpen = () => {
-    setDataOpen(true);
-  };
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -55,12 +56,14 @@ const Home = () => {
   };
   const logout = async () => {
     handleClose();
-    resetStores();
-    console.clear();
-    signOut().then(() => localStorage.clear());
+    signOut().then(() => {
+      resetStores();
+      console.clear();
+      localStorage.clear();
+    });
   };
 
-  return attributes && userInfo && user ? (
+  return attributes && userInfo && uuid ? (
     <Box>
       <Box
         p={2}
@@ -99,13 +102,18 @@ const Home = () => {
           <Typography mx={1}>Profile</Typography>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            setDataOpen(true);
+            handleClose();
+          }}
+        >
           <ListItemIcon>
             <Addchart fontSize="small" />
           </ListItemIcon>
           Add Data
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem component={Link} to={`settings`} onClick={handleClose}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>

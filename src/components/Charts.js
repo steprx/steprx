@@ -11,34 +11,35 @@ import {
 } from "recharts";
 import { useStepCountStore } from "../Stores/StepCountStore";
 import { useUserStore } from "../Stores/UserStore";
+import moment from "moment";
 
 export const Charts = () => {
   const stepGoal = useStepCountStore((state) => state.stepGoal);
-  const userInfo = useUserStore((state) => state.userInfo);
+  const weighIns = useUserStore((state) => state.weighIns);
   const countsData = useStepCountStore((state) => state.countsData);
 
   const formatWeights = (item) => {
     return {
-      date: item.date.S,
-      weight: item.weight.S,
+      date: moment(Number(item.date)).format("l"),
+      weight: item.weight,
     };
   };
   const formatSteps = (item) => {
     return {
-      date: item.date.S,
-      steps: item.steps.S,
+      date: moment(Number(item.date)).format("l"),
+      steps: item.steps,
       stepGoal: stepGoal?.toFixed(0),
     };
   };
   const formatBodyFats = (item) => {
     return {
-      date: item.date.S,
-      bodyFat: item.bodyFat.S,
+      date: moment(Number(item.date)).format("l"),
+      bodyFat: item.bodyFat,
     };
   };
-  const weightData = userInfo?.map(formatWeights);
+  const weightData = weighIns?.map(formatWeights);
   const stepsData = countsData?.map(formatSteps);
-  const bodyFatData = userInfo?.map(formatBodyFats);
+  const bodyFatData = weighIns?.map(formatBodyFats);
   console.log(stepsData);
   return (
     <Grid container spacing={1}>
@@ -53,22 +54,15 @@ export const Charts = () => {
         </ResponsiveContainer>
       </Grid>
       <Grid item xs={12} sm={4}>
-        {stepsData.length !== 0 ? (
+        {stepsData ? (
           <ResponsiveContainer width="100%" aspect={1}>
             <ComposedChart data={stepsData}>
               <XAxis dataKey="date" padding={{ left: 20, right: 20 }} />
               <YAxis domain={["auto", "auto"]} />
               <Tooltip />
               <Bar dataKey="steps" fill="#8884d8" />
-              <Line type="basis" dataKey="steps" stroke="#8884d8" />
               <Line dataKey="stepGoal" stroke="#808080" />
             </ComposedChart>
-            {/* <LineChart data={data}>
-            <XAxis dataKey="date" padding={{ left: 20, right: 20 }} />
-            <YAxis domain={["auto", "auto"]} />
-            <Tooltip />
-            <Line type="basis" dataKey="steps" stroke="#8884d8" />
-          </LineChart> */}
           </ResponsiveContainer>
         ) : (
           <Typography align="center" variant="body1">

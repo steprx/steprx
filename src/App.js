@@ -8,25 +8,32 @@ import Profile from "./routes/Profile";
 import PrivateRoutes from "./routes/PrivateRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
 import AdminDashboard from "./routes/AdminDashboard";
+import { ThemeProvider, createTheme } from "@mui/material";
+import Settings from "./routes/Settings";
+
+const theme = createTheme();
 
 const App = () => {
   return (
-    <LocalizationProvider dateAdapter={AdapterMoment}>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<AdminRoutes />}>
-            <Route element={<AdminDashboard />} path="/admin" />
-          </Route>
-          <Route element={<PrivateRoutes />}>
-            <Route element={<Home />} path="/" exact>
-              <Route element={<Dashboard />} index />
-              <Route element={<Profile />} path="/profile" />
+    <ThemeProvider theme={theme}>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<AdminRoutes />}>
+              <Route element={<AdminDashboard />} path="/admin" />
             </Route>
-          </Route>
-          <Route element={<LandingPage />} path="/login" />
-        </Routes>
-      </BrowserRouter>
-    </LocalizationProvider>
+            <Route element={<PrivateRoutes />}>
+              <Route element={<Home />} path="/" exact>
+                <Route element={<Dashboard />} index />
+                <Route element={<Profile />} path="/profile" />
+                <Route element={<Settings />} path="/settings" />
+              </Route>
+            </Route>
+            <Route element={<LandingPage />} path="/login" />
+          </Routes>
+        </BrowserRouter>
+      </LocalizationProvider>
+    </ThemeProvider>
   );
 };
 

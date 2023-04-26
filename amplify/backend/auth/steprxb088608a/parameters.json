@@ -1,9 +1,9 @@
 {
   "authSelections": "userPoolOnly",
-  "resourceName": "steprxc66d5217",
+  "resourceName": "steprxb088608a",
   "serviceType": "imported",
   "region": "us-east-1",
-  "usernameAttributes": [
+  "aliasAttributes": [
     "email"
   ],
   "requiredAttributes": [

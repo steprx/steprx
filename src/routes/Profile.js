@@ -1,19 +1,23 @@
 import { Box, Button, Grid, Stack, TextField, Typography } from "@mui/material";
-import { useInfoStore } from "../Stores/InfoStore";
 import { useUserStore } from "../Stores/UserStore";
+import { calcAge, calcHeight } from "../utils/calculations";
 
 const Profile = () => {
   const userAttributes = useUserStore((state) => state.userAttributes);
   const name = userAttributes.given_name + " " + userAttributes.family_name;
   const userInfo = useUserStore((state) => state.userInfo);
-  const age = "temp";
-  const weight = userInfo?.at(0)?.weight.S;
-  const height = "temp";
-  const bodyFat = userInfo?.at(0)?.bodyFat.S;
-  const targetWeightLoss = userInfo?.at(0)?.targetWeightLoss.S;
-  const sex = userInfo?.at(0)?.sex.S;
-  const waist = userInfo?.at(0)?.waist.S;
-  const neck = userInfo?.at(0)?.neck.S;
+  const weighIns = useUserStore((state) => state.weighIns);
+  const age = calcAge(Number(userInfo?.birthdate));
+  const weight = weighIns?.at(0)?.weight;
+  const height = calcHeight(
+    weighIns?.at(0)?.heightFt,
+    weighIns?.at(0)?.heightIn
+  );
+  const bodyFat = weighIns?.at(0)?.bodyFat;
+  const targetWeightLoss = weighIns?.at(0)?.targetWeightLoss;
+  const sex = userInfo?.sex;
+  const waist = weighIns?.at(0)?.waist;
+  const neck = weighIns?.at(0)?.neck;
   return (
     <Box p={2}>
       <Typography variant="h4" align="center">
@@ -44,25 +48,25 @@ const Profile = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Weight:</Typography>
+            <Typography variant="h5">Weight (lbs):</Typography>
             <TextField size="small" disabled defaultValue={weight} />
           </Stack>
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Height:</Typography>
+            <Typography variant="h5">Height (in):</Typography>
             <TextField size="small" disabled defaultValue={height} />
           </Stack>
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Body Fat Percentage:</Typography>
+            <Typography variant="h5">Body Fat %:</Typography>
             <TextField size="small" disabled defaultValue={bodyFat} />
           </Stack>
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Target Weight:</Typography>
+            <Typography variant="h5">Target Weight Loss %:</Typography>
             <TextField size="small" disabled defaultValue={targetWeightLoss} />
           </Stack>
         </Grid>
@@ -74,20 +78,19 @@ const Profile = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Waist:</Typography>
+            <Typography variant="h5">Waist (in):</Typography>
             <TextField size="small" disabled defaultValue={waist} />
           </Stack>
         </Grid>
         <Grid item xs={12} md={6}>
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h5">Neck:</Typography>
+            <Typography variant="h5">Neck (in):</Typography>
             <TextField size="small" disabled defaultValue={neck} />
           </Stack>
         </Grid>
       </Grid>
       <Box display="flex" justifyContent="center" my={2}>
         <Button variant="contained">Save Changes</Button>
-        {/* <Button>Edit Profile</Button> */}
       </Box>
     </Box>
   );

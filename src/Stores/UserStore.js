@@ -4,17 +4,19 @@ import { devtools, persist } from "zustand/middleware";
 const initialState = {
   currentUser: null,
   userInfo: null,
+  weighIns: null,
   userAttributes: null,
-  // userSubmit: false,
+  uuid: null,
   session: null,
 };
 const store = (set) => ({
   ...initialState,
   setCurrentUser: (user) => set((state) => ({ currentUser: user })),
   setUserInfo: (info) => set((state) => ({ userInfo: info })),
+  setWeighIns: (weighIn) => set((state) => ({ weighIns: weighIn })),
   setUserAttributes: (attributes) =>
     set((state) => ({ userAttributes: attributes })),
-  // setUserSubmit: (submit) => set((state) => ({ userSubmit: submit })),
+  setUuid: (uuid) => set((state) => ({ uuid: uuid })),
   setSession: (session) => set((state) => ({ session: session })),
   reset: () => set(initialState),
 });
