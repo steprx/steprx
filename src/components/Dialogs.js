@@ -474,6 +474,9 @@ export const ParentDialog = (props) => {
           <Typography align="center" variant="h6">
             Let's get some basic info
           </Typography>
+          <Typography align="center" variant="h10">
+            *Required field
+          </Typography>
           <Stack spacing={2} justifyContent="center">
             <Stack direction="row" spacing={1}>
               <DatePicker
@@ -545,7 +548,7 @@ export const ParentDialog = (props) => {
             <Stack direction="row" spacing={1}>
               <TextField
                 size="small"
-                label="Body Fat %"
+                label="Body Fat (%)"
                 variant="outlined"
                 fullWidth
                 required
@@ -564,7 +567,7 @@ export const ParentDialog = (props) => {
               />
               <TextField
                 size="small"
-                label="Target Weight Loss (%)"
+                label="Target % Weight Loss"
                 variant="outlined"
                 fullWidth
                 required
@@ -585,7 +588,7 @@ export const ParentDialog = (props) => {
             <Stack direction="row" spacing={1}>
               <TextField
                 size="small"
-                label="Waist (in)"
+                label="Neck (in)"
                 variant="outlined"
                 fullWidth
                 type="number"
@@ -603,7 +606,7 @@ export const ParentDialog = (props) => {
               />
               <TextField
                 size="small"
-                label="Neck (in)"
+                label="Waist (in)"
                 variant="outlined"
                 fullWidth
                 type="number"
