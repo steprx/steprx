@@ -1,0 +1,55 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-steprx-staging-212357-authRole",
+      "UnauthRoleArn": "arn:aws:iam::005159501475:role/amplify-steprx-staging-212357-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::005159501475:role/amplify-steprx-staging-212357-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-steprx-staging-212357-deployment",
+      "UnauthRoleName": "amplify-steprx-staging-212357-unauthRole",
+      "StackName": "amplify-steprx-staging-212357",
+      "StackId": "arn:aws:cloudformation:us-east-1:005159501475:stack/amplify-steprx-staging-212357/60b38470-b877-11ed-9835-0ac13d8323d7",
+      "AmplifyAppId": "d3uf43c5n30bgh"
+    }
+  },
+  "auth": {
+    "steprxbc53e2a0": {
+      "service": "Cognito",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "output": {
+        "UserPoolId": "us-east-1_nVAnayHkh",
+        "UserPoolName": "users",
+        "AppClientID": "162h1oov1nc8i4amtdu7nbk63a",
+        "AppClientIDWeb": "162h1oov1nc8i4amtdu7nbk63a"
+      },
+      "frontendAuthConfig": {
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "signupAttributes": [
+          "GIVEN_NAME",
+          "FAMILY_NAME",
+          "EMAIL",
+          "UPDATED_AT"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_UPPERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_SYMBOLS"
+          ]
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "lastPushTimeStamp": "2023-04-26T17:27:42.250Z"
+    }
+  }
+}
