@@ -63,7 +63,7 @@ const Home = () => {
     });
   };
 
-  return attributes && userInfo && uuid ? (
+  return uuid ? (
     <Box>
       <Box
         p={2}
