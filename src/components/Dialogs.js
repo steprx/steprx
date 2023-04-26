@@ -574,7 +574,7 @@ export const ParentDialog = (props) => {
                 type="number"
                 inputProps={{
                   min: 1,
-                  max: 60,
+                  max: inputs.bodyFat - 1,
                   step: ".01",
                 }}
                 onChange={(event) => {
