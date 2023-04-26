@@ -574,7 +574,7 @@ export const ParentDialog = (props) => {
                 type="number"
                 inputProps={{
                   min: 1,
-                  max: 60,
+                  max: inputs.bodyFat - 1,
                   step: ".01",
                 }}
                 onChange={(event) => {
@@ -593,13 +593,13 @@ export const ParentDialog = (props) => {
                 fullWidth
                 type="number"
                 inputProps={{
-                  min: 13,
-                  max: 65,
+                  min: 10,
+                  max: 30,
                   step: ".01",
                 }}
                 onChange={(event) => {
                   const value = event.target.value;
-                  setInputs({ ...inputs, waist: value });
+                  setInputs({ ...inputs, neck: value });
                 }}
                 // error={waistError}
                 // helperText={waistError ? "Must be 13-65." : ""}
@@ -611,13 +611,13 @@ export const ParentDialog = (props) => {
                 fullWidth
                 type="number"
                 inputProps={{
-                  min: 10,
-                  max: 30,
+                  min: 13,
+                  max: 80,
                   step: ".01",
                 }}
                 onChange={(event) => {
                   const value = event.target.value;
-                  setInputs({ ...inputs, neck: value });
+                  setInputs({ ...inputs, waist: value });
                 }}
                 // error={neckError}
                 // helperText={neckError ? "Must be 10-30." : ""}
