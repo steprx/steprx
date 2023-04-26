@@ -6,17 +6,17 @@ const Profile = () => {
   const userAttributes = useUserStore((state) => state.userAttributes);
   const name = userAttributes.given_name + " " + userAttributes.family_name;
   const userInfo = useUserStore((state) => state.userInfo);
-  const age = calcAge(userInfo?.at(0)?.birthdate.N);
-  const weight = userInfo?.at(0)?.weight.S;
+  const age = calcAge(Number(userInfo?.birthdate));
+  const weight = userInfo?.at(0)?.weight;
   const height = calcHeight(
-    userInfo?.at(0)?.heightFt.S,
-    userInfo?.at(0)?.heightIn.S
+    userInfo?.at(0)?.heightFt,
+    userInfo?.at(0)?.heightIn
   );
-  const bodyFat = userInfo?.at(0)?.bodyFat.S;
-  const targetWeightLoss = userInfo?.at(0)?.targetWeightLoss.S;
-  const sex = userInfo?.at(0)?.sex.S;
-  const waist = userInfo?.at(0)?.waist.S;
-  const neck = userInfo?.at(0)?.neck.S;
+  const bodyFat = userInfo?.at(0)?.bodyFat;
+  const targetWeightLoss = userInfo?.at(0)?.targetWeightLoss;
+  const sex = userInfo?.at(0)?.sex;
+  const waist = userInfo?.at(0)?.waist;
+  const neck = userInfo?.at(0)?.neck;
   return (
     <Box p={2}>
       <Typography variant="h4" align="center">

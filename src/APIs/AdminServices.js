@@ -1,5 +1,7 @@
 import { ExecuteStatementCommand } from "@aws-sdk/client-dynamodb";
 import { ddbDocClient } from "../libs/ddbDocClient";
+import api from "./api";
+import axios from "axios";
 
 export const getAllData = async () => {
   const params = {
@@ -21,7 +23,7 @@ export const getAllSteps = async () => {
   };
   try {
     console.log("getting steps...");
-    const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
+    const data = await api.get("/steps/get/all");
     console.log("data: ", data.Items);
     return data.Items;
   } catch (err) {

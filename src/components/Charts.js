@@ -20,21 +20,21 @@ export const Charts = () => {
 
   const formatWeights = (item) => {
     return {
-      date: moment(Number(item.date.S)).format("l"),
-      weight: item.weight.S,
+      date: moment(Number(item.date)).format("l"),
+      weight: item.weight,
     };
   };
   const formatSteps = (item) => {
     return {
-      date: moment(Number(item.date.S)).format("l"),
-      steps: item.steps.S,
+      date: moment(Number(item.date)).format("l"),
+      steps: item.steps,
       stepGoal: stepGoal?.toFixed(0),
     };
   };
   const formatBodyFats = (item) => {
     return {
-      date: moment(Number(item.date.S)).format("l"),
-      bodyFat: item.bodyFat.S,
+      date: moment(Number(item.date)).format("l"),
+      bodyFat: item.bodyFat,
     };
   };
   const weightData = weighIns?.map(formatWeights);
@@ -54,7 +54,7 @@ export const Charts = () => {
         </ResponsiveContainer>
       </Grid>
       <Grid item xs={12} sm={4}>
-        {stepsData.length !== 0 ? (
+        {stepsData ? (
           <ResponsiveContainer width="100%" aspect={1}>
             <ComposedChart data={stepsData}>
               <XAxis dataKey="date" padding={{ left: 20, right: 20 }} />
