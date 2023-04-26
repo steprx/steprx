@@ -27,7 +27,7 @@ export const calcTotalSteps = (steps) => {
   console.log("calculating total steps...", steps);
   let totalSteps = 0;
   for (let i = 0; i < steps?.length; i++) {
-    totalSteps += Number(steps[i].steps.S);
+    totalSteps += Number(steps[i].steps);
   }
   return totalSteps;
 };

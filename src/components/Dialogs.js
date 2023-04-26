@@ -55,11 +55,12 @@ export const ParentDialog = (props) => {
     props.handleClose(false);
   };
 
-  const nameRegex = /^[a-zA-Z](?:[ '.\-a-zA-Z]*[a-zA-Z\'\-])?$/g;
-  const emailRegex = /^\w\w*(?:(?:\.|-)?\w+)*@\w+\-?\w*(?:\.[a-z]{2,})+$/g;
+  const nameRegex = "^[a-zA-Z'\\-]+(?:s+[a-zA-Z'\\-]+)*$";
+  const emailRegex =
+    "^\\w+([\\.\\-]?\\w+)*@\\w+([\\.\\-]?\\w+)*(\\.\\w{2,4})+$";
   const passwordRegex =
-    /^(?!\s+)(?!.*\s+$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ])[A-Za-z0-9$^*.[\]{}()?"!@#%&\\,><':;|_~`=+\- ]{8,256}$/g;
-  const usernameRegex = /.+/g;
+    "^(?!\\s+)(?!.*\\s$)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\\$\\^*.\\[\\\\\\]{}()?\"!@#%&,><':;|_~=+\\-/])[A-Za-z0-9\\$\\^*.\\[\\\\\\]{}()?\"!@#%&,><':;|_~=+\\-/]{8,256}$";
+  const usernameRegex = ".+";
   const weightRegex =
     /^(1[5-9][0-9]|[2-9][0-9]{2}|1[0-3][0-9]{2}|1400)(\.\d{1,2})?$/g;
   const heightFtRegex = /^[4-8]$/g;
@@ -113,7 +114,16 @@ export const ParentDialog = (props) => {
   const SignUpDialog = (props) => {
     const time = new Date();
     const [error, setError] = useState(false);
-    const [helperText, setHelperText] = useState(null);
+    const [helperText, setHelperText] = useState(
+      <>
+        1 uppercase character
+        <br />
+        1 lowercase character
+        <br />
+        1 numeric character
+        <br />1 special character
+      </>
+    );
 
     const [inputs, setInputs] = useState({
       firstName: "",
@@ -132,46 +142,54 @@ export const ParentDialog = (props) => {
         setUuid(user.userSub);
         setUser(user.user);
         setView(3);
+      } else {
+        setError(true);
+        setHelperText("Passwords don't match");
       }
     };
 
-    const [firstNameError, setFirstNameError] = useState(false);
-    const [lastNameError, setLastNameError] = useState(false);
-    const [emailError, setEmailError] = useState(false);
-    const [usernameError, setUsernameError] = useState(false);
-    const [passwordError, setPasswordError] = useState(false);
-    const [confirmError, setConfirmError] = useState(false);
+    // const [firstNameError, setFirstNameError] = useState(false);
+    // const [lastNameError, setLastNameError] = useState(false);
+    // const [emailError, setEmailError] = useState(false);
+    // const [usernameError, setUsernameError] = useState(false);
+    // const [passwordError, setPasswordError] = useState(false);
+    // const [confirmError, setConfirmError] = useState(false);
 
-    const handleCreateSubmission = () => {
-      let isFirstNameValid = inputs.firstName.match(nameRegex);
-      let isLastNameValid = inputs.lastName.match(nameRegex);
-      let isEmailValid = inputs.email.match(emailRegex);
-      let isUsernameValid = inputs.username.match(usernameRegex);
-      let isPasswordValid = inputs.password.match(passwordRegex);
-      let isConfirmValid = inputs.confirm.match(passwordRegex);
-      let isPasswordMatched = inputs.password === inputs.confirm;
+    // const handleCreateSubmission = () => {
+    //   let isFirstNameValid = inputs.firstName.match(nameRegex);
+    //   let isLastNameValid = inputs.lastName.match(nameRegex);
+    //   let isEmailValid = inputs.email.match(emailRegex);
+    //   let isUsernameValid = inputs.username.match(usernameRegex);
+    //   let isPasswordValid = inputs.password.match(passwordRegex);
+    //   let isConfirmValid = inputs.confirm.match(passwordRegex);
+    //   let isPasswordMatched = inputs.password === inputs.confirm;
 
-      setFirstNameError(!isFirstNameValid);
-      setLastNameError(!isLastNameValid);
-      setEmailError(!isEmailValid);
-      setUsernameError(!isUsernameValid);
-      setPasswordError(!isPasswordValid);
-      setConfirmError(!isConfirmValid || !isPasswordMatched);
+    //   setFirstNameError(!isFirstNameValid);
+    //   setLastNameError(!isLastNameValid);
+    //   setEmailError(!isEmailValid);
+    //   setUsernameError(!isUsernameValid);
+    //   setPasswordError(!isPasswordValid);
+    //   setConfirmError(!isConfirmValid || !isPasswordMatched);
 
-      if (
-        isFirstNameValid &&
-        isLastNameValid &&
-        isEmailValid &&
-        isUsernameValid &&
-        isPasswordValid &&
-        isConfirmValid
-      ) {
-        createUser(inputs);
-      }
+    //   if (
+    //     isFirstNameValid &&
+    //     isLastNameValid &&
+    //     isEmailValid &&
+    //     isUsernameValid &&
+    //     isPasswordValid &&
+    //     isConfirmValid
+    //   ) {
+    //     createUser(inputs);
+    //   }
+    // };
+
+    const submit = (event) => {
+      event.preventDefault();
+      createUser(inputs);
     };
 
     return (
-      <Box p={2}>
+      <Box p={2} component="form" onSubmit={(event) => submit(event)}>
         <Stack justifyContent="center" spacing={2}>
           <Typography align="center" variant="h6">
             Create an Account
@@ -184,12 +202,17 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
+                inputProps={{
+                  pattern: nameRegex,
+                  minLength: 2,
+                  maxLength: 40,
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, firstName: value });
                 }}
-                error={firstNameError}
-                helperText={firstNameError ? "Enter a valid first name" : ""}
+                // error={firstNameError}
+                // helperText={firstNameError ? "Enter a valid first name" : ""}
               />
               <TextField
                 size="small"
@@ -197,12 +220,17 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
+                inputProps={{
+                  pattern: nameRegex,
+                  minLength: 2,
+                  maxLength: 40,
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, lastName: value });
                 }}
-                error={lastNameError}
-                helperText={lastNameError ? "Enter a valid last name" : ""}
+                // error={lastNameError}
+                // helperText={lastNameError ? "Enter a valid last name" : ""}
               />
             </Stack>
             <Stack spacing={1} direction="row">
@@ -212,12 +240,16 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
+                inputProps={{
+                  pattern: emailRegex,
+                  maxLength: 256,
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, email: value });
                 }}
-                error={emailError}
-                helperText={emailError ? "Enter a valid email" : ""}
+                // error={emailError}
+                // helperText={emailError ? "Enter a valid email" : ""}
               />
               <TextField
                 size="small"
@@ -225,12 +257,17 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
+                inputProps={{
+                  pattern: usernameRegex,
+                  minLength: 2,
+                  maxLength: 64,
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, username: value });
                 }}
-                error={usernameError}
-                helperText={usernameError ? "Enter a valid username" : ""}
+                // error={usernameError}
+                // helperText={usernameError ? "Enter a valid username" : ""}
               />
             </Stack>
             <Stack spacing={1} direction="row">
@@ -241,12 +278,20 @@ export const ParentDialog = (props) => {
                 type="password"
                 fullWidth
                 required
+                inputProps={{
+                  pattern: passwordRegex,
+                  title:
+                    "Password must contain at least 8 characters including uppercase, lowercase, numeric, and special characters",
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, password: value });
                 }}
-                error={passwordError}
-                helperText={passwordError ? "Enter a valid password" : ""}
+                helperText={
+                  <>Password must contain at least 8 characters including:</>
+                }
+                // error={passwordError}
+                // helperText={passwordError ? "Enter a valid password" : ""}
               />
               <TextField
                 size="small"
@@ -256,16 +301,29 @@ export const ParentDialog = (props) => {
                 fullWidth
                 required
                 onChange={(event) => {
+                  setError(false);
+                  setHelperText(
+                    <>
+                      1 uppercase character
+                      <br />
+                      1 lowercase character
+                      <br />
+                      1 numeric character
+                      <br />1 special character
+                    </>
+                  );
                   const value = event.target.value;
                   setInputs({ ...inputs, confirm: value });
                 }}
-                error={confirmError}
-                helperText={confirmError ? "Enter a valid Password" : ""}
+                error={error}
+                helperText={helperText}
+                // error={confirmError}
+                // helperText={confirmError ? "Enter a valid Password" : ""}
               />
             </Stack>
           </Stack>
           <Stack spacing={1}>
-            <Button variant="contained" onClick={handleCreateSubmission}>
+            <Button variant="contained" type="submit">
               Create Account
             </Button>
             <Button size="small" onClick={() => setView(6)}>
@@ -287,17 +345,31 @@ export const ParentDialog = (props) => {
         .then(() => setView(4));
     };
 
+    const submit = (event) => {
+      event.preventDefault();
+      confirmUser(code);
+    };
     return (
-      <Box p={2}>
+      <Box p={2} component="form" onSubmit={(event) => submit(event)}>
         <Stack justifyContent="center" spacing={2}>
+          <Typography align="center" variant="h6">
+            Verification Code
+          </Typography>
           <TextField
             size="small"
             label="Verification Code"
             variant="outlined"
             fullWidth
+            required
+            type="number"
+            inputProps={{
+              minLength: 6,
+              maxLength: 6,
+            }}
+            helperText={"Check your email for a 6 digit verification code"}
             onChange={(event) => setCode(event.target.value)}
           />
-          <Button size="small" onClick={() => confirmUser(code)}>
+          <Button size="small" type="submit">
             Verify Email
           </Button>
         </Stack>
@@ -352,48 +424,52 @@ export const ParentDialog = (props) => {
         .catch((err) => alert(err));
     };
 
-    const [weightError, setWeightError] = useState(false);
-    const [heightFtError, setHeightFtError] = useState(false);
-    const [heightInError, setHeightInError] = useState(false);
-    const [bodyFatError, setBodyFatError] = useState(false);
-    const [targetWeightLossError, setTargetWeightLossError] = useState(false);
-    const [waistError, setWaistError] = useState(false);
-    const [neckError, setNeckError] = useState(false);
+    // const [weightError, setWeightError] = useState(false);
+    // const [heightFtError, setHeightFtError] = useState(false);
+    // const [heightInError, setHeightInError] = useState(false);
+    // const [bodyFatError, setBodyFatError] = useState(false);
+    // const [targetWeightLossError, setTargetWeightLossError] = useState(false);
+    // const [waistError, setWaistError] = useState(false);
+    // const [neckError, setNeckError] = useState(false);
 
-    const handleCreateUserStats = () => {
-      let isWeightValid = inputs.weight.match(weightRegex);
-      let isHeightFtValid = inputs.heightFt.match(heightFtRegex);
-      let isHeightInValid = inputs.heightIn.match(heightInRegex);
-      let isBodyFatValid = inputs.bodyFat.match(bodyFatRegex);
-      let isTargetWeightLossValid = inputs.targetWeightLoss.match(
-        targetWeightLossRegex
-      );
-      let isWaistValid = inputs.waist.match(waistRegex);
-      let isNeckValid = inputs.neck.match(neckRegex);
+    // const handleCreateUserStats = () => {
+    //   let isWeightValid = inputs.weight.match(weightRegex);
+    //   let isHeightFtValid = inputs.heightFt.match(heightFtRegex);
+    //   let isHeightInValid = inputs.heightIn.match(heightInRegex);
+    //   let isBodyFatValid = inputs.bodyFat.match(bodyFatRegex);
+    //   let isTargetWeightLossValid = inputs.targetWeightLoss.match(
+    //     targetWeightLossRegex
+    //   );
+    //   let isWaistValid = inputs.waist.match(waistRegex);
+    //   let isNeckValid = inputs.neck.match(neckRegex);
 
-      setWeightError(!isWeightValid);
-      setHeightFtError(!isHeightFtValid);
-      setHeightInError(!isHeightInValid);
-      setBodyFatError(!isBodyFatValid);
-      setTargetWeightLossError(!isTargetWeightLossValid);
-      setWaistError(!isWaistValid);
-      setNeckError(!isNeckValid);
+    //   setWeightError(!isWeightValid);
+    //   setHeightFtError(!isHeightFtValid);
+    //   setHeightInError(!isHeightInValid);
+    //   setBodyFatError(!isBodyFatValid);
+    //   setTargetWeightLossError(!isTargetWeightLossValid);
+    //   setWaistError(!isWaistValid);
+    //   setNeckError(!isNeckValid);
 
-      if (
-        isWeightValid &&
-        isHeightInValid &&
-        isHeightFtValid &&
-        isBodyFatValid &&
-        isTargetWeightLossValid &&
-        isWaistValid &&
-        isNeckValid
-      ) {
-        handleSubmit(inputs);
-      }
+    //   if (
+    //     isWeightValid &&
+    //     isHeightInValid &&
+    //     isHeightFtValid &&
+    //     isBodyFatValid &&
+    //     isTargetWeightLossValid &&
+    //     isWaistValid &&
+    //     isNeckValid
+    //   ) {
+    //     handleSubmit(inputs);
+    //   }
+    // };
+    const submit = async (event) => {
+      event.preventDefault();
+      await handleSubmit(inputs).then(() => navigate("/"));
     };
 
     return (
-      <Box p={2}>
+      <Box p={2} component="form" onSubmit={(event) => submit(event)}>
         <Stack justifyContent="center" spacing={2}>
           <Typography align="center" variant="h6">
             Let's get some basic info
@@ -405,6 +481,7 @@ export const ParentDialog = (props) => {
                 disableFuture
                 value={birthdate}
                 onChange={handleBirthdateChange}
+                required
                 renderInput={(params) => (
                   <TextField fullWidth size="small" {...params} />
                 )}
@@ -415,12 +492,18 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
+                type="number"
+                inputProps={{
+                  min: 80,
+                  max: 1400,
+                  step: ".01",
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, weight: value });
                 }}
-                error={weightError}
-                helperText={weightError ? "Must be 150-1400" : ""}
+                // error={weightError}
+                // helperText={weightError ? "Must be 150-1400" : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -429,24 +512,34 @@ export const ParentDialog = (props) => {
                 label="Height (ft)"
                 variant="outlined"
                 fullWidth
+                type="number"
+                inputProps={{
+                  min: 4,
+                  max: 8,
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, heightFt: value });
                 }}
-                error={heightFtError}
-                helperText={heightFtError ? "Must be 4-8" : ""}
+                // error={heightFtError}
+                // helperText={heightFtError ? "Must be 4-8" : ""}
               />
               <TextField
                 size="small"
                 label="Height (in)"
                 variant="outlined"
                 fullWidth
+                type="number"
+                inputProps={{
+                  min: 0,
+                  max: 11,
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, heightIn: value });
                 }}
-                error={heightInError}
-                helperText={heightInError ? "Must be 1-12" : ""}
+                // error={heightInError}
+                // helperText={heightInError ? "Must be 1-12" : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -456,12 +549,18 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
+                type="number"
+                inputProps={{
+                  min: 10,
+                  max: 99,
+                  step: ".01",
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, bodyFat: value });
                 }}
-                error={bodyFatError}
-                helperText={bodyFatError ? "Must be 15-99" : ""}
+                // error={bodyFatError}
+                // helperText={bodyFatError ? "Must be 15-99" : ""}
               />
               <TextField
                 size="small"
@@ -469,12 +568,18 @@ export const ParentDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
+                type="number"
+                inputProps={{
+                  min: 1,
+                  max: 60,
+                  step: ".01",
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, targetWeightLoss: value });
                 }}
-                error={targetWeightLossError}
-                helperText={targetWeightLossError ? "Must be 1-60" : ""}
+                // error={targetWeightLossError}
+                // helperText={targetWeightLossError ? "Must be 1-60" : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -483,29 +588,41 @@ export const ParentDialog = (props) => {
                 label="Waist (in)"
                 variant="outlined"
                 fullWidth
+                type="number"
+                inputProps={{
+                  min: 13,
+                  max: 65,
+                  step: ".01",
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, waist: value });
                 }}
-                error={waistError}
-                helperText={waistError ? "Must be 13-65." : ""}
+                // error={waistError}
+                // helperText={waistError ? "Must be 13-65." : ""}
               />
               <TextField
                 size="small"
                 label="Neck (in)"
                 variant="outlined"
                 fullWidth
+                type="number"
+                inputProps={{
+                  min: 10,
+                  max: 30,
+                  step: ".01",
+                }}
                 onChange={(event) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, neck: value });
                 }}
-                error={neckError}
-                helperText={neckError ? "Must be 10-30." : ""}
+                // error={neckError}
+                // helperText={neckError ? "Must be 10-30." : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
-              <FormControl variant="standard" required>
-                <RadioGroup row value={inputs.sex}>
+              <FormControl variant="standard">
+                <RadioGroup row value={inputs.sex} required>
                   <FormControlLabel
                     value="female"
                     control={<Radio />}
@@ -525,6 +642,7 @@ export const ParentDialog = (props) => {
                 disableFuture
                 value={value}
                 onChange={handleChange}
+                required
                 renderInput={(params) => (
                   <TextField fullWidth size="small" {...params} />
                 )}
@@ -532,12 +650,13 @@ export const ParentDialog = (props) => {
             </Stack>
           </Stack>
           <Button
-            component={Link}
-            to={`/`}
+            type="submit"
+            // component={Link}
+            // to={`/`}
             variant="contained"
-            onClick={async () =>
-              await handleSubmit(inputs).then(() => navigate("/"))
-            }
+            // onClick={async () =>
+            //   await handleSubmit(inputs).then(() => navigate("/"))
+            // }
           >
             Submit
           </Button>
@@ -602,20 +721,30 @@ export const ParentDialog = (props) => {
         );
       });
       getUserAttributes().then((res) => setUserAttributes(res));
-      getAllInfo(user.username).then((res) => {
+      getAllInfo(user.attributes.sub).then((res) => {
         console.log(res);
         setUserInfo(res);
       });
       getAllWeighIns(user.attributes.sub).then((res) => setWeighIns(res));
-      getAllSteps(user.username).then((res) => {
+      getAllSteps(user.attributes.sub)?.then((res) => {
         console.log(res);
         setTotalSteps(calcTotalSteps(res));
         setCountsData(res);
       });
     };
 
+    const submit = async (event) => {
+      event.preventDefault();
+      await authUser(inputs).then(() => {
+        console.log(localStorage.getItem("groups"));
+        localStorage.getItem("groups") === "admin"
+          ? navigate("/admin")
+          : navigate("/");
+      });
+    };
+
     return (
-      <Box p={2}>
+      <Box p={2} component="form" onSubmit={(event) => submit(event)}>
         <Stack justifyContent="center" spacing={2}>
           <Typography align="center" variant="h6">
             Sign In
@@ -625,6 +754,8 @@ export const ParentDialog = (props) => {
               size="small"
               label="Username or Email Address"
               variant="outlined"
+              required
+              // inputProps={}
               onChange={(event) =>
                 setInputs({ ...inputs, email: event.target.value })
               }
@@ -634,6 +765,12 @@ export const ParentDialog = (props) => {
               label="Password"
               variant="outlined"
               type="password"
+              required
+              inputProps={{
+                pattern: passwordRegex,
+                title:
+                  "Password must contain at least 8 characters including uppercase, lowercase, numeric, and special characters",
+              }}
               onChange={(event) =>
                 setInputs({ ...inputs, password: event.target.value })
               }
@@ -642,14 +779,15 @@ export const ParentDialog = (props) => {
           <Stack spacing={1}>
             <Button
               variant="contained"
-              onClick={async () =>
-                await authUser(inputs).then(() => {
-                  console.log(localStorage.getItem("groups"));
-                  localStorage.getItem("groups") === "admin"
-                    ? navigate("/admin")
-                    : navigate("/");
-                })
-              }
+              type="submit"
+              // onClick={async () =>
+              //   await authUser(inputs).then(() => {
+              //     console.log(localStorage.getItem("groups"));
+              //     localStorage.getItem("groups") === "admin"
+              //       ? navigate("/admin")
+              //       : navigate("/");
+              //   })
+              // }
             >
               Sign In
             </Button>
@@ -801,10 +939,10 @@ export const AddWeighInDialog = (props) => {
         await getUserAttributes(uuid).then((res) => setUserAttributes(res));
         await getAllWeighIns(uuid).then((res) => setWeighIns(res));
         const i = weighIns?.length - 1;
-        const gender = userInfo?.at(i)?.sex.S;
-        const weight = weighIns?.at(i)?.weight.S;
-        const bodyFat = weighIns?.at(i)?.bodyFat.S;
-        const targetWeightLoss = weighIns?.at(i)?.targetWeightLoss.S;
+        const gender = userInfo?.sex;
+        const weight = weighIns?.at(i)?.weight;
+        const bodyFat = weighIns?.at(i)?.bodyFat;
+        const targetWeightLoss = weighIns?.at(i)?.targetWeightLoss;
         const stepGoal = await calcStepGoal(
           gender,
           weight,
@@ -812,8 +950,8 @@ export const AddWeighInDialog = (props) => {
           targetWeightLoss
         );
         const weightDiff = await calcWeightDiff(
-          weighIns?.at(0)?.weight.S,
-          weighIns?.at(i)?.weight.S
+          weighIns?.at(0)?.weight,
+          weighIns?.at(i)?.weight
         );
         console.log("weight lost:", weightDiff);
         console.log("step goal:", stepGoal);

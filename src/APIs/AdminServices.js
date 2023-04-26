@@ -1,5 +1,7 @@
-import { ExecuteStatementCommand } from "@aws-sdk/client-dynamodb";
-import { ddbDocClient } from "../libs/ddbDocClient";
+// import { ExecuteStatementCommand } from "@aws-sdk/client-dynamodb";
+// import { ddbDocClient } from "../libs/ddbDocClient";
+// import axios from "axios";
+import api from "./api";
 
 export const getAllData = async () => {
   const params = {
@@ -7,9 +9,9 @@ export const getAllData = async () => {
   };
   try {
     console.log("getting user info...");
-    const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
-    console.log("data: ", data.Items);
-    return data.Items;
+    const data = await api.get("/info/get/all");
+    console.log("data: ", data.data);
+    return data.data;
   } catch (err) {
     console.log("Error getting all info", err);
   }
@@ -21,9 +23,9 @@ export const getAllSteps = async () => {
   };
   try {
     console.log("getting steps...");
-    const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
-    console.log("data: ", data.Items);
-    return data.Items;
+    const data = await api.get("/steps/get/all");
+    console.log("data: ", data.data);
+    return data.data;
   } catch (err) {
     console.log("Error getting all steps", err);
   }
@@ -35,9 +37,10 @@ export const getAllWeights = async () => {
   };
   try {
     console.log("getting weigh ins...");
-    const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
-    console.log("data: ", data.Items);
-    return data.Items;
+    const data = await api.get("/stats/get/all");
+    // const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
+    console.log("data: ", data.data);
+    return data.data;
   } catch (err) {
     console.log("Error getting all weigh ins", err);
   }

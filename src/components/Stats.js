@@ -26,14 +26,15 @@ const Stats = () => {
       console.log(weighIns);
       console.log(i);
       console.log(weighIns?.at(i));
-      const gender = userInfo?.at(i)?.sex.S;
-      const weight = weighIns?.at(i)?.weight.S;
-      const bodyFat = weighIns?.at(i)?.bodyFat.S;
-      const targetWeightLoss = weighIns?.at(i)?.targetWeightLoss.S;
+      console.log(userInfo);
+      const gender = userInfo?.sex;
+      const weight = weighIns?.at(i)?.weight;
+      const bodyFat = weighIns?.at(i)?.bodyFat;
+      const targetWeightLoss = weighIns?.at(i)?.targetWeightLoss;
       const stepGoal = calcStepGoal(gender, weight, bodyFat, targetWeightLoss);
       const weightDiff = calcWeightDiff(
-        weighIns?.at(0)?.weight.S,
-        weighIns?.at(i)?.weight.S
+        weighIns?.at(0)?.weight,
+        weighIns?.at(i)?.weight
       );
       console.log("weight lost:", weightDiff);
       console.log("step goal:", stepGoal);

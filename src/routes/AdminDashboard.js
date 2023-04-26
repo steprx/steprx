@@ -58,9 +58,9 @@ const AdminDashboard = () => {
     const formatInfo = (item) => {
       const datum = {
         id: infoId,
-        uuid: item.uuid?.S,
-        age: calcAge(item.birthdate?.N),
-        sex: item.sex?.S,
+        uuid: item.uuid,
+        age: calcAge(item.birthdate),
+        sex: item.sex,
       };
       infoId++;
       return datum;
@@ -69,9 +69,9 @@ const AdminDashboard = () => {
     const formatSteps = (item) => {
       const datum = {
         id: stepId,
-        uuid: item.uuid?.S,
-        date: moment(Number(item.date.S)).format("l"),
-        steps: item.steps?.S,
+        uuid: item.uuid,
+        date: moment(Number(item.date)).format("l"),
+        steps: item.steps,
       };
       stepId++;
       return datum;
@@ -80,13 +80,13 @@ const AdminDashboard = () => {
     const formatWeight = (item) => {
       const datum = {
         id: weightId,
-        uuid: item.uuid?.S,
-        date: moment(Number(item.date.S)).format("l"),
-        weight: item.weight?.S,
-        bodyFat: item.bodyFat?.S,
-        targetWeightLoss: item.targetWeightLoss?.S,
-        waist: item.waist?.S,
-        neck: item.neck?.S,
+        uuid: item.uuid,
+        date: moment(Number(item.date)).format("l"),
+        weight: item.weight,
+        bodyFat: item.bodyFat,
+        targetWeightLoss: item.targetWeightLoss,
+        waist: item.waist,
+        neck: item.neck,
       };
       console.log(datum);
       weightId++;
