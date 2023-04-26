@@ -1,6 +1,6 @@
 {
   "auth": {
-    "steprxb088608a": {
+    "steprxf4aaabbf": {
       "customAuth": false,
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
@@ -9,35 +9,35 @@
     }
   },
   "parameters": {
-    "AMPLIFY_auth_steprxb088608a_nativeClientId": {
+    "AMPLIFY_auth_steprxf4aaabbf_nativeClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "steprxb088608a"
+          "resourceName": "steprxf4aaabbf"
         }
       ]
     },
-    "AMPLIFY_auth_steprxb088608a_userPoolId": {
+    "AMPLIFY_auth_steprxf4aaabbf_userPoolId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "steprxb088608a"
+          "resourceName": "steprxf4aaabbf"
         }
       ]
     },
-    "AMPLIFY_auth_steprxb088608a_userPoolName": {
+    "AMPLIFY_auth_steprxf4aaabbf_userPoolName": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "steprxb088608a"
+          "resourceName": "steprxf4aaabbf"
         }
       ]
     },
-    "AMPLIFY_auth_steprxb088608a_webClientId": {
+    "AMPLIFY_auth_steprxf4aaabbf_webClientId": {
       "usedBy": [
         {
           "category": "auth",
-          "resourceName": "steprxb088608a"
+          "resourceName": "steprxf4aaabbf"
         }
       ]
     }
