@@ -138,7 +138,6 @@ export const ParentDialog = (props) => {
     const createUser = async (inputs) => {
       if (inputs.password === inputs.confirm) {
         const user = await signUp(inputs).catch((err) => alert(err));
-        console.log(user, user.userSub, user.user);
         setUuid(user.userSub);
         setUser(user.user);
         setView(3);
@@ -292,7 +291,6 @@ export const ParentDialog = (props) => {
     const [code, setCode] = useState(null);
 
     const confirmUser = (code) => {
-      console.log(currentUser);
       confirmSignUp(currentUser?.username, code)
         .catch((err) => alert(err))
         .then(() => setView(4));
@@ -336,7 +334,6 @@ export const ParentDialog = (props) => {
     const [birthdate, setBirthdate] = useState(moment());
     const handleBirthdateChange = (newValue) => {
       setBirthdate(newValue);
-      console.log(newValue);
       setInputs({ ...inputs, birthdate: Date.parse(newValue) });
     };
     const handleChange = (newValue) => {
@@ -359,8 +356,6 @@ export const ParentDialog = (props) => {
       date: today,
     });
     const handleSubmit = async () => {
-      console.log(currentUser, inputs);
-      console.log(uuid, inputs);
       await putWeighIn(uuid, inputs)
         .then(() => {
           putInfo(uuid, inputs);
@@ -601,7 +596,6 @@ export const ParentDialog = (props) => {
     const authUser = async (inputs) => {
       const user = await signIn(inputs).catch((err) => alert(err));
       setUuid(user.attributes.sub);
-      console.log(user.attributes.sub);
       await getSession().then((res) => {
         localStorage.setItem("token", res);
         localStorage.setItem("access", res.getAccessToken().jwtToken);
@@ -614,12 +608,10 @@ export const ParentDialog = (props) => {
       });
       await getUserAttributes().then((res) => setUserAttributes(res));
       await getAllInfo(user.attributes.sub).then((res) => {
-        console.log("userInfo:", res);
         setUserInfo(res);
       });
       await getAllWeighIns(user.attributes.sub).then((res) => setWeighIns(res));
       await getAllSteps(user.attributes.sub)?.then((res) => {
-        console.log(res);
         setTotalSteps(calcTotalSteps(res));
         setCountsData(res);
       });
@@ -628,7 +620,6 @@ export const ParentDialog = (props) => {
     const submit = async (event) => {
       event.preventDefault();
       await authUser(inputs).then(() => {
-        console.log(localStorage.getItem("groups"));
         localStorage.getItem("groups") === "admin"
           ? navigate("/admin")
           : navigate("/");
@@ -724,15 +715,12 @@ export const AddStepsDialog = (props) => {
   const setCountsData = useStepCountStore((state) => state.setCountsData);
   const handleChange = (newValue) => {
     setValue(newValue);
-    console.log(Date.parse(moment()));
-    console.log(moment(1681704731000).format("l"));
     setInputs({ ...inputs, date: Date.parse(newValue) });
   };
   const handleClose = () => {
     props.handleClose(false);
   };
   const handleSubmit = async () => {
-    console.log(currentUser);
     await putSteps(uuid, inputs.date, inputs.steps)
       .then(async () => {
         const steps = await getAllSteps(uuid);
@@ -826,7 +814,6 @@ export const AddWeighInDialog = (props) => {
     date: today,
   });
   const handleSubmit = async () => {
-    console.log(currentUser, inputs);
     await putWeighIn(uuid, inputs)
       .then(async () => {
         await getUserAttributes(uuid).then((res) => setUserAttributes(res));
@@ -846,8 +833,6 @@ export const AddWeighInDialog = (props) => {
           weighIns?.at(0)?.weight,
           weighIns?.at(i)?.weight
         );
-        console.log("weight lost:", weightDiff);
-        console.log("step goal:", stepGoal);
         setStepGoal(stepGoal);
         setWeightLoss(weightDiff);
       })

@@ -11,9 +11,7 @@ export const putInfo = async (uuid, payload) => {
   };
   try {
     await api.post("/info/save", params.Item);
-  } catch (err) {
-    console.log("Error", err);
-  }
+  } catch (err) {}
 };
 
 export const getAllInfo = async (username) => {
@@ -22,17 +20,12 @@ export const getAllInfo = async (username) => {
     Parameters: [{ S: username }],
   };
   try {
-    console.log("getting user info...", username);
     const data = await api.get("/info/uuid/" + username);
-    console.log("data: ", data.data);
     return data.data;
-  } catch (err) {
-    console.log("Error getting all info", err);
-  }
+  } catch (err) {}
 };
 
 export const putSteps = async (user, date, steps) => {
-  console.log("putting steps", date, steps);
   const params = {
     TableName: "steps",
     Item: {
@@ -43,9 +36,7 @@ export const putSteps = async (user, date, steps) => {
   };
   try {
     await api.post("/steps/save", params.Item);
-  } catch (err) {
-    console.log("Error", err);
-  }
+  } catch (err) {}
 };
 
 export const getAllSteps = async (username) => {
@@ -54,13 +45,9 @@ export const getAllSteps = async (username) => {
     Parameters: [{ S: username }],
   };
   try {
-    console.log("getting all steps...", username);
     const data = await api.get("/steps/uuid/" + username);
-    console.log(data.data);
     return data.data;
-  } catch (err) {
-    console.log("Error getting all steps", err);
-  }
+  } catch (err) {}
 };
 
 export const putWeighIn = async (uuid, payload) => {
@@ -80,9 +67,7 @@ export const putWeighIn = async (uuid, payload) => {
   };
   try {
     await api.post("/stats/save", params.Item);
-  } catch (err) {
-    console.log("Error", err);
-  }
+  } catch (err) {}
 };
 
 export const getAllWeighIns = async (username) => {
@@ -91,11 +76,7 @@ export const getAllWeighIns = async (username) => {
     Parameters: [{ S: username }],
   };
   try {
-    console.log("getting user weigh ins...", username);
     const data = await api.get("/stats/uuid/" + username);
-    console.log("weigh ins: ", data.data);
     return data.data;
-  } catch (err) {
-    console.log("Error getting all weigh ins", err);
-  }
+  } catch (err) {}
 };

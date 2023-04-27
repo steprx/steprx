@@ -5,13 +5,9 @@ export const getAllData = async () => {
     Statement: "SELECT * FROM user_info",
   };
   try {
-    console.log("getting user info...");
     const data = await api.get("/info/get/all");
-    console.log("data: ", data.data);
     return data.data;
-  } catch (err) {
-    console.log("Error getting all info", err);
-  }
+  } catch (err) {}
 };
 
 export const getAllSteps = async () => {
@@ -19,13 +15,9 @@ export const getAllSteps = async () => {
     Statement: "SELECT * FROM steps",
   };
   try {
-    console.log("getting steps...");
     const data = await api.get("/steps/get/all");
-    console.log("data: ", data.data);
     return data.data;
-  } catch (err) {
-    console.log("Error getting all steps", err);
-  }
+  } catch (err) {}
 };
 
 export const getAllWeights = async () => {
@@ -33,11 +25,7 @@ export const getAllWeights = async () => {
     Statement: "SELECT * FROM weigh_ins",
   };
   try {
-    console.log("getting weigh ins...");
     const data = await api.get("/stats/get/all");
-    console.log("data: ", data.data);
     return data.data;
-  } catch (err) {
-    console.log("Error getting all weigh ins", err);
-  }
+  } catch (err) {}
 };

@@ -23,10 +23,6 @@ const Stats = () => {
   useEffect(() => {
     async function getData() {
       const i = weighIns?.length - 1;
-      console.log(weighIns);
-      console.log(i);
-      console.log(weighIns?.at(i));
-      console.log(userInfo);
       const gender = userInfo?.sex;
       const weight = weighIns?.at(i)?.weight;
       const bodyFat = weighIns?.at(i)?.bodyFat;
@@ -36,15 +32,12 @@ const Stats = () => {
         weighIns?.at(0)?.weight,
         weighIns?.at(i)?.weight
       );
-      console.log("weight lost:", weightDiff);
-      console.log("step goal:", stepGoal);
       setStepGoal(stepGoal);
       setTotalSteps(calcTotalSteps(steps));
       setWeightLoss(weightDiff);
     }
     getData();
   }, []);
-  console.log("post useEffect", sub);
   return !stepGoal ? (
     <Box>
       <Typography>Loading...</Typography>

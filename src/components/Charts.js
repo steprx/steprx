@@ -40,7 +40,6 @@ export const Charts = () => {
   const weightData = weighIns?.map(formatWeights);
   const stepsData = countsData?.map(formatSteps);
   const bodyFatData = weighIns?.map(formatBodyFats);
-  console.log(stepsData);
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} sm={4}>
