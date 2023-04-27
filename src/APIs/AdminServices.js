@@ -1,6 +1,3 @@
-// import { ExecuteStatementCommand } from "@aws-sdk/client-dynamodb";
-// import { ddbDocClient } from "../libs/ddbDocClient";
-// import axios from "axios";
 import api from "./api";
 
 export const getAllData = async () => {
@@ -38,7 +35,6 @@ export const getAllWeights = async () => {
   try {
     console.log("getting weigh ins...");
     const data = await api.get("/stats/get/all");
-    // const data = await ddbDocClient.send(new ExecuteStatementCommand(params));
     console.log("data: ", data.data);
     return data.data;
   } catch (err) {

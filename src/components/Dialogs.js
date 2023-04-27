@@ -613,12 +613,12 @@ export const ParentDialog = (props) => {
         );
       });
       await getUserAttributes().then((res) => setUserAttributes(res));
-      getAllInfo(user.attributes.sub).then((res) => {
+      await getAllInfo(user.attributes.sub).then((res) => {
         console.log("userInfo:", res);
         setUserInfo(res);
       });
-      getAllWeighIns(user.attributes.sub).then((res) => setWeighIns(res));
-      getAllSteps(user.attributes.sub)?.then((res) => {
+      await getAllWeighIns(user.attributes.sub).then((res) => setWeighIns(res));
+      await getAllSteps(user.attributes.sub)?.then((res) => {
         console.log(res);
         setTotalSteps(calcTotalSteps(res));
         setCountsData(res);
