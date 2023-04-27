@@ -148,41 +148,6 @@ export const ParentDialog = (props) => {
       }
     };
 
-    // const [firstNameError, setFirstNameError] = useState(false);
-    // const [lastNameError, setLastNameError] = useState(false);
-    // const [emailError, setEmailError] = useState(false);
-    // const [usernameError, setUsernameError] = useState(false);
-    // const [passwordError, setPasswordError] = useState(false);
-    // const [confirmError, setConfirmError] = useState(false);
-
-    // const handleCreateSubmission = () => {
-    //   let isFirstNameValid = inputs.firstName.match(nameRegex);
-    //   let isLastNameValid = inputs.lastName.match(nameRegex);
-    //   let isEmailValid = inputs.email.match(emailRegex);
-    //   let isUsernameValid = inputs.username.match(usernameRegex);
-    //   let isPasswordValid = inputs.password.match(passwordRegex);
-    //   let isConfirmValid = inputs.confirm.match(passwordRegex);
-    //   let isPasswordMatched = inputs.password === inputs.confirm;
-
-    //   setFirstNameError(!isFirstNameValid);
-    //   setLastNameError(!isLastNameValid);
-    //   setEmailError(!isEmailValid);
-    //   setUsernameError(!isUsernameValid);
-    //   setPasswordError(!isPasswordValid);
-    //   setConfirmError(!isConfirmValid || !isPasswordMatched);
-
-    //   if (
-    //     isFirstNameValid &&
-    //     isLastNameValid &&
-    //     isEmailValid &&
-    //     isUsernameValid &&
-    //     isPasswordValid &&
-    //     isConfirmValid
-    //   ) {
-    //     createUser(inputs);
-    //   }
-    // };
-
     const submit = (event) => {
       event.preventDefault();
       createUser(inputs);
@@ -211,8 +176,6 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, firstName: value });
                 }}
-                // error={firstNameError}
-                // helperText={firstNameError ? "Enter a valid first name" : ""}
               />
               <TextField
                 size="small"
@@ -229,8 +192,6 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, lastName: value });
                 }}
-                // error={lastNameError}
-                // helperText={lastNameError ? "Enter a valid last name" : ""}
               />
             </Stack>
             <Stack spacing={1} direction="row">
@@ -248,8 +209,6 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, email: value });
                 }}
-                // error={emailError}
-                // helperText={emailError ? "Enter a valid email" : ""}
               />
               <TextField
                 size="small"
@@ -266,8 +225,6 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, username: value });
                 }}
-                // error={usernameError}
-                // helperText={usernameError ? "Enter a valid username" : ""}
               />
             </Stack>
             <Stack spacing={1} direction="row">
@@ -290,8 +247,6 @@ export const ParentDialog = (props) => {
                 helperText={
                   <>Password must contain at least 8 characters including:</>
                 }
-                // error={passwordError}
-                // helperText={passwordError ? "Enter a valid password" : ""}
               />
               <TextField
                 size="small"
@@ -317,8 +272,6 @@ export const ParentDialog = (props) => {
                 }}
                 error={error}
                 helperText={helperText}
-                // error={confirmError}
-                // helperText={confirmError ? "Enter a valid Password" : ""}
               />
             </Stack>
           </Stack>
@@ -424,45 +377,6 @@ export const ParentDialog = (props) => {
         .catch((err) => alert(err));
     };
 
-    // const [weightError, setWeightError] = useState(false);
-    // const [heightFtError, setHeightFtError] = useState(false);
-    // const [heightInError, setHeightInError] = useState(false);
-    // const [bodyFatError, setBodyFatError] = useState(false);
-    // const [targetWeightLossError, setTargetWeightLossError] = useState(false);
-    // const [waistError, setWaistError] = useState(false);
-    // const [neckError, setNeckError] = useState(false);
-
-    // const handleCreateUserStats = () => {
-    //   let isWeightValid = inputs.weight.match(weightRegex);
-    //   let isHeightFtValid = inputs.heightFt.match(heightFtRegex);
-    //   let isHeightInValid = inputs.heightIn.match(heightInRegex);
-    //   let isBodyFatValid = inputs.bodyFat.match(bodyFatRegex);
-    //   let isTargetWeightLossValid = inputs.targetWeightLoss.match(
-    //     targetWeightLossRegex
-    //   );
-    //   let isWaistValid = inputs.waist.match(waistRegex);
-    //   let isNeckValid = inputs.neck.match(neckRegex);
-
-    //   setWeightError(!isWeightValid);
-    //   setHeightFtError(!isHeightFtValid);
-    //   setHeightInError(!isHeightInValid);
-    //   setBodyFatError(!isBodyFatValid);
-    //   setTargetWeightLossError(!isTargetWeightLossValid);
-    //   setWaistError(!isWaistValid);
-    //   setNeckError(!isNeckValid);
-
-    //   if (
-    //     isWeightValid &&
-    //     isHeightInValid &&
-    //     isHeightFtValid &&
-    //     isBodyFatValid &&
-    //     isTargetWeightLossValid &&
-    //     isWaistValid &&
-    //     isNeckValid
-    //   ) {
-    //     handleSubmit(inputs);
-    //   }
-    // };
     const submit = async (event) => {
       event.preventDefault();
       await handleSubmit(inputs).then(() => navigate("/"));
@@ -473,9 +387,6 @@ export const ParentDialog = (props) => {
         <Stack justifyContent="center" spacing={2}>
           <Typography align="center" variant="h6">
             Let's get some basic info
-          </Typography>
-          <Typography align="center" variant="h10">
-            *Required field
           </Typography>
           <Stack spacing={2} justifyContent="center">
             <Stack direction="row" spacing={1}>
@@ -505,8 +416,6 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, weight: value });
                 }}
-                // error={weightError}
-                // helperText={weightError ? "Must be 150-1400" : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -524,8 +433,6 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, heightFt: value });
                 }}
-                // error={heightFtError}
-                // helperText={heightFtError ? "Must be 4-8" : ""}
               />
               <TextField
                 size="small"
@@ -541,8 +448,6 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, heightIn: value });
                 }}
-                // error={heightInError}
-                // helperText={heightInError ? "Must be 1-12" : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -562,12 +467,10 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, bodyFat: value });
                 }}
-                // error={bodyFatError}
-                // helperText={bodyFatError ? "Must be 15-99" : ""}
               />
               <TextField
                 size="small"
-                label="Target % Weight Loss"
+                label="Target Weight Loss (%)"
                 variant="outlined"
                 fullWidth
                 required
@@ -581,8 +484,6 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, targetWeightLoss: value });
                 }}
-                // error={targetWeightLossError}
-                // helperText={targetWeightLossError ? "Must be 1-60" : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -601,8 +502,6 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, neck: value });
                 }}
-                // error={waistError}
-                // helperText={waistError ? "Must be 13-65." : ""}
               />
               <TextField
                 size="small"
@@ -619,8 +518,6 @@ export const ParentDialog = (props) => {
                   const value = event.target.value;
                   setInputs({ ...inputs, waist: value });
                 }}
-                // error={neckError}
-                // helperText={neckError ? "Must be 10-30." : ""}
               />
             </Stack>
             <Stack direction="row" spacing={1}>
@@ -652,15 +549,7 @@ export const ParentDialog = (props) => {
               />
             </Stack>
           </Stack>
-          <Button
-            type="submit"
-            // component={Link}
-            // to={`/`}
-            variant="contained"
-            // onClick={async () =>
-            //   await handleSubmit(inputs).then(() => navigate("/"))
-            // }
-          >
+          <Button type="submit" variant="contained">
             Submit
           </Button>
         </Stack>
@@ -758,7 +647,6 @@ export const ParentDialog = (props) => {
               label="Username or Email Address"
               variant="outlined"
               required
-              // inputProps={}
               onChange={(event) =>
                 setInputs({ ...inputs, email: event.target.value })
               }
@@ -780,18 +668,7 @@ export const ParentDialog = (props) => {
             />
           </Stack>
           <Stack spacing={1}>
-            <Button
-              variant="contained"
-              type="submit"
-              // onClick={async () =>
-              //   await authUser(inputs).then(() => {
-              //     console.log(localStorage.getItem("groups"));
-              //     localStorage.getItem("groups") === "admin"
-              //       ? navigate("/admin")
-              //       : navigate("/");
-              //   })
-              // }
-            >
+            <Button variant="contained" type="submit">
               Sign In
             </Button>
             <Button size="small" onClick={() => setView(2)}>
@@ -835,6 +712,7 @@ export const AddStepsDialog = (props) => {
   const uuid = useUserStore((state) => state.uuid);
   const today = Date.parse(moment());
   const lastYear = moment().subtract(365, "days").calendar();
+  const navigate = useNavigate();
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
     date: today,
@@ -864,9 +742,14 @@ export const AddStepsDialog = (props) => {
       })
       .then(() => handleClose());
   };
+
+  const submit = async (event) => {
+    event.preventDefault();
+    await handleSubmit(inputs).then(() => navigate("/"));
+  };
   return (
     <Dialog open={props.open} fullWidth maxWidth="xs" onClose={handleClose}>
-      <Box m={1} p={1}>
+      <Box m={1} p={1} component="form" onSubmit={(event) => submit(event)}>
         <Typography align="center" variant="h6" mb={1}>
           Add Steps
         </Typography>
@@ -877,6 +760,7 @@ export const AddStepsDialog = (props) => {
               disableFuture
               minDate={lastYear}
               value={value}
+              required
               onChange={handleChange}
               renderInput={(params) => (
                 <TextField fullWidth size="small" {...params} />
@@ -886,13 +770,19 @@ export const AddStepsDialog = (props) => {
               size="small"
               label="Steps"
               variant="outlined"
+              required
+              type="number"
+              inputProps={{
+                min: 1,
+                max: 100000,
+              }}
               onChange={(event) =>
                 setInputs({ ...inputs, steps: event.target.value })
               }
             />
           </Stack>
           <Stack spacing={1} direction="row">
-            <Button variant="contained" onClick={() => handleSubmit()}>
+            <Button type="submit" variant="contained">
               Submit
             </Button>
             <Button
@@ -967,9 +857,14 @@ export const AddWeighInDialog = (props) => {
   const handleClose = () => {
     props.handleClose(false);
   };
+
+  const submit = async (event) => {
+    event.preventDefault();
+    await handleSubmit(inputs).then(() => navigate("/"));
+  };
   return (
     <Dialog open={props.open} fullWidth maxWidth="xs" onClose={handleClose}>
-      <Box p={2}>
+      <Box p={2} component="form" onSubmit={(event) => submit(event)}>
         <Stack justifyContent="center" spacing={2}>
           <Typography align="center" variant="h6">
             Weigh In
@@ -982,6 +877,12 @@ export const AddWeighInDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
+                type="number"
+                inputProps={{
+                  min: 80,
+                  max: 1400,
+                  step: ".01",
+                }}
                 onChange={(event) =>
                   setInputs({ ...inputs, weight: event.target.value })
                 }
@@ -993,7 +894,11 @@ export const AddWeighInDialog = (props) => {
                 label="Height (ft)"
                 variant="outlined"
                 fullWidth
-                required
+                type="number"
+                inputProps={{
+                  min: 4,
+                  max: 8,
+                }}
                 onChange={(event) =>
                   setInputs({ ...inputs, heightFt: event.target.value })
                 }
@@ -1003,7 +908,11 @@ export const AddWeighInDialog = (props) => {
                 label="Height (in)"
                 variant="outlined"
                 fullWidth
-                required
+                type="number"
+                inputProps={{
+                  min: 0,
+                  max: 11,
+                }}
                 onChange={(event) =>
                   setInputs({ ...inputs, heightIn: event.target.value })
                 }
@@ -1016,6 +925,12 @@ export const AddWeighInDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
+                type="number"
+                inputProps={{
+                  min: 10,
+                  max: 99,
+                  step: ".01",
+                }}
                 onChange={(event) =>
                   setInputs({ ...inputs, bodyFat: event.target.value })
                 }
@@ -1026,6 +941,12 @@ export const AddWeighInDialog = (props) => {
                 variant="outlined"
                 fullWidth
                 required
+                type="number"
+                inputProps={{
+                  min: 1,
+                  max: inputs.bodyFat - 1,
+                  step: ".01",
+                }}
                 onChange={(event) =>
                   setInputs({ ...inputs, targetWeightLoss: event.target.value })
                 }
@@ -1034,22 +955,32 @@ export const AddWeighInDialog = (props) => {
             <Stack direction="row" spacing={1}>
               <TextField
                 size="small"
-                label="Waist (in)"
+                label="Neck (in)"
                 variant="outlined"
                 fullWidth
-                required
+                type="number"
+                inputProps={{
+                  min: 10,
+                  max: 30,
+                  step: ".01",
+                }}
                 onChange={(event) =>
-                  setInputs({ ...inputs, waist: event.target.value })
+                  setInputs({ ...inputs, neck: event.target.value })
                 }
               />
               <TextField
                 size="small"
-                label="Neck (in)"
+                label="Waist (in)"
                 variant="outlined"
                 fullWidth
-                required
+                type="number"
+                inputProps={{
+                  min: 13,
+                  max: 80,
+                  step: ".01",
+                }}
                 onChange={(event) =>
-                  setInputs({ ...inputs, neck: event.target.value })
+                  setInputs({ ...inputs, waist: event.target.value })
                 }
               />
             </Stack>
@@ -1059,20 +990,14 @@ export const AddWeighInDialog = (props) => {
                 disableFuture
                 value={value}
                 onChange={handleChange}
+                required
                 renderInput={(params) => (
                   <TextField fullWidth size="small" {...params} />
                 )}
               />
             </Stack>
           </Stack>
-          <Button
-            component={Link}
-            to={`/`}
-            variant="contained"
-            onClick={async () =>
-              await handleSubmit(inputs).then(() => navigate("/"))
-            }
-          >
+          <Button type="submit" variant="contained">
             Submit
           </Button>
         </Stack>
