@@ -88,7 +88,6 @@ const AdminDashboard = () => {
         waist: item.waist,
         neck: item.neck,
       };
-      console.log(datum);
       weightId++;
       return datum;
     };
@@ -104,7 +103,6 @@ const AdminDashboard = () => {
     };
     getData();
   }, []);
-  console.log(info);
   const infoColumns = [
     { field: "uuid", headerName: "UUID", width: 200 },
     { field: "age", headerName: "Age", width: 200 },

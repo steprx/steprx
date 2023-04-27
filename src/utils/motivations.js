@@ -12,6 +12,5 @@ export const displayMotivation = () => {
     '"Take your victories, whatever they may be, cherish them, use them, but don\'t settle for them" - Mia Hamm',
   ];
   const index = (Math.random() * 9).toFixed(0);
-  console.log(index);
   return quotes[index];
 };

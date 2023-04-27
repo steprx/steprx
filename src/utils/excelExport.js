@@ -7,7 +7,6 @@ const ExportExcel = ({ excelData, fileName }) => {
   const fileType =
     "application/vmd.openxmlformats-officedocument.spreadsheetml.sheet;charset-UTF-8";
   const fileExtension = ".xlsx";
-  console.log(excelData);
   const exportToExcel = async () => {
     const ws = XLSX.utils.json_to_sheet(JSON.parse(excelData));
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };

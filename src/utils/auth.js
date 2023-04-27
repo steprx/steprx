@@ -1,7 +1,6 @@
 import { Auth } from "aws-amplify";
 
 export async function signUp(payload) {
-  console.log("creating user...");
   try {
     const user = await Auth.signUp({
       username: payload.username,
@@ -16,7 +15,6 @@ export async function signUp(payload) {
         enabled: true,
       },
     });
-    console.log(user);
     return user;
   } catch (error) {
     console.log("error signing up:", error);
@@ -25,19 +23,15 @@ export async function signUp(payload) {
 
 export async function confirmSignUp(username, code) {
   try {
-    console.log("confirming user...");
     await Auth.confirmSignUp(username, code);
-    console.log("user confirmed.");
   } catch (error) {
     console.log("error confirming sign up", error);
   }
 }
 
 export async function signIn(payload) {
-  console.log("signing in...");
   try {
     const user = await Auth.signIn(payload.email, payload.password);
-    console.log(user);
     return user;
   } catch (error) {
     console.log("error signing in", error);
@@ -46,9 +40,7 @@ export async function signIn(payload) {
 
 export async function getSession() {
   try {
-    console.log("getting user session...");
     const session = await Auth.currentSession();
-    console.log(session);
     return session;
   } catch (error) {
     console.log("error getting session", error);
@@ -57,10 +49,8 @@ export async function getSession() {
 
 export async function getUserAttributes() {
   try {
-    console.log("getting current user...");
     const user = await Auth.currentAuthenticatedUser();
     const { attributes } = user;
-    console.log(attributes);
     return attributes;
   } catch (error) {
     console.log("error getting info", error);
@@ -68,7 +58,6 @@ export async function getUserAttributes() {
 }
 
 export async function signOut() {
-  console.log("signing out...");
   try {
     await Auth.signOut();
   } catch (error) {
