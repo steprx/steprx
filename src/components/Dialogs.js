@@ -357,18 +357,18 @@ export const ParentDialog = (props) => {
     });
     const handleSubmit = async () => {
       await putWeighIn(uuid, inputs)
-        .then(() => {
+        .then(async () => {
           putInfo(uuid, inputs);
-          getSession().then((res) => {
+          await getSession().then((res) => {
             localStorage.setItem("token", res);
             localStorage.setItem("access", res.getAccessToken());
             localStorage.setItem("id", res.getIdToken());
             localStorage.setItem("refresh", res.getRefreshToken());
           });
+          await getUserAttributes().then((res) => setUserAttributes(res));
+          await getAllInfo(uuid).then((res) => setUserInfo(res));
+          await getAllWeighIns(uuid).then((res) => setWeighIns(res));
         })
-        .then(() => getUserAttributes().then((res) => setUserAttributes(res)))
-        .then(() => getAllInfo(uuid).then((res) => setUserInfo(res)))
-        .then(() => getAllWeighIns(uuid).then((res) => setWeighIns(res)))
         .catch((err) => alert(err));
     };
 
