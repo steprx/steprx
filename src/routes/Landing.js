@@ -11,6 +11,7 @@ const LandingPage = () => {
     button === "sign in" ? setView(6) : setView(1);
     setOpen(true);
   };
+  testCall();
   return (
     <Box
       height="100vh"
