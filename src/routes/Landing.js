@@ -3,7 +3,6 @@ import { useState } from "react";
 import background from "../assets/background.jpg";
 import { ParentDialog } from "../components/Dialogs";
 import { useDialogStore } from "../Stores/DialogStore";
-import { testCall } from "../APIs/TestServices";
 
 const LandingPage = () => {
   const [open, setOpen] = useState(false);
@@ -12,7 +11,6 @@ const LandingPage = () => {
     button === "sign in" ? setView(6) : setView(1);
     setOpen(true);
   };
-  testCall();
   return (
     <Box
       height="100vh"
