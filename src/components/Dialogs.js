@@ -329,16 +329,17 @@ export const ParentDialog = (props) => {
   };
 
   const HealthDialog = (props) => {
-    const today = Date.parse(moment());
+    const today = Date.parse(moment().startOf("day"));
+    const minAge = moment().subtract(13, "years").calendar();
     const [value, setValue] = useState(moment());
     const [birthdate, setBirthdate] = useState(moment());
     const handleBirthdateChange = (newValue) => {
       setBirthdate(newValue);
-      setInputs({ ...inputs, birthdate: Date.parse(newValue) });
+      setInputs({ ...inputs, birthdate: Date.parse(newValue.startOf("day")) });
     };
     const handleChange = (newValue) => {
       setValue(newValue);
-      setInputs({ ...inputs, date: Date.parse(newValue) });
+      setInputs({ ...inputs, date: Date.parse(newValue.startOf("day")) });
     };
     const handleRadioChange = (event) => {
       setInputs({ ...inputs, sex: event.target.value });
@@ -376,7 +377,9 @@ export const ParentDialog = (props) => {
       event.preventDefault();
       await handleSubmit(inputs).then(() => navigate("/"));
     };
-
+    const onKeyDown = (e) => {
+      e.preventDefault();
+    };
     return (
       <Box p={2} component="form" onSubmit={(event) => submit(event)}>
         <Stack justifyContent="center" spacing={2}>
@@ -388,11 +391,17 @@ export const ParentDialog = (props) => {
               <DatePicker
                 label="Birthdate"
                 disableFuture
+                minDate={minAge}
                 value={birthdate}
                 onChange={handleBirthdateChange}
                 required
                 renderInput={(params) => (
-                  <TextField fullWidth size="small" {...params} />
+                  <TextField
+                    fullWidth
+                    size="small"
+                    onKeyDown={onKeyDown}
+                    {...params}
+                  />
                 )}
               />
               <TextField
@@ -539,7 +548,12 @@ export const ParentDialog = (props) => {
                 onChange={handleChange}
                 required
                 renderInput={(params) => (
-                  <TextField fullWidth size="small" {...params} />
+                  <TextField
+                    fullWidth
+                    size="small"
+                    onKeyDown={onKeyDown}
+                    {...params}
+                  />
                 )}
               />
             </Stack>
@@ -701,7 +715,7 @@ export const ParentDialog = (props) => {
 export const AddStepsDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
   const uuid = useUserStore((state) => state.uuid);
-  const today = Date.parse(moment());
+  const today = Date.parse(moment().startOf("day").startOf("day"));
   const lastYear = moment().subtract(365, "days").calendar();
   const navigate = useNavigate();
   const [value, setValue] = useState(moment());
@@ -715,7 +729,10 @@ export const AddStepsDialog = (props) => {
   const setCountsData = useStepCountStore((state) => state.setCountsData);
   const handleChange = (newValue) => {
     setValue(newValue);
-    setInputs({ ...inputs, date: Date.parse(newValue) });
+    setInputs({
+      ...inputs,
+      date: Date.parse(newValue.startOf("day").startOf("day")),
+    });
   };
   const handleClose = () => {
     props.handleClose(false);
@@ -735,6 +752,9 @@ export const AddStepsDialog = (props) => {
     event.preventDefault();
     await handleSubmit(inputs).then(() => navigate("/"));
   };
+  const onKeyDown = (e) => {
+    e.preventDefault();
+  };
   return (
     <Dialog open={props.open} fullWidth maxWidth="xs" onClose={handleClose}>
       <Box m={1} p={1} component="form" onSubmit={(event) => submit(event)}>
@@ -751,7 +771,12 @@ export const AddStepsDialog = (props) => {
               required
               onChange={handleChange}
               renderInput={(params) => (
-                <TextField fullWidth size="small" {...params} />
+                <TextField
+                  fullWidth
+                  size="small"
+                  onKeyDown={onKeyDown}
+                  {...params}
+                />
               )}
             />
             <TextField
@@ -788,7 +813,7 @@ export const AddStepsDialog = (props) => {
 };
 
 export const AddWeighInDialog = (props) => {
-  const today = Date.parse(moment());
+  const today = Date.parse(moment().startOf("day"));
   const userInfo = useUserStore((state) => state.userInfo);
   const weighIns = useUserStore((state) => state.weighIns);
   const currentUser = useUserStore((state) => state.currentUser);
@@ -801,7 +826,7 @@ export const AddWeighInDialog = (props) => {
   const [value, setValue] = useState(moment());
   const handleChange = (newValue) => {
     setValue(newValue);
-    setInputs({ ...inputs, date: Date.parse(newValue) });
+    setInputs({ ...inputs, date: Date.parse(newValue.startOf("day")) });
   };
   const [inputs, setInputs] = useState({
     weight: null,
@@ -846,6 +871,9 @@ export const AddWeighInDialog = (props) => {
   const submit = async (event) => {
     event.preventDefault();
     await handleSubmit(inputs).then(() => navigate("/"));
+  };
+  const onKeyDown = (e) => {
+    e.preventDefault();
   };
   return (
     <Dialog open={props.open} fullWidth maxWidth="xs" onClose={handleClose}>
@@ -977,7 +1005,12 @@ export const AddWeighInDialog = (props) => {
                 onChange={handleChange}
                 required
                 renderInput={(params) => (
-                  <TextField fullWidth size="small" {...params} />
+                  <TextField
+                    fullWidth
+                    size="small"
+                    onKeyDown={onKeyDown}
+                    {...params}
+                  />
                 )}
               />
             </Stack>
