@@ -68,7 +68,7 @@ const Home = () => {
         </IconButton>
         <Typography
           component={Link}
-          to={`/`}
+          to={`/home`}
           align="center"
           color="#ffffff"
           variant="h5"

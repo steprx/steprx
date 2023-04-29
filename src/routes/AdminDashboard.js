@@ -157,7 +157,7 @@ const AdminDashboard = () => {
         <ExportExcel excelData={excel} fileName={"StepRx Data"} />
         <Typography
           component={Link}
-          to={`/`}
+          to={`/home`}
           align="center"
           color="#ffffff"
           variant="h5"
