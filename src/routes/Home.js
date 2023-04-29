@@ -8,7 +8,7 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddStepsDialog, AddWeighInDialog } from "../components/Dialogs";
 import { Addchart, AddCircle, Logout, Settings } from "@mui/icons-material";
 import { Link, Outlet, useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ import { signOut } from "../utils/auth";
 import { useUserStore } from "../Stores/UserStore";
 import { useStepCountStore } from "../Stores/StepCountStore";
 import { useDialogStore } from "../Stores/DialogStore";
+import PrivateRoutes from "./PrivateRoutes";
 
 const Home = () => {
   const resetUser = useUserStore((state) => state.reset);
@@ -38,6 +39,11 @@ const Home = () => {
   const [dataOpen, setDataOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
+
+  // useEffect(() => {
+  //   PrivateRoutes();
+  // }, []);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };

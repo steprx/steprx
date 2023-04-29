@@ -10,6 +10,7 @@ import AdminRoutes from "./routes/AdminRoutes";
 import AdminDashboard from "./routes/AdminDashboard";
 import { ThemeProvider, createTheme } from "@mui/material";
 import Settings from "./routes/Settings";
+import Error from "./routes/Error";
 
 const theme = createTheme();
 
@@ -30,6 +31,7 @@ const App = () => {
               </Route>
             </Route>
             <Route element={<LandingPage />} index />
+            <Route element={<Error />} path="*" />
           </Routes>
         </BrowserRouter>
       </LocalizationProvider>
