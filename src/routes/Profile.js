@@ -89,9 +89,6 @@ const Profile = () => {
           </Stack>
         </Grid>
       </Grid>
-      <Box display="flex" justifyContent="center" my={2}>
-        <Button variant="contained">Save Changes</Button>
-      </Box>
     </Box>
   );
 };
