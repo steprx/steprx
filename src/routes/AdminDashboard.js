@@ -44,7 +44,6 @@ const AdminDashboard = () => {
   const logout = async () => {
     handleClose();
     signOut().then(() => {
-      navigate("/login");
       resetStores();
       console.clear();
       localStorage.clear();
@@ -179,7 +178,7 @@ const AdminDashboard = () => {
       >
         <MenuItem
           onClick={async () => {
-            await logout().then(() => navigate("/login"));
+            await logout().then(() => navigate("/"));
           }}
         >
           <ListItemIcon>

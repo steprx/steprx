@@ -375,7 +375,7 @@ export const ParentDialog = (props) => {
 
     const submit = async (event) => {
       event.preventDefault();
-      await handleSubmit(inputs).then(() => navigate("/"));
+      await handleSubmit(inputs).then(() => navigate("/home"));
     };
     const onKeyDown = (e) => {
       e.preventDefault();
@@ -636,7 +636,7 @@ export const ParentDialog = (props) => {
       await authUser(inputs).then(() => {
         localStorage.getItem("groups") === "admin"
           ? navigate("/admin")
-          : navigate("/");
+          : navigate("/home");
       });
     };
 
@@ -750,7 +750,7 @@ export const AddStepsDialog = (props) => {
 
   const submit = async (event) => {
     event.preventDefault();
-    await handleSubmit(inputs).then(() => navigate("/"));
+    await handleSubmit(inputs).then(() => navigate("/home"));
   };
   const onKeyDown = (e) => {
     e.preventDefault();
@@ -870,7 +870,7 @@ export const AddWeighInDialog = (props) => {
 
   const submit = async (event) => {
     event.preventDefault();
-    await handleSubmit(inputs).then(() => navigate("/"));
+    await handleSubmit(inputs).then(() => navigate("/home"));
   };
   const onKeyDown = (e) => {
     e.preventDefault();

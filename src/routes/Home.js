@@ -111,7 +111,7 @@ const Home = () => {
         </MenuItem>
         <MenuItem
           onClick={async () => {
-            await logout().then(() => navigate("/login"));
+            await logout().then(() => navigate("/"));
           }}
         >
           <ListItemIcon>

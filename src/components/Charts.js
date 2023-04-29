@@ -59,7 +59,7 @@ export const Charts = () => {
               <XAxis dataKey="date" padding={{ left: 20, right: 20 }} />
               <YAxis domain={["auto", "auto"]} />
               <Tooltip />
-              <Bar dataKey="steps" fill="#8884d8" />
+              <Line dataKey="steps" fill="#8884d8" />
               <Line dataKey="stepGoal" stroke="#808080" />
             </ComposedChart>
           </ResponsiveContainer>

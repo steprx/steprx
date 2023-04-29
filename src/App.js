@@ -23,13 +23,13 @@ const App = () => {
               <Route element={<AdminDashboard />} path="/admin" />
             </Route>
             <Route element={<PrivateRoutes />}>
-              <Route element={<Home />} path="/" exact>
+              <Route element={<Home />} path="/home" exact>
                 <Route element={<Dashboard />} index />
-                <Route element={<Profile />} path="/profile" />
-                <Route element={<Settings />} path="/settings" />
+                <Route element={<Profile />} path="profile" />
+                <Route element={<Settings />} path="settings" />
               </Route>
             </Route>
-            <Route element={<LandingPage />} path="/login" />
+            <Route element={<LandingPage />} index />
           </Routes>
         </BrowserRouter>
       </LocalizationProvider>
