@@ -51,9 +51,6 @@ export const ParentDialog = (props) => {
   const setWeighIns = useUserStore((state) => state.setWeighIns);
   const setCountsData = useStepCountStore((state) => state.setCountsData);
   const setTotalSteps = useStepCountStore((state) => state.setTotalSteps);
-  const handleClose = () => {
-    props.handleClose(false);
-  };
 
   const nameRegex = "^[a-zA-Z'\\-]+(?:s+[a-zA-Z'\\-]+)*$";
   const emailRegex =
@@ -707,7 +704,7 @@ export const ParentDialog = (props) => {
     }
   };
   return (
-    <Dialog open={props.open} onClose={handleClose} fullWidth maxWidth="xs">
+    <Dialog open={props.open} fullWidth maxWidth="xs">
       {dialogDisplay()}
     </Dialog>
   );
@@ -716,8 +713,9 @@ export const ParentDialog = (props) => {
 export const AddStepsDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
   const uuid = useUserStore((state) => state.uuid);
+  const weighIns = useUserStore((state) => state.weighIns);
   const today = Date.parse(moment().startOf("day").startOf("day"));
-  const lastYear = moment().subtract(365, "days");
+  const minDate = moment(Number(weighIns?.at(0)?.date));
   const navigate = useNavigate();
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
@@ -767,7 +765,7 @@ export const AddStepsDialog = (props) => {
             <DatePicker
               label="Date"
               disableFuture
-              minDate={lastYear}
+              minDate={minDate}
               value={value}
               required
               onChange={handleChange}

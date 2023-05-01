@@ -8,6 +8,8 @@ const Profile = () => {
   const userInfo = useUserStore((state) => state.userInfo);
   const weighIns = useUserStore((state) => state.weighIns);
   const age = calcAge(Number(userInfo?.birthdate));
+  console.log(userInfo?.birthdate);
+  console.log(age);
   const weight = weighIns?.at(0)?.weight;
   const height = calcHeight(
     weighIns?.at(0)?.heightFt,
