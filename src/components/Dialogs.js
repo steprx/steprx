@@ -330,9 +330,10 @@ export const ParentDialog = (props) => {
 
   const HealthDialog = (props) => {
     const today = Date.parse(moment().startOf("day"));
-    const minAge = moment().subtract(13, "years").calendar();
+    const minAge = moment().subtract(13, "years");
+    console.log(minAge);
     const [value, setValue] = useState(moment());
-    const [birthdate, setBirthdate] = useState(moment());
+    const [birthdate, setBirthdate] = useState(minAge);
     const handleBirthdateChange = (newValue) => {
       setBirthdate(newValue);
       setInputs({ ...inputs, birthdate: Date.parse(newValue.startOf("day")) });
@@ -391,7 +392,7 @@ export const ParentDialog = (props) => {
               <DatePicker
                 label="Birthdate"
                 disableFuture
-                minDate={minAge}
+                maxDate={minAge}
                 value={birthdate}
                 onChange={handleBirthdateChange}
                 required
@@ -526,16 +527,16 @@ export const ParentDialog = (props) => {
             </Stack>
             <Stack direction="row" spacing={1}>
               <FormControl variant="standard">
-                <RadioGroup row value={inputs.sex} required>
+                <RadioGroup row value={inputs.sex}>
                   <FormControlLabel
                     value="female"
-                    control={<Radio />}
+                    control={<Radio required />}
                     label="Female"
                     onChange={handleRadioChange}
                   />
                   <FormControlLabel
                     value="male"
-                    control={<Radio />}
+                    control={<Radio required />}
                     label="Male"
                     onChange={handleRadioChange}
                   />
@@ -716,7 +717,7 @@ export const AddStepsDialog = (props) => {
   const currentUser = useUserStore((state) => state.currentUser);
   const uuid = useUserStore((state) => state.uuid);
   const today = Date.parse(moment().startOf("day").startOf("day"));
-  const lastYear = moment().subtract(365, "days").calendar();
+  const lastYear = moment().subtract(365, "days");
   const navigate = useNavigate();
   const [value, setValue] = useState(moment());
   const [inputs, setInputs] = useState({
@@ -818,6 +819,7 @@ export const AddWeighInDialog = (props) => {
   const weighIns = useUserStore((state) => state.weighIns);
   const currentUser = useUserStore((state) => state.currentUser);
   const uuid = useUserStore((state) => state.uuid);
+  const minDate = moment(Number(weighIns?.at(0)?.date));
   const setUserAttributes = useUserStore((state) => state.setUserAttributes);
   const setWeighIns = useUserStore((state) => state.setWeighIns);
   const setWeightLoss = useStepCountStore((state) => state.setWeightLoss);
@@ -1000,6 +1002,7 @@ export const AddWeighInDialog = (props) => {
             <Stack direction="row" spacing={1}>
               <DatePicker
                 label="Date of Visit"
+                minDate={minDate.toDate()}
                 disableFuture
                 value={value}
                 onChange={handleChange}

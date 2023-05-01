@@ -109,12 +109,6 @@ const Home = () => {
           </ListItemIcon>
           Add Data
         </MenuItem>
-        <MenuItem component={Link} to={`settings`} onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
         <MenuItem
           onClick={async () => {
             await logout().then(() => navigate("/"));

@@ -17,7 +17,7 @@ export async function signUp(payload) {
     });
     return user;
   } catch (error) {
-    console.log("error signing up:", error);
+    console.log("error signing up: ", error);
   }
 }
 
@@ -25,7 +25,7 @@ export async function confirmSignUp(username, code) {
   try {
     await Auth.confirmSignUp(username, code);
   } catch (error) {
-    console.log("error confirming sign up", error);
+    console.log("error confirming sign up: ", error);
   }
 }
 
@@ -34,7 +34,7 @@ export async function signIn(payload) {
     const user = await Auth.signIn(payload.email, payload.password);
     return user;
   } catch (error) {
-    console.log("error signing in", error);
+    console.log("error signing in: ", error);
   }
 }
 
@@ -43,7 +43,7 @@ export async function getSession() {
     const session = await Auth.currentSession();
     return session;
   } catch (error) {
-    console.log("error getting session", error);
+    console.log("error getting session: ", error);
   }
 }
 
@@ -53,7 +53,7 @@ export async function getUserAttributes() {
     const { attributes } = user;
     return attributes;
   } catch (error) {
-    console.log("error getting info", error);
+    console.log("error getting info: ", error);
   }
 }
 

@@ -3,7 +3,7 @@ export const displayMotivation = () => {
     '"Believe you can and you\'re halfway there." — Theodore Roosevelt',
     '"Don\'t let yesterday take up too much of today." — Will Rogers',
     '"It is never too late to be what you might have been." - George Eliot',
-    '"Do the best you can. No one can do more that that." - John Wooden',
+    '"Do the best you can. No one can do more than that." - John Wooden',
     '"If you can dream it, you can do it." - Walt Disney',
     '"Do what you can, with what you have, where you are." - Theodore Roosevelt',
     '"Don\'t look at your feet to see if you are doing it right. Just dance." - Anne Lamott',
