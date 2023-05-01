@@ -328,7 +328,6 @@ export const ParentDialog = (props) => {
   const HealthDialog = (props) => {
     const today = Date.parse(moment().startOf("day"));
     const minAge = moment().subtract(13, "years");
-    console.log(minAge);
     const [value, setValue] = useState(moment());
     const [birthdate, setBirthdate] = useState(minAge);
     const handleBirthdateChange = (newValue) => {
